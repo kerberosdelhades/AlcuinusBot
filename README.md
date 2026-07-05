@@ -1,6 +1,6 @@
 # AlcuinusBot
 
-Bot del grupo de IA de Kreitek. Lee mensajes del canal de Telegram, analiza contenido con embeddings y clustering, y publica resúmenes estructurados en un sub-hilo de documentación.
+Bot del grupo de IA de Kreitek. Lee mensajes del canal de Telegram, analiza contenido con embeddings y clustering, y publica resúmenes estructurados en un canal de documentación separado.
 
 ## Documentación
 
@@ -11,11 +11,16 @@ Bot del grupo de IA de Kreitek. Lee mensajes del canal de Telegram, analiza cont
 
 Proyecto en fase de diseño. No hay código implementado aún.
 
-## Stack (planificado)
+## Dependencias principales
 
-- **Userbot**: Pyrogram / Telethon (lectura del canal)
-- **Bot API**: python-telegram-bot (escritura al sub-hilo)
-- **NLP**: sentence-transformers, BERTopic, HDBSCAN
-- **Contenido**: trafilatura (extracción de texto de enlaces)
-- **LLM**: Etiquetado de clusters y resúmenes
-- **Storage**: SQLite
+- **[pytopicgram](https://github.com/ugr-sail/pytopicgram)** — Ingesta de mensajes de Telegram + topic modeling con BERTopic (Universidad de Granada, SoftwareX 2025)
+- **sentence-transformers** — Embeddings semánticos
+- **BERTopic / HDBSCAN** — Clustering de bundles (enlace + opiniones)
+- **requests + BeautifulSoup** — Metadata de enlaces (título, descripción)
+
+## Stack
+
+- **Ingesta**: pytopicgram (Telethon + SQLite)
+- **Análisis**: BERTopic sobre bundles (enlaces + opiniones asociadas)
+- **Metadata**: HTTP fetch ligero (solo título + descripción)
+- **Salida**: Pyrogram / Bot API al canal de documentación

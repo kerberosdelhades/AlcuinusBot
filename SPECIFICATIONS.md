@@ -13,35 +13,71 @@ Dos canales, separación limpia:
 
 | Componente | Propósito | Tecnología |
 |------------|-----------|------------|
-| **Ingesta** | Leer mensajes del canal fuente | Pyrogram (userbot, only first extraction) |
-| **Almacenamiento** | Persistir mensajes y metadatos | SQLite |
-| **Contenido** | Resolver enlaces a texto completo | `trafilatura` |
-| **Embeddings** | Representación semántica de textos | `sentence-transformers` |
-| **Clustering** | Agrupación temática | BERTopic / HDBSCAN |
-| **Salida** | Publicar resúmenes al canal de doc | Pyrogram (mismo userbot) |
+| **Ingesta + Storage** | Leer mensajes del canal, persistir, preprocesar | pytopicgram (Telethon + SQLite) |
+| **Topic modeling** | Agrupación temática de mensajes | pytopicgram (BERTopic / HDBSCAN) |
+| **Detección de anchors** | Identificar mensajes con enlaces | Custom (sobre datos de pytopicgram) |
+| **Metadata de enlaces** | Título, descripción de cada enlace | HTTP fetch + HTML parse |
+| **Asociación de opiniones** | Vincular reacciones a su enlace | Custom (ventana temporal + señales) |
+| **Clustering de bundles** | Agrupar enlaces+opiniones por tema | BERTopic (propio, sobre bundles) |
+| **Salida** | Publicar resúmenes al canal de doc | Pyrogram / Bot API |
+
+### Dependencia: pytopicgram
+
+Usamos [pytopicgram](https://github.com/ugr-sail/pytopicgram) (Universidad de Granada, SoftwareX 2025) como base para ingesta y topic modeling. Nos da:
+
+- Conexión a Telegram API vía Telethon
+- Almacenamiento en SQLite con preprocesamiento
+- BERTopic clustering con embeddings de LLMs
+- Soporte multilingüe
+- Métricas de engagement (viralidad, etc.)
+
+Lo que pytopicgram **no hace** (y es lo que construimos nosotros):
+- Identificar enlaces compartidos como anchors
+- Asociar opiniones posteriores a cada enlace
+- Extraer metadata ligera de enlaces
+- Clusters sobre bundles (enlace + opiniones) en vez de mensajes crudos
+- Generar resúmenes para un canal de documentación
 
 ### Flujo del pipeline
 
 ```
 Canal fuente (read-only)
-    → Userbot lee mensajes → SQLite
-    → Extraer enlaces → Fetch contenido (trafilatura)
-    → Embed (sentence-transformers)
-    → BERTopic clustering → LLM etiqueta clusters
-    → Formatear resumen
+    → pytopicgram: ingesta + SQLite + preprocesamiento
+    → pytopicgram: BERTopic topic modeling (sobre mensajes crudos)
+    → AlcuinusBot:
+        → Identificar anchors (mensajes con enlaces)
+        → Para cada anchor: ventana de mensajes posteriores
+        → Asociar opiniones/reacciones al enlace más cercano
+        → Fetch metadata de cada enlace (título, descripción)
+        → Embed del bundle (metadata + opiniones)
+        → BERTopic clustering sobre bundles
+        → Formatear resumen
     → Canal de documentación (write-only)
 ```
 
-### Decisión de diseño: un solo userbot
+### Asociación de opiniones a enlaces
 
-El mismo cliente Pyrogram sirve para leer y escribir. No necesitamos un bot separado con Bot API. Esto simplifica la autenticación a una sola cuenta de Telegram.
+La parte más interesante del pipeline. Cuando alguien comparte un enlace, las reacciones no están en el mensaje siguiente — se extienden decenas de mensajes después, y pueden mezclarse con reacciones a otros enlaces.
 
-## MVP (proyecto de fin de semana)
+**Problema**: dado un mensaje con enlace (anchor), ¿qué mensajes posteriores son reacciones a ese enlace?
 
-1. **Ingesta**: Userbot lee últimos 7 días de mensajes del canal fuente → SQLite
-2. **Contenido**: Para cada mensaje con enlace: fetch + extraer texto
-3. **Análisis**: Embed → BERTopic clustering → LLM etiqueta clusters
-4. **Salida**: Escribir "Resumen Semanal" en el canal de documentación:
+**Criterios de ventana** (a definir con datos reales):
+- Mensajes hasta el próximo enlace compartido
+- Gap temporal (ej: >2h sin mensajes = cierre de ventana)
+- Límite fijo (ej: máximo 50 mensajes posteriores)
+- Señales explícitas: reply chains, menciones, palabras clave
+
+**Clustering de bundles**: cada bundle (enlace + metadata + opiniones asociadas) se embeddea y clusteriza. Esto agrupa por *temas que generan discusión*, no por contenido mencionado de pasada.
+
+## MVP
+
+1. **Ingesta**: pytopicgram lee últimos 7 días de mensajes del canal fuente → SQLite
+2. **Topic modeling**: pytopicgram genera clusters de mensajes + etiquetas
+3. **Detección de anchors**: identificar mensajes con enlaces en los datos de pytopicgram
+4. **Asociación**: ventana de mensajes posteriores → vincular opiniones a anchors
+5. **Metadata**: fetch título + descripción de cada enlace
+6. **Clustering de bundles**: BERTopic sobre los bundles (enlace + opiniones)
+7. **Salida**: Escribir "Resumen Semanal" en el canal de documentación:
    - Top 5 temas (etiquetas de cluster + conteo de mensajes)
    - 3 temas emergentes (clusters nuevos esta semana)
    - 5 enlaces más influyentes (por centralidad semántica)
@@ -51,47 +87,26 @@ El mismo cliente Pyrogram sirve para leer y escribir. No necesitamos un bot sepa
 
 Ideas para expandir después del MVP. Implementación incremental.
 
-1. **Clusters semánticos con etiquetas legibles** — Agrupar mensajes por tema, que un LLM asigne nombres descriptivos.
-2. **Resolución de correferencias** — "el paper de Google DeepMind" y "el reporte técnico de Gemini 2.5" → misma entidad.
-3. **Trayectorias temporales de temas** — Cómo evolucionan los temas: se dividen, fusionan, desaparecen, aparecen nuevos.
-4. **Análisis puente enlace-conversación** — ¿Un enlace ilustró lo que se discutía o introdujo un tema nuevo?
-5. **Grafo de citación e influencia** — Trazar cómo una idea evoluciona de lunes a miércoles.
-6. **Mapeo de contradicciones y consenso** — Zonas de acuerdo vs. desacuerdo, con evidencia.
-7. **"Quizás te perdiste" personalizado** — Digests dirigidos por usuario basados en sus intereses.
+1. **Resolución de correferencias** — "el paper de Google DeepMind" y "el reporte técnico de Gemini 2.5" → misma entidad.
+2. **Trayectorias temporales de temas** — Cómo evolucionan los temas: se dividen, fusionan, desaparecen, aparecen nuevos.
+3. **Análisis puente enlace-conversación** — ¿Un enlace ilustró lo que se discutía o introdujo un tema nuevo?
+4. **Grafo de citación e influencia** — Trazar cómo una idea evoluciona de lunes a miércoles.
+5. **Mapeo de contradicciones y consenso** — Zonas de acuerdo vs. desacuerdo, con evidencia.
+6. **"Quizás te perdiste" personalizado** — Digests dirigidos por usuario basados en sus intereses.
 
 ## Despliegue
 
 | Desafío | Solución |
 |---------|----------|
-| Bot no lee canales | Userbot (Pyrogram) para todo: lectura y escritura |
-| Rate limits en fetch | Cache de contenido; priorizar enlaces de mensajes con más engagement |
-| Ruido (memes, off-topic) | Filtrar por longitud de mensaje, presencia de enlaces, o señales de engagement |
-| Contenido multilingual | Embeddings multilingües (`intfloat/multilingual-e5-large`) |
-
-## Esqueleto de implementación
-
-```python
-from pyrogram import Client
-from bertopic import BERTopic
-from sentence_transformers import SentenceTransformer
-import trafilatura
-
-# Configuración
-SOURCE_CHANNEL = -100XXXXXXXXXX    # canal fuente (read-only)
-DOCS_CHANNEL = -100YYYYYYYYYY      # canal de documentación (write-only)
-
-# 1. Ingesta: userbot lee mensajes del canal fuente → SQLite
-# 2. Para cada mensaje con enlace: fetch + extraer texto (trafilatura)
-# 3. Embed: model = SentenceTransformer("all-MiniLM-L6-v2")
-# 4. Cluster: topic_model = BERTopic(hdbscan_model=HDBSCAN(min_cluster_size=5))
-# 5. Topics dinámicos: topics_over_time = topic_model.topics_over_time(docs, timestamps)
-# 6. Formatear y enviar:
-app.send_message(
-    chat_id=DOCS_CHANNEL,
-    text=formatted_report
-)
-```
+| Bot no lee canales | pytopicgram (Telethon) para lectura |
+| Rate limits en fetch | Solo metadata (título, descripción), no contenido completo |
+| Ruido (memes, off-topic) | pytopicgram ya filtra por engagement; nosotros filtramos por presencia de enlaces |
+| Contenido multilingual | pytopicgram soporta multilingüe; embeddings multilingües |
 
 ## Personalidad del bot
 
 Ver `assets/PERSONALITY.md` — "El Arquitecto de la Claridad", un sintetizador y tutor que destila documentación de IA en conocimiento accionable.
+
+## Referencias
+
+- **pytopicgram**: Gómez-Romero et al. *pytopicgram: A library for data extraction and topic modeling from Telegram channels*. SoftwareX 30, 102141 (May 2025). DOI:10.1016/j.softx.2025.102141. GitHub: [ugr-sail/pytopicgram](https://github.com/ugr-sail/pytopicgram)
