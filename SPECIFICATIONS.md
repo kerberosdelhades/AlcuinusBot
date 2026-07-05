@@ -1,84 +1,79 @@
+# AlcuinusBot — Specifications
 
-***
+Bot del grupo de IA de Kreitek. Lee mensajes del canal, analiza contenido y escribe resúmenes estructurados en un sub-hilo de documentación.
 
-## AI Documentation Bot for Telegram: Connecting Thoughts Across a Dense Channel
+## Arquitectura
 
-Your constraint (read-only, writes only to its own sub-thread) is actually a **design advantage** — it creates a clean "analyst's notebook" that doesn't clutter the main conversation.
+| Componente | Propósito | Tecnología |
+|------------|-----------|------------|
+| **Ingesta** | Leer mensajes del canal + extraer enlaces | Pyrogram / Telethon (userbot) |
+| **Contenido** | Resolver enlaces a texto completo | `trafilatura`, `newspaper3k` |
+| **Embeddings** | Agrupación semántica | `sentence-transformers` + BERTopic / HDBSCAN |
+| **Grafo de conocimiento** | Extracción de entidades y relaciones | spaCy NER + LLM |
+| **Análisis temporal** | Evolución de temas en el tiempo | BERTopic `topics_over_time()` |
+| **Salida** | Resúmenes estructurados en sub-hilo | `message_thread_id` via Bot API |
 
-### Core Architecture
+### Flujo del pipeline
 
-| Component | Purpose | Tech Options |
-|-----------|---------|--------------|
-| **Ingestion** | Read channel messages + extract links | `python-telegram-bot` / Pyrogram / Telethon (userbot for channels) |
-| **Content Fetching** | Resolve links to full text | `trafilatura`, `newspaper3k`, `readability-lxml` |
-| **Embedding & Clustering** | Semantic grouping of messages/links | `sentence-transformers` + `BERTopic` / `HDBSCAN` + `UMAP` |
-| **Knowledge Graph** | Entity/relation extraction across messages | `iText2KG`, `LangGraph`, custom NER + RE pipeline |
-| **Temporal Analysis** | Track topic evolution over time | `BERTopic.topics_over_time()`, dynamic topic modeling |
-| **Output** | Write structured summaries to sub-thread | `message_thread_id` via Bot API |
+```
+Canal Telegram → Userbot (lee mensajes) → SQLite
+    → Extraer enlaces → Fetch + Resumir (LLM) → Embed
+    → BERTopic clustering → LLM etiqueta clusters
+    → Escribir resumen al sub-hilo
+```
 
-***
+### Nota: Userbot vs Bot API
 
-### Seven Concrete "Connection" Strategies
+El Bot API **no puede leer mensajes de canales** solo participar en grupos. Para leer el canal se necesita un **userbot** (Telethon/Pyrogram con tu cuenta de Telegram). El bot normal se usa solo para escribir al sub-hilo.
 
-#### 1. **Semantic Clustering with Human-Readable Labels**
-- Embed every message + linked article summary (use `EmbeddingGemma` with `task: clustering` prompt  [huggingface](https://huggingface.co/datasets/John6666/forum2/blob/main/clustering_vs_semantic_similarity_1.md))
-- Cluster with **HDBSCAN** (density-based, finds outliers)  [medium](https://medium.com/@piyushkashyap045/text-clustering-and-topic-modeling-with-llms-446dd7657366)
-- Use an LLM to label each cluster: *"Cluster 47 → 'EU AI Act compliance tooling' "*
-- **Output**: Weekly "Theme Map" post in your sub-thread with cluster labels, member counts, and 1-line summaries
+## MVP (proyecto de fin de semana)
 
-#### 2. **Cross-Document Coreference Resolution**
-- Extract entities (papers, models, researchers, companies, benchmarks) from *all* messages + linked content
-- Resolve coreferences: *"The paper from Google DeepMind"* + *"Gemini 2.5 technical report"* → same entity  [arxiv](https://arxiv.org/html/2406.02148v1)
-- Build an **entity co-occurrence graph**: which entities appear together across messages
-- **Output**: "This week's entity network" — shows emerging connections (e.g., "Qwen3" suddenly co-occurring with "long-context" and "synthetic data")
+1. **Userbot** lee últimos 7 días de mensajes → SQLite
+2. **Extraer enlaces** → fetch + resumir (LLM) → embed
+3. **BERTopic** clustering → LLM etiqueta los clusters
+4. **Escribir "Resumen Semanal"** en el sub-hilo de documentación:
+   - Top 5 temas (etiquetas de cluster + conteo de mensajes)
+   - 3 temas emergentes (clusters nuevos esta semana)
+   - 5 enlaces más influyentes (por centralidad semántica)
+   - 1 "conexión" (ej: "la discusión sobre MoE se mezcló con el paper nuevo de NVIDIA sobre expert routing")
 
-#### 3. **Temporal Topic Trajectories (Dynamic Topic Modeling)**
-- Slice messages into time windows (daily/weekly)
-- Track how topic representations **evolve** — splitting, merging, fading, emerging  [maartengr.github](https://maartengr.github.io/BERTopic/getting_started/topicsovertime/topicsovertime.html)
-- Detect **topic shifts**: sudden semantic discontinuities in the conversation flow  [dmas.lab.mcgill](https://dmas.lab.mcgill.ca/fung/pub/LFMM25amlds_preprint.pdf)
-- **Output**: "Topic velocity report" — which themes are accelerating, which are dying, what new clusters appeared
+## Estrategias de análisis (futuro)
 
-#### 4. **Link-Conversation Bridge Analysis**
-- For every shared link: fetch content → summarize → embed
-- Compute **semantic similarity** between the link's content and the *surrounding conversation* (messages ±N around the share)
-- Flag: *high alignment* (link illustrates discussion) vs. *low alignment* (link introduces new theme)
-- **Output**: "Bridge report" — which links seeded new discussion threads vs. which were cited as evidence
+Estas son ideas para expandir el bot después del MVP. Se implementan de forma incremental.
 
-#### 5. **Citation & Influence Graph**
-- Detect explicit references: "as @user said", "building on the paper from Tuesday", reply chains
-- Detect **implicit references**: semantic similarity between a message and prior messages without explicit reply
-- Build a directed graph: *Message A → influenced → Message B*
-- **Output**: Weekly "Idea lineage" — trace how a concept introduced via a link on Monday evolved through Wednesday's debate
+1. **Clusters semánticos con etiquetas legibles** — Agrupar mensajes por tema, que un LLM asigne nombres descriptivos a cada grupo.
+2. **Resolución de correferencias** — Detectar que "el paper de Google DeepMind" y "el reporte técnico de Gemini 2.5" son la misma entidad.
+3. **Trayectorias temporales de temas** — Cómo evolucionan los temas día a día: se dividen, fusionan, desaparecen, aparecen nuevos.
+4. **Análisis puente enlace-conversación** — ¿Un enlace ilustró lo que se discutía o introdujo un tema nuevo?
+5. **Grafo de citación e influencia** — Trazar cómo una idea evoluciona desde que se introduce un lunes hasta el debate del miércoles.
+6. **Mapeo de contradicciones y consenso** — Zonas de acuerdo vs. desacuerdo en el canal, con evidencia.
+7. **"Quizás te perdiste" personalizado** — Digests dirigidos por usuario basados en sus intereses históricos.
 
-#### 6. **Contradiction & Consensus Mapping**
-- Cluster messages by stance on key questions (using LLM-as-judge on embeddings)
-- Identify: *consensus zones* (high agreement, low variance) vs. *contention zones* (semantic divergence)
-- Track how consensus shifts when new links are introduced
-- **Output**: "Where the channel agrees / disagrees" — with evidence snippets
+## Despliegue
 
-#### 7. **Personalized "You Might Have Missed"**
-- Maintain per-user (or per-role) interest profiles from their message history
-- When new clusters form, match against profiles
-- **Output**: Targeted digests in the sub-thread: *"@armando — 3 new papers on long-context eval appeared in the 'benchmarking' cluster"*
+| Desafío | Solución |
+|---------|----------|
+| Bot no lee canales | Userbot (Telethon/Pyrogram) para leer, bot para escribir |
+| Rate limits en fetch | Cache de contenido; priorizar enlaces de mensajes con más engagement |
+| Ventana de contexto limitada | Resumen map-reduce (LangChain) para artículos largos |
+| Ruido (memes, off-topic) | Filtrar por longitud de mensaje, presencia de enlaces, o señales de engagement |
+| Contenido multilingual | Embeddings multilingües (`intfloat/multilingual-e5-large`) |
 
-***
-
-### Implementation Sketch (Python)
+## Esqueleto de implementación
 
 ```python
-# Core pipeline (simplified)
 from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 import trafilatura
 from telegram import Bot
 
-# 1. Ingest messages (with message_thread_id for sub-thread writes)
-# 2. For each message with link: fetch + extract text (trafilatura)
-# 3. Embed: model = SentenceTransformer("EmbeddingGemma")
+# 1. Ingesta: userbot lee mensajes → SQLite
+# 2. Para cada mensaje con enlace: fetch + extraer texto (trafilatura)
+# 3. Embed: model = SentenceTransformer("all-MiniLM-L6-v2")
 # 4. Cluster: topic_model = BERTopic(hdbscan_model=HDBSCAN(min_cluster_size=5))
-# 5. Dynamic topics: topics_over_time = topic_model.topics_over_time(docs, timestamps)
-# 6. Entity extraction: spaCy NER + LLM RE → knowledge graph
-# 7. Write to sub-thread:
+# 5. Topics dinámicos: topics_over_time = topic_model.topics_over_time(docs, timestamps)
+# 6. Extracción de entidades: spaCy NER + LLM → grafo de conocimiento
+# 7. Escribir al sub-hilo:
 bot.send_message(
     chat_id=CHANNEL_ID,
     message_thread_id=DOC_SUBTHREAD_ID,
@@ -87,30 +82,6 @@ bot.send_message(
 )
 ```
 
-***
+## Personalidad del bot
 
-### Practical Deployment Notes
-
-| Challenge | Solution |
-|-----------|----------|
-| **Bot can't read channel messages** | Use a **userbot** (Telethon/Pyrogram with your account) to read, then pass to bot for writing  [stackoverflow](https://stackoverflow.com/questions/68709527/how-to-read-receive-telegram-channel-messages-in-my-telegram-bot) |
-| **Rate limits on link fetching** | Cache fetched content; prioritize links from high-engagement messages |
-| **Context window limits** | Use **map-reduce summarization** (LangChain) for long articles  [medium](https://medium.com/@ankita.bagaria8/theme-detection-and-paragraph-summarization-with-langchain-and-llm-f3db3c202615) |
-| **Noise (memes, off-topic)** | Filter by message length, link presence, or engagement signals before clustering |
-| **Multilingual content** | Use multilingual embeddings (`intfloat/multilingual-e5-large`, `EmbeddingGemma`) |
-
-***
-
-### First MVP Scope (Weekend Project)
-
-1. **Userbot** reads last 7 days of messages → SQLite
-2. **Extract links** → fetch + summarize (LLM) → embed
-3. **BERTopic** clustering → LLM labels clusters
-4. **Write one "Weekly Synthesis"** to your documentation sub-thread with:
-   - Top 5 themes (cluster labels + message counts)
-   - 3 emerging topics (new clusters this week)
-   - 5 most influential links (by semantic centrality in graph)
-   - 1 "connection insight" (e.g., "Discussion on MoE architectures merged with the new NVIDIA paper on expert routing")
-
-***
-
+Ver `assets/PERSONALITY.md` — "El Arquitecto de la Claridad", un sintetizador y tutor que destila documentación de IA en conocimiento accionable.
