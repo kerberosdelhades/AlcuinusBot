@@ -102,14 +102,14 @@ async def extract_messages(
 
 
 def run_extraction(
-    days_back: int = 7,
+    days_back: int = 0,
     output_dir: str = "data",
 ) -> str:
     """
-    Convenience wrapper: load config, extract last N days of messages.
+    Convenience wrapper: load config, extract messages.
 
     Args:
-        days_back: How many days of history to extract.
+        days_back: How many days of history to extract. 0 = all messages.
         output_dir: Directory for output files.
 
     Returns:
@@ -127,7 +127,11 @@ def run_extraction(
     channel_id = abs(raw_id)
 
     end_date = datetime.datetime.now(datetime.timezone.utc)
-    start_date = end_date - datetime.timedelta(days=days_back)
+    if days_back > 0:
+        start_date = end_date - datetime.timedelta(days=days_back)
+    else:
+        # Far enough back to get everything
+        start_date = datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc)
 
     output_path = os.path.join(output_dir, "channel_messages.json")
 
