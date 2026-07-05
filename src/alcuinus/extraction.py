@@ -40,21 +40,22 @@ def load_config() -> dict:
     return config
 
 
-def build_channels_df(channel_name: str, channel_url: str) -> pd.DataFrame:
+def build_channels_df(channel_name: str, channel_id: int) -> pd.DataFrame:
     """Build a pytopicgram-compatible channels DataFrame for a single channel."""
     return pd.DataFrame([
         {
             "channel_name": channel_name,
-            "url": channel_url,
+            "url": str(channel_id),
             "user": "",
             "cluster": "source",
+            "id": channel_id,
         }
     ])
 
 
 async def extract_messages(
     channel_name: str,
-    channel_url: str,
+    channel_id: int,
     api_id: int,
     api_hash: str,
     start_date: datetime.datetime,
@@ -66,7 +67,7 @@ async def extract_messages(
 
     Args:
         channel_name: Human-readable channel name (for logging).
-        channel_url: Telegram channel URL or @username.
+        channel_id: Telegram channel numeric ID (negative for channels).
         api_id: Telegram API ID.
         api_hash: Telegram API hash.
         start_date: Start of extraction window.
@@ -76,7 +77,7 @@ async def extract_messages(
     Returns:
         Path to the output JSON file containing extracted messages.
     """
-    channels_df = build_channels_df(channel_name, channel_url)
+    channels_df = build_channels_df(channel_name, channel_id)
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
@@ -87,7 +88,7 @@ async def extract_messages(
         api_id=api_id,
         api_hash=api_hash,
         output_file_name=output_path,
-        by_url=True,
+        by_url=False,
         photos=False,
     )
 
@@ -113,7 +114,7 @@ def run_extraction(
     api_id = int(config["api_id"])
     api_hash = config["api_hash"]
     channel_name = config.get("source_channel_name", "kreitek-ia")
-    channel_url = config["source_channel"]
+    channel_id = int(config["source_channel"])
 
     end_date = datetime.datetime.now(datetime.timezone.utc)
     start_date = end_date - datetime.timedelta(days=days_back)
@@ -122,7 +123,7 @@ def run_extraction(
 
     asyncio.run(extract_messages(
         channel_name=channel_name,
-        channel_url=channel_url,
+        channel_id=channel_id,
         api_id=api_id,
         api_hash=api_hash,
         start_date=start_date,
