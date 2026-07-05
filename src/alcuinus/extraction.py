@@ -44,10 +44,10 @@ def build_channels_df(channel_name: str, channel_url: str) -> pd.DataFrame:
     """Build a pytopicgram-compatible channels DataFrame for a single channel."""
     return pd.DataFrame([
         {
-            "Channel": channel_name,
-            "URL": channel_url,
-            "User": "",
-            "Tag": "source",
+            "channel_name": channel_name,
+            "url": channel_url,
+            "user": "",
+            "cluster": "source",
         }
     ])
 
