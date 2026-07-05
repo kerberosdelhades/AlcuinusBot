@@ -1,0 +1,21 @@
+[project]
+name = "alcuinusbot"
+version = "0.1.0"
+description = "Bot del grupo de IA de Kreitek — análisis de enlaces y opiniones en Telegram"
+requires-python = ">=3.11"
+dependencies = [
+    # pytopicgram crawler deps (not the full ML stack)
+    "telethon",
+    "pandas",
+    "urlextract",
+    "rich",
+    "tqdm",
+    # our own deps
+    "requests",
+    "beautifulsoup4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]

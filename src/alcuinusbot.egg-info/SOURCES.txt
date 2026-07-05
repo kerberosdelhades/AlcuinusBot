@@ -1,0 +1,10 @@
+LICENSE
+README.md
+pyproject.toml
+src/alcuinus/__init__.py
+src/alcuinus/extraction.py
+src/alcuinusbot.egg-info/PKG-INFO
+src/alcuinusbot.egg-info/SOURCES.txt
+src/alcuinusbot.egg-info/dependency_links.txt
+src/alcuinusbot.egg-info/requires.txt
+src/alcuinusbot.egg-info/top_level.txt

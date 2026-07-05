@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: alcuinusbot
+Version: 0.1.0
+Summary: Bot del grupo de IA de Kreitek — análisis de enlaces y opiniones en Telegram
+Requires-Python: >=3.11
+License-File: LICENSE
+Requires-Dist: telethon
+Requires-Dist: pandas
+Requires-Dist: urlextract
+Requires-Dist: rich
+Requires-Dist: tqdm
+Requires-Dist: requests
+Requires-Dist: beautifulsoup4
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Dynamic: license-file

@@ -1,0 +1,10 @@
+telethon
+pandas
+urlextract
+rich
+tqdm
+requests
+beautifulsoup4
+
+[dev]
+pytest
