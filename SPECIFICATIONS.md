@@ -6,46 +6,49 @@ Bot del grupo de IA de Kreitek. Lee mensajes de un canal de Telegram, analiza co
 
 Dos canales, separación limpia:
 
-- **Canal fuente** (read-only) — El grupo de IA donde se comparten links, papers, discusiones. El userbot lee, nunca escribe.
-- **Canal de documentación** (write-only) — Donde el bot publica resúmenes y análisis. El userbot escribe.
+- **Canal fuente** (read-only) — El grupo de IA donde se comparten links, papers, discusiones. El bot lee, nunca escribe.
+- **Canal de documentación** (write-only) — Donde el bot publica resúmenes y análisis.
 
 ### Componentes
 
-| Componente | Propósito | Tecnología |
-|------------|-----------|------------|
-| **Ingesta + Storage** | Leer mensajes del canal, persistir, preprocesar | pytopicgram (Telethon + SQLite) |
-| **Topic modeling** | Agrupación temática de mensajes | pytopicgram (BERTopic / HDBSCAN) |
-| **Detección de anchors** | Identificar mensajes con enlaces | Custom (sobre datos de pytopicgram) |
-| **Metadata de enlaces** | Título, descripción de cada enlace | HTTP fetch + HTML parse |
-| **Asociación de opiniones** | Vincular reacciones a su enlace | Custom (ventana temporal + señales) |
-| **Clustering de bundles** | Agrupar enlaces+opiniones por tema | BERTopic (propio, sobre bundles) |
-| **Salida** | Publicar resúmenes al canal de doc | Pyrogram / Bot API |
+| Componente | Propósito | Tecnología | Estado |
+|------------|-----------|------------|--------|
+| **Ingesta** | Leer mensajes del canal fuente | pytopicgram crawler (Telethon) → JSON | ✅ Hecho |
+| **Detección de anchors** | Identificar mensajes con enlaces | Custom (sobre JSON de mensajes) | Pendiente |
+| **Metadata de enlaces** | Título, descripción de cada enlace | HTTP fetch + HTML parse | Pendiente |
+| **Asociación de opiniones** | Vincular reacciones a su enlace | Custom (ventana temporal + señales) | Pendiente |
+| **Clustering de bundles** | Agrupar enlaces+opiniones por tema | BERTopic (propio, sobre bundles) | Pendiente |
+| **Salida** | Publicar resúmenes al canal de doc | Pyrogram / Bot API | Pendiente |
 
 ### Dependencia: pytopicgram
 
-Usamos [pytopicgram](https://github.com/ugr-sail/pytopicgram) (Universidad de Granada, SoftwareX 2025) como base para ingesta y topic modeling. Nos da:
+Usamos [pytopicgram](https://github.com/ugr-sail/pytopicgram) (Universidad de Granada, SoftwareX 2025) **solo como crawler** — su módulo `crawler.py` para la ingesta de mensajes vía Telethon. No usamos su pipeline de preprocesamiento, métricas, NLP, ni topic modeling.
 
+Lo que tomamos de pytopicgram:
 - Conexión a Telegram API vía Telethon
-- Almacenamiento en SQLite con preprocesamiento
-- BERTopic clustering con embeddings de LLMs
-- Soporte multilingüe
-- Métricas de engagement (viralidad, etc.)
+- Batch fetching de mensajes con metadata completa (reacciones, views, forwards)
+- Extracción de URLs de mensajes
 
-Lo que pytopicgram **no hace** (y es lo que construimos nosotros):
-- Identificar enlaces compartidos como anchors
-- Asociar opiniones posteriores a cada enlace
-- Extraer metadata ligera de enlaces
-- Clusters sobre bundles (enlace + opiniones) en vez de mensajes crudos
-- Generar resúmenes para un canal de documentación
+Lo que construimos nosotros:
+- Detección de anchors (mensajes con enlaces)
+- Asociación de opiniones posteriores a cada enlace
+- Metadata ligera de enlaces (título, descripción)
+- Clustering sobre bundles (enlace + opiniones) en vez de mensajes crudos
+- Generación de resúmenes para el canal de documentación
+
+### Notas de integración con pytopicgram
+
+- **Vendored**: pytopicgram se clona en `vendor/pytopicgram` (no pip install — sus dependencias ML son incompatibles con Python 3.14)
+- **Patches locales**: `crawler.py` tiene un fix para que `channel_url` use la entidad resuelta cuando `by_url=False`
+- **PeerChannel**: los IDs numéricos de canal se pasan como `PeerChannel` para que Telethon use `GetChannelsRequest` en vez de `GetChatsRequest`
 
 ### Flujo del pipeline
 
 ```
 Canal fuente (read-only)
-    → pytopicgram: ingesta + SQLite + preprocesamiento
-    → pytopicgram: BERTopic topic modeling (sobre mensajes crudos)
+    → pytopicgram crawler: Telethon → JSON (mensajes con metadata)
     → AlcuinusBot:
-        → Identificar anchors (mensajes con enlaces)
+        → Identificar anchors (mensajes con URLs)
         → Para cada anchor: ventana de mensajes posteriores
         → Asociar opiniones/reacciones al enlace más cercano
         → Fetch metadata de cada enlace (título, descripción)
@@ -71,15 +74,14 @@ La parte más interesante del pipeline. Cuando alguien comparte un enlace, las r
 
 ## MVP
 
-1. **Ingesta**: pytopicgram lee últimos 7 días de mensajes del canal fuente → SQLite
-2. **Topic modeling**: pytopicgram genera clusters de mensajes + etiquetas
-3. **Detección de anchors**: identificar mensajes con enlaces en los datos de pytopicgram
-4. **Asociación**: ventana de mensajes posteriores → vincular opiniones a anchors
-5. **Metadata**: fetch título + descripción de cada enlace
-6. **Clustering de bundles**: BERTopic sobre los bundles (enlace + opiniones)
-7. **Salida**: Escribir "Resumen Semanal" en el canal de documentación:
+1. **Ingesta**: pytopicgram crawler lee todo el historial del canal fuente → JSON ✅
+2. **Detección de anchors**: identificar mensajes con enlaces en el JSON
+3. **Asociación**: ventana de mensajes posteriores → vincular opiniones a anchors
+4. **Metadata**: fetch título + descripción de cada enlace
+5. **Clustering de bundles**: BERTopic sobre los bundles (enlace + opiniones)
+6. **Salida**: Escribir resumen en el canal de documentación:
    - Top 5 temas (etiquetas de cluster + conteo de mensajes)
-   - 3 temas emergentes (clusters nuevos esta semana)
+   - 3 temas emergentes (clusters nuevos)
    - 5 enlaces más influyentes (por centralidad semántica)
    - 1 "conexión" (ej: "la discusión sobre MoE se mezcló con el paper nuevo de NVIDIA sobre expert routing")
 
@@ -100,8 +102,8 @@ Ideas para expandir después del MVP. Implementación incremental.
 |---------|----------|
 | Bot no lee canales | pytopicgram (Telethon) para lectura |
 | Rate limits en fetch | Solo metadata (título, descripción), no contenido completo |
-| Ruido (memes, off-topic) | pytopicgram ya filtra por engagement; nosotros filtramos por presencia de enlaces |
-| Contenido multilingual | pytopicgram soporta multilingüe; embeddings multilingües |
+| Ruido (memes, off-topic) | Filtrar por presencia de enlaces |
+| Contenido multilingual | Embeddings multilingües (`intfloat/multilingual-e5-large`) |
 
 ## Personalidad del bot
 
