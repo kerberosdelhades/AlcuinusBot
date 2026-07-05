@@ -41,14 +41,20 @@ def load_config() -> dict:
 
 
 def build_channels_df(channel_name: str, channel_id: int) -> pd.DataFrame:
-    """Build a pytopicgram-compatible channels DataFrame for a single channel."""
+    """Build a pytopicgram-compatible channels DataFrame for a single channel.
+
+    Wraps channel_id in a Telethon PeerChannel so that get_entity()
+    routes to the correct API call (GetChannelsRequest, not GetChatsRequest).
+    """
+    from telethon.tl.types import PeerChannel
+
     return pd.DataFrame([
         {
             "channel_name": channel_name,
             "url": str(channel_id),
             "user": "",
             "cluster": "source",
-            "id": channel_id,
+            "id": PeerChannel(channel_id=channel_id),
         }
     ])
 
@@ -114,7 +120,11 @@ def run_extraction(
     api_id = int(config["api_id"])
     api_hash = config["api_hash"]
     channel_name = config.get("source_channel_name", "kreitek-ia")
-    channel_id = int(config["source_channel"])
+    raw_id = int(config["source_channel"])
+
+    # Telegram channel IDs are -100XXXXXXXXXX in Bot API format.
+    # PeerChannel needs the inner positive ID.
+    channel_id = abs(raw_id)
 
     end_date = datetime.datetime.now(datetime.timezone.utc)
     start_date = end_date - datetime.timedelta(days=days_back)
