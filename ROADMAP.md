@@ -5,7 +5,7 @@
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 0 | **Ingestion** — extract messages from source Telegram channel | ✅ Done |
-| 1 | **Anchor detection** — identify messages containing links | Pending |
+| 1 | **Anchor detection** — identify messages containing links | ✅ Done |
 | 2 | **Association** — link subsequent opinions/reactions to each anchor | Pending |
 | 3 | **Metadata** — fetch title + description per link | Pending |
 | 4 | **Bundle clustering** — BERTopic over bundles (link + opinions) | Pending |
@@ -48,12 +48,16 @@ run_extraction(days_back=0, output_dir="data") → path_to_json
 - List of extracted URLs (there may be multiple per message)
 - Raw message text (for later context)
 
-**Key decisions**:
-1. URL extraction: use `urlextract` (already a pytopicgram dependency) or simple regex
-2. Filtering: skip obvious non-content URLs (t.me links, telegram invite links, etc.?)
-3. Output format: JSON file `data/anchors.json`
+**Implementation**: `src/alcuinus/anchor_detection.py`
+- `extract_urls(text)` → list of http/https URLs via `urlextract`
+- `build_anchor(message_dict)` → anchor record or None
+- `detect_anchors(messages)` → all anchors sorted by msg_id
+- `run_anchor_detection()` → load JSON, detect, write `data/anchors.json`
+- Uses `urlextract` (transitive dep from pytopicgram, zero new deps)
 
-**Known data**: 71 of 252 messages contain `http`. Most messages are forwards — the `fwd_from` field carries the original author metadata. Anchors from forwards may need to be tracked differently (the link was shared by the forwarder, not the group member).
+**Result**: 71 anchors found, 76 total URLs, spanning 2022-09-15 → 2026-05-25
+
+**Tests**: `tests/test_anchor_detection.py` — 15 tests covering URL extraction, anchor building, empty input, real data round-trip
 
 ---
 
