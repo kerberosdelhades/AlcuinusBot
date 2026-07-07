@@ -6,7 +6,7 @@
 |-------|-------------|--------|
 | 0 | **Ingestion** — extract messages from source Telegram channel | ✅ Done |
 | 1 | **Anchor detection** — identify messages containing links | ✅ Done |
-| 2 | **Association** — link subsequent opinions/reactions to each anchor | Pending |
+| 2 | **Association** — link subsequent opinions/reactions to each anchor | ✅ Done |
 | 3 | **Metadata** — fetch title + description per link | Pending |
 | 4 | **Bundle clustering** — BERTopic over bundles (link + opinions) | Pending |
 | 5 | **Output** — publish summaries to docs channel | Pending |
@@ -61,21 +61,27 @@ run_extraction(days_back=0, output_dir="data") → path_to_json
 
 ---
 
-## Phase 2 — Association
+## Phase 2 — Association ✅
 
 **Goal**: For each anchor, determine which subsequent messages are reactions/opinions about that anchor.
 
-**Problem**: Reactions aren't just the next message — they span dozens of messages and interleave with reactions to other links.
+**Implementation**: `src/alcuinus/association.py` — three-pass algorithm:
 
-**Approach** (per SPECIFICATIONS.md):
-- **Window**: messages after the anchor until the next anchor (or gap > 2h, or max 50 messages)
-- **Signals**: reply chains (`reply_to`), mentions, keyword patterns
-- **Output**: bundles — each bundle = (anchor, list of associated message IDs, metadata)
+1. **Window assignment** (pass 1): every non-anchor message belongs to the nearest preceding anchor. Window closes at the next anchor.
 
-**Key decisions**:
-1. Window strategy: try "until next anchor" first (simplest), add time-gap fallback if results are noisy
-2. Overlap handling: a reply that quotes or mentions an earlier anchor explicitly should be assigned to that earlier anchor, even if a new anchor appeared in between
-3. Reactions field (currently null): if we fix reaction extraction, emoji reactions become a strong association signal
+2. **Reply override** (pass 2): a message whose `reply_to` points directly at an anchor is reassigned to that anchor, regardless of window boundaries. This handles the case where someone explicitly replies to an older link after a newer link has been shared.
+
+3. **Time-gap cleanup** (pass 3): for the last anchor in the data, messages too far away (default: 168h / 7 days) are dropped — unless they're reply-anchored (pass 2 exempts them).
+
+**Output**: `data/bundles.json` — each bundle = `{anchor, reactions[], window{boundary, ...}}`. Anchors with zero reactions are included (empty reactions list).
+
+**API**:
+- `associate(messages, anchors, max_idle_hours=168)` → list of bundles
+- `run_association()` → convenience wrapper, writes output file
+
+**Reaction records**: `{msg_id, date, sender_id, text_preview, reply_to_msg_id, strategy}` — where `strategy` is either `"window"` or `"reply"`.
+
+**Tests**: `tests/test_association.py` — 12 tests covering synthetic fixture with all three strategies, empty inputs, round-trip I/O, and record schema validation.
 
 ---
 
