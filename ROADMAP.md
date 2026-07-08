@@ -7,7 +7,7 @@
 | 0 | **Ingestion** — extract messages from source Telegram channel | ✅ Done |
 | 1 | **Anchor detection** — identify messages containing links | ✅ Done |
 | 2 | **Association** — link subsequent opinions/reactions to each anchor | ✅ Done |
-| 3 | **Metadata** — fetch title + description per link | Pending |
+| 3 | **Metadata** — fetch title + description per link (HTML + GitHub/arXiv API) | ✅ Done |
 | 4 | **Chunking & Tagging** — parent-child chunks, overlap, metadata prefix | Pending |
 | 5 | **Embedding** — `mistral-embed` (1024 dim) → pgvector | Pending |
 | 6 | **Bundle clustering** — por decidir (BERTopic como opción) | Pending |
@@ -94,7 +94,11 @@ run_extraction(days_back=0, output_dir="data") → path_to_json
 
 **Goal**: For each unique URL in the anchors, fetch the page title and meta description.
 
-**Approach**: HTTP GET + BeautifulSoup (already in deps). Lightweight — no full content fetch, no JS rendering.
+**Approach**:
+- **Generic HTML**: HTTP GET + BeautifulSoup for most URLs. Lightweight — no JS rendering, just `<title>` + `<meta description>`.
+- **GitHub API**: `https://api.github.com/repos/{owner}/{repo}` → structured metadata (description, topics, stars). No auth needed for light use (60 req/h).
+- **arXiv API**: `http://export.arxiv.org/api/query?id_list={id}` → title, authors, abstract. No rate limits in practice.
+- **Everything else** (PDFs, images, other non-HTML): graceful skip with status `"unsupported"`.
 
 **Concerns**:
 - Rate limits on some domains → add delays / caching
@@ -228,7 +232,6 @@ The 10-20% overlap range is well-documented across the RAG ecosystem. The strong
 
 ## Open decisions
 
-- Phase 3: special-cased metadata extraction for GitHub/arXiv links vs. generic HTML-only parsing with graceful skip — decide before building Phase 3 in full.
 - **Clustering tech**: BERTopic (con HDBSCAN/UMAP) vs. alternativas más ligeras (KMeans, HDBSCAN standalone). Decidir antes de Phase 6.
 - Reranking: revisit only if `mistral-embed` top-K retrieval precision is insufficient; no reranker is currently planned.
 - Discord ingestion: scoped as future work, not yet started.

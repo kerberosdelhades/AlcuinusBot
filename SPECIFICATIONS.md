@@ -16,7 +16,7 @@ Dos canales, separación limpia:
 | **Ingesta** | Leer mensajes del canal fuente | pytopicgram crawler (Telethon) → JSON | ✅ |
 | **Detección de anchors** | Identificar mensajes con enlaces | urlextract | ✅ |
 | **Asociación de opiniones** | Vincular reacciones a su enlace | Three-pass algorithm (window + reply + gap) | ✅ |
-| **Metadata de enlaces** | Título, descripción de cada enlace | HTTP fetch + HTML parse | Pendiente |
+| **Metadata de enlaces** | Título, descripción de cada enlace | HTTP fetch + HTML parse (genérico) + GitHub/arXiv API calls | ✅ |
 | **Chunking & Tagging** | Partir contenido en chunks recuperables con metadata | Parent-child chunks, 15% overlap (baseline) | Pendiente |
 | **Embedding** | Vectorizar chunks para búsqueda semántica | `mistral-embed` (Mistral AI API, 1024 dim) | Pendiente |
 | **Almacenamiento vectorial** | Persistir y consultar vectores | pgvector sobre PostgreSQL | Pendiente |
@@ -41,6 +41,8 @@ Usamos [pytopicgram](https://github.com/ugr-sail/pytopicgram) (Universidad de Gr
 |-------------|------|---------------|
 | **`mistral-embed`** | API externa (Mistral AI) | Embedding multilingual (es/en), 1024 dim, ~8K tokens/ctx. Ya provisionado — sin trabajo extra de integración. |
 | **pgvector** | Extensión PostgreSQL | Almacén vectorial sobre Postgres gestionado. Evita provisioning de Qdrant hasta que el corpus lo justifique. |
+| **GitHub API** | API externa (sin auth para uso ligero) | Metadata estructurada de repositorios (descripción, topics, estrellas). 60 req/h sin auth. |
+| **arXiv API** | API externa (pública) | Metadata de papers (título, autores, abstract). Sin rate limits prácticos. |
 | **BERTopic** | Python lib (clustering) | Opción principal para clustering temático sobre vectores de pgvector. Puede operar con embeddings externos. Alternativas por evaluar (KMeans, HDBSCAN standalone). |
 | **Telethon** | Python lib (Telegram MTProto) | Crawling del canal fuente. Ya integrado via pytopicgram. |
 
@@ -49,6 +51,7 @@ Usamos [pytopicgram](https://github.com/ugr-sail/pytopicgram) (Universidad de Gr
 - **Embedding**: `mistral-embed` es la decisión final. No se evaluarán alternativas salvo que la calidad de retrieval sea insuficiente en testing.
 - **Almacenamiento**: pgvector sobre PostgreSQL existente. Qdrant queda descartado hasta que el tamaño del corpus o necesidades de filtrado lo justifiquen.
 - **Canales**: Dos canales separados (fuente read-only, documentación write-only). Esta decisión es estable.
+- **Metadata de enlaces**: HTTP GET + BeautifulSoup para la mayoría de URLs. GitHub y arXiv se resuelven vía sus APIs respectivas (sin rate limits para uso ligero, devuelven datos estructurados).
 
 ### Flujo del pipeline
 
@@ -57,7 +60,7 @@ Canal fuente (read-only)
     → pytopicgram crawler: Telethon → JSON (252 mensajes)
     → Anchor detection: urlextract → 71 anchors (76 URLs)
     → Association: three-pass → bundles (anchor + reactions + window)
-    → [Pendiente] Metadata: fetch título + descripción de cada URL
+    → Metadata: fetch título + descripción (HTML genérico + GitHub/arXiv API) ✅
     → [Pendiente] Chunking: parent-child chunks, 15% overlap, metadata prefix
     → [Pendiente] Embedding: mistral-embed (1024 dim) → vectores
     → [Pendiente] Storage: pgvector (PostgreSQL)
@@ -80,7 +83,7 @@ Three-pass algorithm para vincular mensajes posteriores a su anchor:
 1. **Ingesta**: pytopicgram crawler lee todo el historial → JSON ✅
 2. **Detección de anchors**: mensajes con enlaces ✅
 3. **Asociación**: ventana de mensajes → bundles ✅
-4. **Metadata**: fetch título + descripción de cada enlace (pendiente)
+4. **Metadata**: fetch título + descripción de cada enlace ✅
 5. **Chunking & Tagging**: parent-child chunks, 15% overlap, metadata prefix (pendiente)
 6. **Embedding**: `mistral-embed` → vectores 1024d (pendiente)
 7. **Storage**: pgvector en PostgreSQL (pendiente)
