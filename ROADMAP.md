@@ -8,8 +8,15 @@
 | 1 | **Anchor detection** — identify messages containing links | ✅ Done |
 | 2 | **Association** — link subsequent opinions/reactions to each anchor | ✅ Done |
 | 3 | **Metadata** — fetch title + description per link | Pending |
-| 4 | **Bundle clustering** — BERTopic over bundles (link + opinions) | Pending |
-| 5 | **Output** — publish summaries to docs channel | Pending |
+| 4 | **Chunking & Tagging** — parent-child chunks, overlap, metadata prefix | Pending |
+| 5 | **Embedding** — `mistral-embed` (1024 dim) → pgvector | Pending |
+| 6 | **Bundle clustering** — por decidir (BERTopic como opción) | Pending |
+| 7 | **Decay classification** — evergreen / semi-stable / ephemeral tagging | Pending |
+| 8 | **Output** — publish summaries to docs channel | Pending |
+| 9 | **Syllabus generation** — living study guide for newcomers | Pending |
+| 10 | **6-month review cycle** — re-audit existing documentation | Pending |
+
+---
 
 ## Phase 0 — Ingestion ✅
 
@@ -68,9 +75,7 @@ run_extraction(days_back=0, output_dir="data") → path_to_json
 **Implementation**: `src/alcuinus/association.py` — three-pass algorithm:
 
 1. **Window assignment** (pass 1): every non-anchor message belongs to the nearest preceding anchor. Window closes at the next anchor.
-
 2. **Reply override** (pass 2): a message whose `reply_to` points directly at an anchor is reassigned to that anchor, regardless of window boundaries. This handles the case where someone explicitly replies to an older link after a newer link has been shared.
-
 3. **Time-gap cleanup** (pass 3): for the last anchor in the data, messages too far away (default: 168h / 7 days) are dropped — unless they're reply-anchored (pass 2 exempts them).
 
 **Output**: `data/bundles.json` — each bundle = `{anchor, reactions[], window{boundary, ...}}`. Anchors with zero reactions are included (empty reactions list).
@@ -100,15 +105,68 @@ run_extraction(days_back=0, output_dir="data") → path_to_json
 
 ---
 
-## Phase 4 — Bundle clustering
+## Phase 4 — Chunking & Tagging
 
-**Goal**: Cluster the bundles (anchor metadata + associated opinions) to discover discussion topics.
+**Goal**: Split extracted content into retrievable chunks with rich metadata.
 
-**Tech**: BERTopic / HDBSCAN with multilingual embeddings (`intfloat/multilingual-e5-large`)
+**Approach**:
+- **Parent-child chunking**: small child chunks for retrieval precision, larger parent chunks sent to the LLM for full context.
+- **15% overlap** between chunks (baseline). The 10-20% range is industry consensus; NVIDIA FinanceBench benchmark found 15% optimal with 1,024-token chunks (see references below).
+- **Metadata prefix** per chunk: channel, date, poster, language, surrounding chat snippet.
+
+**Input**: bundles from Phase 2 + link metadata from Phase 3
+
+**Output**: chunk records with metadata, ready for embedding.
+
+### Chunk overlap — empirical basis
+
+The 10-20% overlap range is well-documented across the RAG ecosystem. The strongest evidence:
+
+- **NVIDIA FinanceBench** (2024): tested 10%, 15%, and 20% overlap with 1,024-token chunks. Result: **15% was optimal**. Below 10% loses boundary context where sentences split across chunks; above 25% adds near-duplicate noise that reduces effective context diversity.
+  → https://developer.nvidia.com/blog/finding-the-best-chunking-strategy-for-accurate-ai-responses/
+
+- **LlamaIndex `SentenceSplitter` defaults**: `chunk_size=1024`, `chunk_overlap=200` (~20%). When a leading framework sets this as default, it reflects common practice.
+  → https://docs.llamaindex.ai/en/stable/api_reference/node_parsers/sentence_splitter/
+
+- **Industry consensus**: multiple sources converge on 10-15% as baseline, 20% as upper bound.
+  → https://leanware.co/insights/langchain-rag-tutorial-build-retrieval-augmented-generation-from-scratch
+  → https://nandigamharikrishna.substack.com/p/rag-chunking-strategies-and-embeddings
+
+**AlcuinusBot baseline**: 15% overlap, adjust in Phase 5/6 testing if retrieval quality requires it.
+
+---
+
+## Phase 5 — Embedding + pgvector
+
+**Goal**: Vectorize all chunks and store them for semantic search.
+
+**Tech**: `mistral-embed` (Mistral AI API)
+- Dimensions: 1024
+- Context window: ~8K tokens per input
+- Multilingual: solid Spanish/English coverage
+- Already provisioned — no new integration/auth work required.
+
+**Approach**:
+- Apply an instruction/task-context prefix per chunk (e.g., "represents a technical link summary for retrieval").
+- Store vectors in **pgvector** on existing/managed PostgreSQL.
+- Keyword/date/channel filters layered on top as needed.
+
+**Output**: pgvector table with chunk embeddings, queryable via dense similarity search.
+
+---
+
+## Phase 6 — Bundle clustering
+
+**Goal**: Cluster bundles (anchor metadata + associated opinions) to discover discussion topics.
+
+**Tech**: Por decidir. Opciones candidatas:
+- **BERTopic** — clustering temático sobre embeddings. Puede operar con vectores externos de pgvector. Requiere HDBSCAN/UMAP como deps.
+- **Alternativas por evaluar** — scikit-learn KMeans/Agglomerative, HDBSCAN standalone, etc.
 
 **Input per bundle**:
 - Anchor link titles + descriptions
 - Associated opinion message texts
+- Embeddings from pgvector (mistral-embed, 1024d)
 
 **Output**:
 - Cluster labels (topics)
@@ -116,9 +174,22 @@ run_extraction(days_back=0, output_dir="data") → path_to_json
 
 **Key decision**: clustering is over *bundles*, not raw messages. This groups by "topics that generated discussion" rather than "mentioned in passing."
 
+**Status**: Decisión de tecnología de clustering abierta. BERTopic es la opción principal pero no bloqueada.
+
 ---
 
-## Phase 5 — Output
+## Phase 7 — Decay classification
+
+**Goal**: Tag every cluster/link/entity with a decay profile.
+
+**Profiles**:
+- **Evergreen**: foundational papers, architectural patterns, evaluation methodologies — permanent, surfaced to newcomers.
+- **Semi-stable**: benchmark results, scaling laws, prompting techniques — 12-24 month retention.
+- **Ephemeral**: model-of-the-week news, transient tool announcements — short retention, flagged for review/removal.
+
+---
+
+## Phase 8 — Output
 
 **Goal**: Generate and post a structured summary to the docs channel.
 
@@ -131,6 +202,40 @@ run_extraction(days_back=0, output_dir="data") → path_to_json
 **Tech**: Pyrogram or raw Bot API. The bot writes to the docs channel, never to the source channel.
 
 **Config**: `docs_channel` from `config/.env`.
+
+---
+
+## Phase 9 — Syllabus generation
+
+**Goal**: Produce a living syllabus/study-guide that gives newcomers a map, distinct from the raw archive.
+
+**Input**: curated clusters with decay profiles.
+
+**Output**: structured document (Markdown or formatted messages) organized by topic, with evergreen content highlighted.
+
+---
+
+## Phase 10 — 6-month review cycle
+
+**Goal**: Re-audit existing documentation every 6 months.
+
+**Approach**:
+- Re-evaluate decay profiles (content may shift from semi-stable to ephemeral).
+- Flag stale links for removal or update.
+- Regenerate syllabus sections as needed.
+
+---
+
+## Open decisions
+
+- Phase 3: special-cased metadata extraction for GitHub/arXiv links vs. generic HTML-only parsing with graceful skip — decide before building Phase 3 in full.
+- **Clustering tech**: BERTopic (con HDBSCAN/UMAP) vs. alternativas más ligeras (KMeans, HDBSCAN standalone). Decidir antes de Phase 6.
+- Reranking: revisit only if `mistral-embed` top-K retrieval precision is insufficient; no reranker is currently planned.
+- Discord ingestion: scoped as future work, not yet started.
+
+## Explicitly reverted / parked decisions
+
+- vx-summary-style link processing bot — parked, out of scope.
 
 ---
 
@@ -150,9 +255,10 @@ Per SPECIFICATIONS.md §"Estrategias de análisis":
 
 | Priority | Task | Effort | Blocks |
 |----------|------|--------|--------|
-| P0 | Phase 1 — Anchor detection | Small | Phase 2 |
-| P1 | Fix reactions extraction (verify Telethon flags) | Small | Phase 2 quality |
-| P2 | Phase 2 — Association (basic window) | Medium | Phase 4 |
-| P3 | Phase 3 — Link metadata | Small | Phase 4 |
-| P4 | Phase 4 — Bundle clustering | Medium | Phase 5 |
-| P5 | Phase 5 — Output | Medium | — |
+| P0 | Phase 3 — Link metadata | Small | Phase 4 |
+| P1 | Fix reactions extraction (verify Telethon flags) | Small | Phase 6 quality |
+| P2 | Phase 4 — Chunking & tagging | Medium | Phase 5 |
+| P3 | Phase 5 — Embedding via mistral-embed + pgvector | Medium | Phase 6 |
+| P4 | Phase 6 — Bundle clustering | Medium | Phase 7 |
+| P5 | Phase 7 — Decay classification | Small | Phase 8 |
+| P6 | Phase 8 — Output | Medium | — |

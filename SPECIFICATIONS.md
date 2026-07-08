@@ -17,7 +17,12 @@ Dos canales, separación limpia:
 | **Detección de anchors** | Identificar mensajes con enlaces | urlextract | ✅ |
 | **Asociación de opiniones** | Vincular reacciones a su enlace | Three-pass algorithm (window + reply + gap) | ✅ |
 | **Metadata de enlaces** | Título, descripción de cada enlace | HTTP fetch + HTML parse | Pendiente |
-| **Clustering de bundles** | Agrupar enlaces+opiniones por tema | BERTopic (sobre bundles) | Pendiente |
+| **Chunking & Tagging** | Partir contenido en chunks recuperables con metadata | Parent-child chunks, 15% overlap (baseline) | Pendiente |
+| **Embedding** | Vectorizar chunks para búsqueda semántica | `mistral-embed` (Mistral AI API, 1024 dim) | Pendiente |
+| **Almacenamiento vectorial** | Persistir y consultar vectores | pgvector sobre PostgreSQL | Pendiente |
+| **Clustering de bundles** | Agrupar enlaces+opiniones por tema | Por decidir (BERTopic como opción principal) | Pendiente |
+| **Curación (decay profiles)** | Clasificar contenido por vida útil | Evergreen / semi-stable / ephemeral | Pendiente |
+| **Guía de estudio** | Mapa vivo de contenidos para newcomers, organizado por cluster temático y curado por decay profile. No es el digest (Salida), sino la tabla de contenidos persistente. | Markdown o mensajes formateados en canal de doc | Pendiente |
 | **Salida** | Publicar resúmenes al canal de doc | Pyrogram / Bot API | Pendiente |
 
 ### Dependencia: pytopicgram
@@ -30,6 +35,21 @@ Usamos [pytopicgram](https://github.com/ugr-sail/pytopicgram) (Universidad de Gr
 - **Patches locales**: `crawler.py` tiene un fix para que `channel_url` use la entidad resuelta cuando `by_url=False`
 - **PeerChannel**: los IDs numéricos de canal se pasan como `PeerChannel` para que Telethon use `GetChannelsRequest` en vez de `GetChatsRequest`
 
+### Dependencias técnicas clave
+
+| Dependencia | Tipo | Justificación |
+|-------------|------|---------------|
+| **`mistral-embed`** | API externa (Mistral AI) | Embedding multilingual (es/en), 1024 dim, ~8K tokens/ctx. Ya provisionado — sin trabajo extra de integración. |
+| **pgvector** | Extensión PostgreSQL | Almacén vectorial sobre Postgres gestionado. Evita provisioning de Qdrant hasta que el corpus lo justifique. |
+| **BERTopic** | Python lib (clustering) | Opción principal para clustering temático sobre vectores de pgvector. Puede operar con embeddings externos. Alternativas por evaluar (KMeans, HDBSCAN standalone). |
+| **Telethon** | Python lib (Telegram MTProto) | Crawling del canal fuente. Ya integrado via pytopicgram. |
+
+### Decisiones bloqueadas
+
+- **Embedding**: `mistral-embed` es la decisión final. No se evaluarán alternativas salvo que la calidad de retrieval sea insuficiente en testing.
+- **Almacenamiento**: pgvector sobre PostgreSQL existente. Qdrant queda descartado hasta que el tamaño del corpus o necesidades de filtrado lo justifiquen.
+- **Canales**: Dos canales separados (fuente read-only, documentación write-only). Esta decisión es estable.
+
 ### Flujo del pipeline
 
 ```
@@ -38,7 +58,12 @@ Canal fuente (read-only)
     → Anchor detection: urlextract → 71 anchors (76 URLs)
     → Association: three-pass → bundles (anchor + reactions + window)
     → [Pendiente] Metadata: fetch título + descripción de cada URL
-    → [Pendiente] Clustering: BERTopic sobre bundles
+    → [Pendiente] Chunking: parent-child chunks, 15% overlap, metadata prefix
+    → [Pendiente] Embedding: mistral-embed (1024 dim) → vectores
+    → [Pendiente] Storage: pgvector (PostgreSQL)
+    → [Pendiente] Clustering: por decidir (BERTopic como opción)
+    → [Pendiente] Curación: decay profiles (evergreen/semi-stable/ephemeral)
+    → [Pendiente] Guía de estudio: mapa vivo de contenidos por cluster
     → [Pendiente] Salida: formatear resumen → canal de documentación
 ```
 
@@ -56,8 +81,13 @@ Three-pass algorithm para vincular mensajes posteriores a su anchor:
 2. **Detección de anchors**: mensajes con enlaces ✅
 3. **Asociación**: ventana de mensajes → bundles ✅
 4. **Metadata**: fetch título + descripción de cada enlace (pendiente)
-5. **Clustering de bundles**: BERTopic sobre bundles (pendiente)
-6. **Salida**: resumen en canal de documentación (pendiente)
+5. **Chunking & Tagging**: parent-child chunks, 15% overlap, metadata prefix (pendiente)
+6. **Embedding**: `mistral-embed` → vectores 1024d (pendiente)
+7. **Storage**: pgvector en PostgreSQL (pendiente)
+8. **Clustering**: por decidir (BERTopic como opción) (pendiente)
+9. **Curación**: clasificación evergreen/semi-stable/ephemeral (pendiente)
+10. **Guía de estudio**: mapa vivo de contenidos, organizado por cluster y decay profile. La tabla de contenidos persistente del canal — distinta del digest periódico (pendiente)
+11. **Salida**: resumen en canal de documentación (pendiente)
 
 ## Datos extraídos
 
@@ -77,3 +107,5 @@ Three-pass algorithm para vincular mensajes posteriores a su anchor:
 ## Referencias
 
 - **pytopicgram**: Gómez-Romero et al. *pytopicgram: A library for data extraction and topic modeling from Telegram channels*. SoftwareX 30, 102141 (May 2025). DOI:10.1016/j.softx.2025.102141
+- **Chunk overlap (15% baseline)**: NVIDIA, *Finding the Best Chunking Strategy for Accurate AI Responses*. FinanceBench benchmark: 15% overlap óptimo con chunks de 1,024 tokens (rango probado: 10%, 15%, 20%). https://developer.nvidia.com/blog/finding-the-best-chunking-strategy-for-accurate-ai-responses/
+- **LlamaIndex SentenceSplitter defaults**: `chunk_size=1024`, `chunk_overlap=200` (~20%). https://docs.llamaindex.ai/en/stable/api_reference/node_parsers/sentence_splitter/
