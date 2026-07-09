@@ -18,8 +18,8 @@ Dos canales, separación limpia:
 | **Asociación de opiniones** | Vincular reacciones a su enlace | Three-pass algorithm (window + reply + gap) | ✅ |
 | **Metadata de enlaces** | Título, descripción de cada enlace | HTTP fetch + HTML parse (genérico) + GitHub/arXiv API calls | ✅ |
 | **Chunking & Tagging** | Partir contenido en chunks recuperables con metadata | Parent-child chunks, 15% overlap (baseline) | Pendiente |
-| **Embedding** | Vectorizar chunks para búsqueda semántica | `mistral-embed` (Mistral AI API, 1024 dim) | Pendiente |
-| **Almacenamiento vectorial** | Persistir y consultar vectores | Zvec (embebido, in-process, Apache 2.0) | Pendiente |
+| **Embedding** | Vectorizar chunks para búsqueda semántica | `mistral-embed` (Mistral AI API, 1024 dim) | ✅ |
+| **Almacenamiento vectorial** | Persistir y consultar vectores | Zvec (embebido, in-process, Apache 2.0) | ✅ |
 | **Clustering de bundles** | Agrupar enlaces+opiniones por tema | Por decidir (BERTopic como opción principal) | Pendiente |
 | **Curación (decay profiles)** | Clasificar contenido por vida útil | Evergreen / semi-stable / ephemeral | Pendiente |
 | **Guía de estudio** | Mapa vivo de contenidos para newcomers, organizado por cluster temático y curado por decay profile. No es el digest (Salida), sino la tabla de contenidos persistente. | Markdown o mensajes formateados en canal de doc | Pendiente |
@@ -62,8 +62,8 @@ Canal fuente (read-only)
     → Association: three-pass → bundles (anchor + reactions + window)
     → Metadata: fetch título + descripción (HTML genérico + GitHub/arXiv API) ✅
     → [Pendiente] Chunking: parent-child chunks, 15% overlap, metadata prefix
-    → [Pendiente] Embedding: mistral-embed (1024 dim) → vectores
-    → [Pendiente] Storage: Zvec (in-process, reranking integrado)
+    → Embedding: mistral-embed (1024 dim) → vectores ✅
+    → Storage: Zvec (in-process, reranking integrado) ✅
     → [Pendiente] Clustering: por decidir (BERTopic como opción)
     → [Pendiente] Curación: decay profiles (evergreen/semi-stable/ephemeral)
     → [Pendiente] Guía de estudio: mapa vivo de contenidos por cluster
@@ -85,8 +85,8 @@ Three-pass algorithm para vincular mensajes posteriores a su anchor:
 3. **Asociación**: ventana de mensajes → bundles ✅
 4. **Metadata**: fetch título + descripción de cada enlace ✅
 5. **Chunking & Tagging**: parent-child chunks, 15% overlap, metadata prefix (pendiente)
-6. **Embedding**: `mistral-embed` → vectores 1024d (pendiente)
-7. **Storage**: Zvec (in-process, reranking integrado) (pendiente)
+6. **Embedding**: `mistral-embed` → vectores 1024d ✅
+7. **Storage**: Zvec (in-process, reranking integrado) ✅
 8. **Clustering**: por decidir (BERTopic como opción) (pendiente)
 9. **Curación**: clasificación evergreen/semi-stable/ephemeral (pendiente)
 10. **Guía de estudio**: mapa vivo de contenidos, organizado por cluster y decay profile. La tabla de contenidos persistente del canal — distinta del digest periódico (pendiente)

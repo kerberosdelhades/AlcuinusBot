@@ -9,7 +9,7 @@
 | 2 | **Association** — link subsequent opinions/reactions to each anchor | ✅ Done |
 | 3 | **Metadata** — fetch title + description per link (HTML + GitHub/arXiv API) | ✅ Done |
 | 4 | **Chunking & Tagging** — parent-child chunks, overlap, metadata prefix | Pending |
-| 5 | **Embedding** — `mistral-embed` (1024 dim) → Zvec | Pending |
+| 5 | **Embedding** — `mistral-embed` (1024 dim) → Zvec | ✅ Done |
 | 6 | **Bundle clustering** — por decidir (BERTopic como opción) | Pending |
 | 7 | **Decay classification** — evergreen / semi-stable / ephemeral tagging | Pending |
 | 8 | **Output** — publish summaries to docs channel | Pending |
