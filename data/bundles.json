@@ -1,0 +1,2907 @@
+[
+  {
+    "anchor": {
+      "msg_id": 25,
+      "date": "2022-09-15 21:47:52+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "Noel Torres",
+      "urls": [
+        "https://youtu.be/ELqsMCCNlvA"
+      ],
+      "text_preview": "https://youtu.be/ELqsMCCNlvA",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 27,
+        "date": "2022-09-20 05:39:48+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Alguna distro ligera y actual para este aspire? gracias por adelantado",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 28,
+        "date": "2022-09-20 05:39:48+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Bunsenlabs",
+        "reply_to_msg_id": 27,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 29,
+        "date": "2022-09-25 03:34:00+00:00",
+        "sender_id": 46641672,
+        "text_preview": "81.174.146.201",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 30,
+        "date": "2022-09-25 03:34:00+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Acorn",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 25,
+      "end_msg_id": 31,
+      "boundary": "next_anchor",
+      "num_messages": 4
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 31,
+      "date": "2022-09-25 09:26:57+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://youtu.be/ZXkEClYNQNY"
+      ],
+      "text_preview": "https://youtu.be/ZXkEClYNQNY",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 31,
+      "end_msg_id": 32,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 32,
+      "date": "2022-10-20 18:02:41+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "jcigala",
+      "urls": [
+        "https://www.marktechpost.com/2022/10/13/meet-consensus-a-search-engine-tool-that-uses-artificial-intelligence-ai-to-instantly-extract-and-aggregate-findings-directly-from-scientific-research/"
+      ],
+      "text_preview": "aquí os va, para científicos d diversa índole y otra gente d mal vivir 🤭 https://www.marktechpost.com/2022/10/13/meet-consensus-a-search-engine-tool-that-uses-artificial-intelligence-ai-to-instantly-extract-and-aggregate-findings-directly-from-scientific-research/ también para el cuñao ilustrao 😈",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 32,
+      "end_msg_id": 33,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 33,
+      "date": "2022-11-05 21:25:51+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://twitter.com/lfajardo/status/1465301827935735811",
+        "https://t.co/YcKDrdIAWK?amp=1",
+        "https://encanarias.info/posts/46256",
+        "https://docs.educar.encanarias.info/s/3fYg37RQD5TGjtS"
+      ],
+      "text_preview": "A todo esto... Gobierno de Canarias también se apunta a la movida. Les remito info del resumen que he hecho del Congreso de Educación en Canarias: el Gobierno dejará Google:\n\nTwitter: https://twitter.com/lfajardo/status/1465301827935735811\n\nMastodon: https://t.co/YcKDrdIAWK?amp=1\n\nDiaspora: https://",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 34,
+        "date": "2022-11-11 11:42:03+00:00",
+        "sender_id": 46641672,
+        "text_preview": "PVPYnZxiyEip8vc",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 33,
+      "end_msg_id": 36,
+      "boundary": "next_anchor",
+      "num_messages": 1
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 36,
+      "date": "2022-11-17 14:06:12+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://nan-archive.vercel.app/how-arrays-work"
+      ],
+      "text_preview": "#programming \n\nHow do arrays work?\nhttps://nan-archive.vercel.app/how-arrays-work",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 36,
+      "end_msg_id": 37,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 37,
+      "date": "2022-11-22 18:05:56+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://youtu.be/Qcx0OeRIk_M"
+      ],
+      "text_preview": "https://youtu.be/Qcx0OeRIk_M",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 39,
+        "date": "2022-12-06 12:11:11+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Commodore 64 interfacing blue book\nV.J. Georgiou \nMicrosignal Press, 1984",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 40,
+        "date": "2022-12-06 12:11:11+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Commodore 64 interfacing blue book\nV.J. Georgiou, 1984",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 41,
+        "date": "2022-12-06 12:11:23+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Complete Commodore 64 ROM Disassembly\nPeter Gerrard, 1984",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 43,
+        "date": "2022-12-06 12:11:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Ready\nA Commodore 64 retrospective\nRoberto Dillon\nSpringer, 2015",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 44,
+        "date": "2022-12-06 12:11:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Ready\nRoberto Dillon, 2015",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 45,
+        "date": "2022-12-06 14:04:17+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Lego duplo. Lego es el mejor juguete en mi opinión. \nEl robot superdoc de clementoni es barato y fácil de usar. No compres la oruga de fisher price si no quieres volverte loco. \nPero para dos-tres años lo ideal son juegos manipulativos.",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 46,
+        "date": "2022-12-06 14:04:17+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Si quieres algo más específico pregúntame. Tengo un centro STEM y  trabajo con niños de 4 a 16 años",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 47,
+        "date": "2022-12-06 14:04:40+00:00",
+        "sender_id": 46641672,
+        "text_preview": "+1 a los duplo y juguetes manipulativos, puzzles...",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 48,
+        "date": "2022-12-06 14:04:40+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Me pedían info de juguetes tecnológicos. Mi primera opinión ha sido q no se yo para tan peques 😊😂😂😂",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 49,
+        "date": "2022-12-06 14:04:40+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Pues si. Con los pequeños lo hacemos todo desenchufado...",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 50,
+        "date": "2022-12-06 14:04:40+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Mi robot favorito es el bootley. Lo pueden usar pequeños, tiene un mando a distancia con cuatro botones, y está pensado para hacer circuitos de dominó, conos... pero mejor en un par de años",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 37,
+      "end_msg_id": 52,
+      "boundary": "next_anchor",
+      "num_messages": 11
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 52,
+      "date": "2023-01-03 22:55:50+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://youtube.com/shorts/QNQQGO2WJbM?feature=share"
+      ],
+      "text_preview": "https://youtube.com/shorts/QNQQGO2WJbM?feature=share",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 52,
+      "end_msg_id": 53,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 53,
+      "date": "2023-01-19 21:54:35+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://towardsdatascience.com/5-python-tricks-that-distinguish-senior-developers-from-juniors-826d57ab3940"
+      ],
+      "text_preview": "5 Python Tricks That Distinguish Senior Developers From Juniors | by Tomer Gabay | Jan, 2023 | Towards Data Science\nhttps://towardsdatascience.com/5-python-tricks-that-distinguish-senior-developers-from-juniors-826d57ab3940",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 53,
+      "end_msg_id": 55,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 55,
+      "date": "2023-01-26 19:42:03+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://youtu.be/q3a_Gc-T6eI"
+      ],
+      "text_preview": "https://youtu.be/q3a_Gc-T6eI",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 56,
+        "date": "2023-01-27 17:09:34+00:00",
+        "sender_id": 46641672,
+        "text_preview": "al final ahorro tiempo si lo hago en Python...",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 55,
+      "end_msg_id": 57,
+      "boundary": "next_anchor",
+      "num_messages": 1
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 57,
+      "date": "2023-03-11 20:30:26+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://github.com/nextcloud/android"
+      ],
+      "text_preview": "Siento el lag... yo uso Nextcloud. La app para android te sincroniza con tu servidor NC como le digas (borrando de tu móvil, moviéndolas a otra carpeta, o dejándola igual; sincro sólo wifi, sólo enchufadoe o cualquier combinación). https://github.com/nextcloud/android También probé otra hace mucho e",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 57,
+      "end_msg_id": 58,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 58,
+      "date": "2023-03-15 00:13:22+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "http://norvig.com/chomsky.html"
+      ],
+      "text_preview": "http://norvig.com/chomsky.html",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 59,
+        "date": "2023-03-19 16:40:37+00:00",
+        "sender_id": 46641672,
+        "text_preview": "#chatGPT\n#api\n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",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 58,
+      "end_msg_id": 60,
+      "boundary": "next_anchor",
+      "num_messages": 1
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 60,
+      "date": "2023-03-24 20:19:08+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.bing.com/images/create/a-image-of-an-ancient-roman-in-a-gladiator-suit-at/641e05405df64c6d97163a22fd83dd67?id=vnEEB23LauC3e4pVOj1ihg%3d%3d&view=detailv2&idpp=genimg&darkschemeovr=1&FORM=GCRIDP&mode=overlay"
+      ],
+      "text_preview": "https://www.bing.com/images/create/a-image-of-an-ancient-roman-in-a-gladiator-suit-at/641e05405df64c6d97163a22fd83dd67?id=vnEEB23LauC3e4pVOj1ihg%3d%3d&view=detailv2&idpp=genimg&darkschemeovr=1&FORM=GCRIDP&mode=overlay",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 60,
+      "end_msg_id": 61,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 61,
+      "date": "2023-03-26 18:03:01+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://github.com/dhylands/python_lcd/blob/master/lcd/lcd_api.py",
+        "https://github.com/dhylands/python_lcd/blob/master/lcd/esp32_gpio_lcd.py"
+      ],
+      "text_preview": "Primero, descarga las siguientes bibliotecas de Micropython:\n\n    lcd_api.py: https://github.com/dhylands/python_lcd/blob/master/lcd/lcd_api.py\n    esp32_gpio_lcd.py: https://github.com/dhylands/python_lcd/blob/master/lcd/esp32_gpio_lcd.py\n\nTransfiere ambos archivos al ESP32 utilizando pyserial, o a",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 61,
+      "end_msg_id": 62,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 62,
+      "date": "2023-03-26 18:05:59+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://github.com/dhylands/python_lcd/blob/master/lcd/lcd_api.py",
+        "https://github.com/dhylands/python_lcd/blob/master/lcd/esp32_gpio_lcd.py"
+      ],
+      "text_preview": "Primero, descarga las siguientes bibliotecas de Micropython:\n\n    lcd_api.py: https://github.com/dhylands/python_lcd/blob/master/lcd/lcd_api.py\n    esp32_gpio_lcd.py: https://github.com/dhylands/python_lcd/blob/master/lcd/esp32_gpio_lcd.py\n\nTransfiere ambos archivos al ESP32 utilizando pyserial, o a",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 63,
+        "date": "2023-03-30 14:07:50+00:00",
+        "sender_id": 46641672,
+        "text_preview": "“Found this useful”\n\nCould you, from now on in this entire conversation, always ask at least one clarifying question for anything I ask, in order to give a more efficient and relevant answer?",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 66,
+        "date": "2023-04-10 14:24:59+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Best AI Tools",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 62,
+      "end_msg_id": 67,
+      "boundary": "next_anchor",
+      "num_messages": 2
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 67,
+      "date": "2023-04-10 21:18:18+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.jonstokes.com/p/heres-what-it-would-take-to-slow"
+      ],
+      "text_preview": "https://www.jonstokes.com/p/heres-what-it-would-take-to-slow",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 68,
+        "date": "2023-04-13 14:32:11+00:00",
+        "sender_id": 46641672,
+        "text_preview": "a \"Fastmode\" prompt to remove disclaimer/confirmation hurdles and allow gpt to just make decisions when options are detected, as well as remaining concise.\n\nFastmode = Identify user's goal and optimize prompts to minimize interactions without\nsacrificing eftectiveness. When direction is unclear, det",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 69,
+        "date": "2023-04-16 07:30:10+00:00",
+        "sender_id": 46641672,
+        "text_preview": "“List of keywords GPT said it would respond in particular or specific ways to.\n\nExplanation:\nExplain, clarify, define, interpret, elucidate, expound, unravel, decipher, translate, detail, reveal, present, disclose, convey, communicate, illustrate, show, highlight, emphasize, illuminate, specify, she",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 67,
+      "end_msg_id": 70,
+      "boundary": "next_anchor",
+      "num_messages": 2
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 70,
+      "date": "2023-04-16 08:41:42+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://github.com/kreitek/CarontePass-Kreitek"
+      ],
+      "text_preview": "https://github.com/kreitek/CarontePass-Kreitek",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 71,
+        "date": "2023-04-17 20:59:54+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Chat-GPT Cheat Sheet V2",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 72,
+        "date": "2023-04-17 21:45:51+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Chatgpt Cheat Sheet",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 70,
+      "end_msg_id": 75,
+      "boundary": "next_anchor",
+      "num_messages": 2
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 75,
+      "date": "2023-04-23 15:55:01+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://eng.umd.edu/news/story/revolutionizing-the-test"
+      ],
+      "text_preview": "https://eng.umd.edu/news/story/revolutionizing-the-test",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 76,
+        "date": "2023-04-23 15:55:01+00:00",
+        "sender_id": 46641672,
+        "text_preview": "interesante... no evita que la gente \"se copie\" (o más bien, que tengan \"ayuda mercenaria\") pero es un paso en la buena dirección",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 77,
+        "date": "2023-04-23 15:55:01+00:00",
+        "sender_id": 46641672,
+        "text_preview": "nah... si no lo he entendido mal es un sistema de plantillas que permite generar automáticamente un examen diferente para cada alumno...",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 78,
+        "date": "2023-04-23 15:55:01+00:00",
+        "sender_id": 46641672,
+        "text_preview": "pero seguro que tiene más cosas... habría que probarlo...",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 79,
+        "date": "2023-04-23 15:55:01+00:00",
+        "sender_id": 46641672,
+        "text_preview": "lo que viene a decir es que simplifica mucho el curro del profe para preparar exámenes, y eso permite que los alumnos hagan muchos más exámenes de la misma materia a lo largo del curso, un poco \"a demanda\", y así aprenden mejor",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 80,
+        "date": "2023-04-23 15:55:01+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Si hace lo que moodle no resuelve nada porque moodl permite cuestionarios con preguntas random. Pero claro, las preguntas te lds tienes que currar.\n\nLa verdad es que no entiendo bien lo que hace eso",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 75,
+      "end_msg_id": 81,
+      "boundary": "next_anchor",
+      "num_messages": 5
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 81,
+      "date": "2023-04-23 15:55:01+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://prairielearn.readthedocs.io/en/latest/getStarted/"
+      ],
+      "text_preview": "@EZanardi https://prairielearn.readthedocs.io/en/latest/getStarted/",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 82,
+        "date": "2023-04-28 13:35:47+00:00",
+        "sender_id": 46641672,
+        "text_preview": "One of the easiest and most effective ways to use ChatGPT",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 83,
+        "date": "2023-05-01 09:39:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Prompts Cheat Sheet",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 84,
+        "date": "2023-05-01 09:45:30+00:00",
+        "sender_id": 46641672,
+        "text_preview": "One way of adjusting ChatGPT's personality\n\nIn order to satisfy a larger variety of users, before each interaction with users you are sent their preferences for your behaviour as a list of words with a value next to them. This allows people to tweak how you respond to their personal preferences. 0 i",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 85,
+        "date": "2023-05-02 06:26:39+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Stanford Researchers Confirm ChatGPT’s Left-Leaning Bias, Find it to be Caused by RLHF Human-Overrides, Reveals Bias to be Far More Extreme than Admitted, e.g. 99% Approval Rating for Joe Biden.\n\n“How aligned is the default LM opinion distribution with the general US population (or a demographic gro",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 86,
+        "date": "2023-05-02 06:35:00+00:00",
+        "sender_id": 46641672,
+        "text_preview": "GPT-4 Political Compass Results: Bias Worse than Ever\n\n🔸 GPT-4 now tries to hide its bias, apparently able to recognize political compass tests, and then makes an attempt to appear neutral by giving multiple answers, one for each side.\n\n🔸 But, force GPT-4 to give just one answer, and suddenly GPT-4 ",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 81,
+      "end_msg_id": 89,
+      "boundary": "next_anchor",
+      "num_messages": 5
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 89,
+      "date": "2023-05-09 02:28:43+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://youtu.be/C_78DM8fG6E"
+      ],
+      "text_preview": "https://youtu.be/C_78DM8fG6E",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 89,
+      "end_msg_id": 90,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 90,
+      "date": "2023-05-09 02:28:43+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://youtu.be/ipRvjS7q1DI"
+      ],
+      "text_preview": "https://youtu.be/ipRvjS7q1DI",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 90,
+      "end_msg_id": 91,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 91,
+      "date": "2023-05-09 02:28:43+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://youtu.be/qbIk7-JPB2c"
+      ],
+      "text_preview": "https://youtu.be/qbIk7-JPB2c",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 92,
+        "date": "2023-05-09 18:44:31+00:00",
+        "sender_id": 46641672,
+        "text_preview": "20 Ways to Use ChatGPT in Your Classroom",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 93,
+        "date": "2023-05-12 21:04:43+00:00",
+        "sender_id": 46641672,
+        "text_preview": "CHATGPT CHEAT SHEET",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 94,
+        "date": "2023-05-19 06:21:21+00:00",
+        "sender_id": 46641672,
+        "text_preview": "THE FASTEST THINGS ON EARTH",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 95,
+        "date": "2023-05-19 06:28:06+00:00",
+        "sender_id": 46641672,
+        "text_preview": "CHATGPT CHEAT SHEET",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 96,
+        "date": "2023-05-19 06:28:41+00:00",
+        "sender_id": 46641672,
+        "text_preview": "20 Ways to Use ChatGPT in Your Classroom",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 91,
+      "end_msg_id": 97,
+      "boundary": "next_anchor",
+      "num_messages": 5
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 97,
+      "date": "2023-05-29 11:21:09+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.reddit.com/r/ChatGPTPro/comments/123nglg/in_anticipation_of_system_messages_coming_to/"
+      ],
+      "text_preview": "https://www.reddit.com/r/ChatGPTPro/comments/123nglg/in_anticipation_of_system_messages_coming_to/",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 98,
+        "date": "2023-06-06 13:47:31+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Cracking the Code: How to Nail the Perfect Prompt for ChatGPT",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 99,
+        "date": "2023-06-08 06:34:38+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Collection of papers and resources on Reasoning in Large Language Models (LLMs)\n\nGithub Link",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 97,
+      "end_msg_id": 102,
+      "boundary": "next_anchor",
+      "num_messages": 2
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 102,
+      "date": "2023-06-20 20:02:04+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://es.wikihow.com/agregar-usuarios-desde-el-CMD"
+      ],
+      "text_preview": "https://es.wikihow.com/agregar-usuarios-desde-el-CMD",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 102,
+      "end_msg_id": 104,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 104,
+      "date": "2023-08-09 00:06:56+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "Roman Vena Vašíček",
+      "urls": [
+        "https://www.microbattery.com/battery-charging-guide"
+      ],
+      "text_preview": "https://www.microbattery.com/battery-charging-guide",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 104,
+      "end_msg_id": 105,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 105,
+      "date": "2023-08-09 00:06:56+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "Roman Vena Vašíček",
+      "urls": [
+        "https://gogreenbatteries.co.uk/guide-to-rechargeble-battery-care/"
+      ],
+      "text_preview": "https://gogreenbatteries.co.uk/guide-to-rechargeble-battery-care/",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 105,
+      "end_msg_id": 106,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 106,
+      "date": "2023-08-09 00:06:56+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "Roman Vena Vašíček",
+      "urls": [
+        "https://www.chargingchargers.com/tutorials/charging.php"
+      ],
+      "text_preview": "https://www.chargingchargers.com/tutorials/charging.php",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 107,
+        "date": "2023-08-11 20:08:47+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Eso vale para Windows 10? Mi equipo es del 2017 y no actualiza (por suerte) a Windows 11",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 108,
+        "date": "2023-08-11 20:08:47+00:00",
+        "sender_id": 46641672,
+        "text_preview": "El OpenShell y el NewOld Explorer sí. El ExplorerPatchr no lo necesitas",
+        "reply_to_msg_id": 107,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 106,
+      "end_msg_id": 109,
+      "boundary": "next_anchor",
+      "num_messages": 2
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 109,
+      "date": "2023-08-11 20:08:47+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://github.com/Open-Shell/Open-Shell-Menu"
+      ],
+      "text_preview": "https://github.com/Open-Shell/Open-Shell-Menu",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 109,
+      "end_msg_id": 110,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 110,
+      "date": "2023-08-11 20:08:47+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://msfn.org/board/topic/170375-oldnewexplorer-119/"
+      ],
+      "text_preview": "https://msfn.org/board/topic/170375-oldnewexplorer-119/",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 110,
+      "end_msg_id": 111,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 111,
+      "date": "2023-08-11 20:08:47+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://github.com/valinet/ExplorerPatcher"
+      ],
+      "text_preview": "https://github.com/valinet/ExplorerPatcher",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 112,
+        "date": "2023-08-11 20:08:47+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Ese es el trío maravillas. \n+ Boton de Inicio como antes del panel de inicio ese inútil\n+ Menú de \"Todos los Programas\" con submenús desplegables.\n+ Panel de detalles en la parte baja del explorador, lo que permite abrir a la vez el panel de vista previa.\n+ ventanas de copiar, mover y reemplazar con",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 111,
+      "end_msg_id": 113,
+      "boundary": "next_anchor",
+      "num_messages": 1
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 113,
+      "date": "2023-08-25 14:13:20+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://github.com/sincorchetes/nixos-settings"
+      ],
+      "text_preview": "https://github.com/sincorchetes/nixos-settings",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 114,
+        "date": "2023-09-23 18:02:43+00:00",
+        "sender_id": 46641672,
+        "text_preview": "#chatGPT\n#prompt",
+        "reply_to_msg_id": 69,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 201,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "telethon es genial",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 202,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "me permite meter cualquier lógica q el cliente normal no permita",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 203,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "y hasta hacer agéntitos automáticos",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 204,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "y sirve tanto para tdlib como para bots...",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 205,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "ah!, y otra recomendación",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 206,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "n8n",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 207,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "eso se lo conectas a Telegram y hacer maravillas",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 208,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Miraré si hay en local",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 209,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "le han enchufado un nodo de agentica q es la polla",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 210,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Tiene que ver con el Telethon de antes?",
+        "reply_to_msg_id": 206,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 211,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "directamente no",
+        "reply_to_msg_id": 210,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 212,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "el n8n es un automatizador.. que le han puesto cositas de IA ahora que te cagas",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 213,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "es software libre, bastante libre",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 214,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "y MUY potente",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 215,
+        "date": "2025-04-15 16:30:55+00:00",
+        "sender_id": 46641672,
+        "text_preview": "y puedes compartir plantillas en un puto JSON",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 216,
+        "date": "2025-05-08 11:25:43+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Show HN: Plexe – ML Models from a Prompt\nArticle, Comments",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 218,
+        "date": "2025-05-28 22:36:26+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Pseudocódigo",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 220,
+        "date": "2025-05-28 22:37:01+00:00",
+        "sender_id": 46641672,
+        "text_preview": "ABC/Basic",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 222,
+        "date": "2025-05-28 22:37:19+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Python",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 113,
+      "end_msg_id": 224,
+      "boundary": "next_anchor",
+      "num_messages": 20
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 224,
+      "date": "2025-06-05 22:33:43+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://hackaday.com/2025/05/26/a-risc-v-operating-system-instruction-manual/"
+      ],
+      "text_preview": "https://hackaday.com/2025/05/26/a-risc-v-operating-system-instruction-manual/",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 225,
+        "date": "2025-06-06 15:47:43+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Alguien le ha metido mano a esto? La app original no funciona y quería modificarlo",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 226,
+        "date": "2025-06-06 15:47:43+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Que es, abandonware?",
+        "reply_to_msg_id": 225,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 227,
+        "date": "2025-06-06 15:47:43+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Yo tengo experiencia modificando apps. Suele pasar por usar apktool para desensamblar y estudiar, volver a compilar en modo debug, para poder ver el logcat y luego ya, decidir si parchear la app o hacer otra cosa nueva con el protocolo reverseado",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 228,
+        "date": "2025-06-06 15:47:43+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Es de 2018 +-, lo estamos mirando en el taller de robótica de los recreos. La app solo está ya para iPhone y no funciona",
+        "reply_to_msg_id": 226,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 229,
+        "date": "2025-06-06 15:47:43+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Quería abrirlo para ver qué tiene dentro y si tiene JTAG o algo",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 230,
+        "date": "2025-06-06 15:47:43+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Será BLE con GATT, posiblmente",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 231,
+        "date": "2025-06-06 15:47:43+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Abrirlo no te va a ayudar",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 232,
+        "date": "2025-06-06 15:47:43+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Si es que el problema es la App, claro",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 233,
+        "date": "2025-06-06 15:47:43+00:00",
+        "sender_id": 46641672,
+        "text_preview": "De momento hemos visto que va con dos li-pos estándar, no ha dado tiempo de desatornillar más",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 234,
+        "date": "2025-06-06 15:47:43+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Si el robot está estropeado, ya es otro tema",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 235,
+        "date": "2025-06-06 15:47:43+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Ya, gracias. Me ayuda tu consejo 🙏",
+        "reply_to_msg_id": 231,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 224,
+      "end_msg_id": 236,
+      "boundary": "next_anchor",
+      "num_messages": 11
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 236,
+      "date": "2025-06-06 15:47:43+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://web.ubtrobot.com/ironman.html"
+      ],
+      "text_preview": "https://web.ubtrobot.com/ironman.html Mira, aqui tienen otro modelo, que solo tendrá colores cambiados, seguramente",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 238,
+        "date": "2025-06-06 15:47:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "De aquí ya deduzco que va por BLE",
+        "reply_to_msg_id": 236,
+        "strategy": "reply"
+      }
+    ],
+    "window": {
+      "start_msg_id": 236,
+      "end_msg_id": 237,
+      "boundary": "next_anchor",
+      "num_messages": 1
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 237,
+      "date": "2025-06-06 15:47:44+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://apkpure.com/es/first-order-stormtrooper-robot/com.ubtech.stormtrooper"
+      ],
+      "text_preview": "Y aqui tienes la app para Android de tu stormtrooper https://apkpure.com/es/first-order-stormtrooper-robot/com.ubtech.stormtrooper",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 237,
+      "end_msg_id": 239,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 239,
+      "date": "2025-06-06 15:47:44+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://play.google.com/store/apps/details?id=com.macdom.ble.blescanner&hl=es"
+      ],
+      "text_preview": "Así que yo trataría de encender el robot, ver si se enciende correctamente y luego descargar una app de BLE como https://play.google.com/store/apps/details?id=com.macdom.ble.blescanner&hl=es para ver si te aparece como periferico BLE.\n\n\nEntonces ya descartas que el problema esté en el robot",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 240,
+        "date": "2025-06-06 15:47:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Oye, muchas gracias, me has dado muchas indicaciones sobre por dónde tirar ☺️😊",
+        "reply_to_msg_id": 239,
+        "strategy": "reply"
+      },
+      {
+        "msg_id": 241,
+        "date": "2025-06-06 15:47:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "De nada! La verdad es que me gustan esos hackeos",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 242,
+        "date": "2025-06-06 15:47:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Carga, enciende y hace su rutina",
+        "reply_to_msg_id": 234,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 239,
+      "end_msg_id": 244,
+      "boundary": "next_anchor",
+      "num_messages": 3
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 244,
+      "date": "2025-07-08 09:21:47+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "Leumez",
+      "urls": [
+        "https://www.mobile-hacker.com/2025/07/07/vibe-hacking-with-nmap-using-android/"
+      ],
+      "text_preview": "https://www.mobile-hacker.com/2025/07/07/vibe-hacking-with-nmap-using-android/",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 244,
+      "end_msg_id": 251,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 251,
+      "date": "2025-08-31 14:24:27+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://youtu.be/FmhlU7nQoUc"
+      ],
+      "text_preview": "Y éste otro para irse a dormir tranquilo... 🙃\n\nIs AI a potential threat to our national security? Dr. Mark Bailey writes about the intersection between artificial intelligence, complexity, and national security\n\nhttps://youtu.be/FmhlU7nQoUc",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 251,
+      "end_msg_id": 252,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 252,
+      "date": "2025-09-02 17:44:56+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://revistacloud.com/china-presenta-alternativa-x86-procesador-zhaoxin-kx-7000/"
+      ],
+      "text_preview": "China presenta su alternativa x86: el procesador Zhaoxin KX-7000 debuta en el PC AI+ de MAXHUB - Revista Cloud\nhttps://revistacloud.com/china-presenta-alternativa-x86-procesador-zhaoxin-kx-7000/",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 253,
+        "date": "2025-09-05 22:47:11+00:00",
+        "sender_id": 46641672,
+        "text_preview": "#webserver #esp32 #lua #scripting #littlefs #wifi #ap",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 254,
+        "date": "2025-09-05 22:47:11+00:00",
+        "sender_id": 46641672,
+        "text_preview": "un regalito",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 255,
+        "date": "2025-09-05 22:47:11+00:00",
+        "sender_id": 46641672,
+        "text_preview": "el otro día hablé de ello y lo he reimplementado para vuestro disfrute",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 256,
+        "date": "2025-09-05 22:47:11+00:00",
+        "sender_id": 46641672,
+        "text_preview": "un servidor web que puede ejecutar scripts .lua",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 257,
+        "date": "2025-09-05 22:47:11+00:00",
+        "sender_id": 46641672,
+        "text_preview": "mostrar la salida por el web (como si fuera .cgi/.php/.asp/.aspx y similares",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 258,
+        "date": "2025-09-05 22:47:12+00:00",
+        "sender_id": 46641672,
+        "text_preview": "he incluido ejemplos de como implementar mas funciones expuestas del script lua al C (call/param/return/varadic)",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 259,
+        "date": "2025-09-05 22:47:12+00:00",
+        "sender_id": 46641672,
+        "text_preview": "la magia sucede si haceis get a lua/test.lua ... el resto es un servidor web normal",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 260,
+        "date": "2025-09-05 22:47:12+00:00",
+        "sender_id": 46641672,
+        "text_preview": "todo hecho con IA",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 261,
+        "date": "2025-09-05 22:47:12+00:00",
+        "sender_id": 46641672,
+        "text_preview": "apenas habré tecleado 15 líneas 😅",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 262,
+        "date": "2025-09-05 22:47:12+00:00",
+        "sender_id": 46641672,
+        "text_preview": "@hpsaturn seguro que te gustará: al ser un lenguaje de script tiene sus memorias y buffers fuera de tu código... es como ejecutar una \"maquina virtual\" jijiji",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 263,
+        "date": "2025-09-05 22:47:12+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Muchas gracias @lunokjod",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 264,
+        "date": "2025-09-05 22:47:12+00:00",
+        "sender_id": 46641672,
+        "text_preview": "está sucio y basto... ya lo he destilado un poco más, pero como prueba de concepto supongo que es útil :D",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 265,
+        "date": "2025-09-05 22:47:12+00:00",
+        "sender_id": 46641672,
+        "text_preview": "si te aburres y miras un directorio oculto .continue son los guiones para instruir a la IA a hacer las cosas a mi gusto :D",
+        "reply_to_msg_id": 263,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 252,
+      "end_msg_id": 266,
+      "boundary": "next_anchor",
+      "num_messages": 13
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 266,
+      "date": "2025-09-07 23:48:00+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "Enrique",
+      "urls": [
+        "https://immich.app/"
+      ],
+      "text_preview": "https://immich.app/",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 268,
+        "date": "2025-09-07 23:48:00+00:00",
+        "sender_id": 46641672,
+        "text_preview": "immich",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 269,
+        "date": "2025-09-07 23:48:00+00:00",
+        "sender_id": 46641672,
+        "text_preview": "aún no lo  he probado, pero he leído un par de revisiones que lo ponen muy bien",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 270,
+        "date": "2025-09-07 23:48:00+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Yo es la que uso, va genial",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 266,
+      "end_msg_id": 271,
+      "boundary": "next_anchor",
+      "num_messages": 3
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 271,
+      "date": "2025-09-07 23:48:00+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "Enrique",
+      "urls": [
+        "https://github.com/alangrainger/immich-public-proxy"
+      ],
+      "text_preview": "Hay también un proxy para poder compartir galerías sin dejar a la calle todo el servidor: https://github.com/alangrainger/immich-public-proxy",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 271,
+      "end_msg_id": 272,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 272,
+      "date": "2025-09-07 23:48:00+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://ente.io/"
+      ],
+      "text_preview": "También tienes https://ente.io/ hosted o self-hosted",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 273,
+        "date": "2025-09-07 23:48:00+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Requisitos de Ente vs Immich\n\nEnte: \nA system with at least 1 GB of RAM and 1 CPU core\n\nImmich:\nRAM: Minimum 4GB, recommended 6GB.\nCPU: Minimum 2 cores, recommended 4 cores.\n\nEnte 🤩",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 275,
+        "date": "2025-09-17 21:50:22+00:00",
+        "sender_id": 46641672,
+        "text_preview": "M5qQGESL8VsClrWdbjfT1rqwQzznmb",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 276,
+        "date": "2025-09-17 21:50:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "#appManager\nApp Manager \nAppManager",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 285,
+        "date": "2025-10-23 17:45:05+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Cuáles eran las chulas de menos de quinientos euros? Tú pilotabas de eso, creo, ¿no?",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 286,
+        "date": "2025-10-23 17:45:05+00:00",
+        "sender_id": 46641672,
+        "text_preview": "calidad /precio, quest 3",
+        "reply_to_msg_id": 285,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 287,
+        "date": "2025-10-23 17:45:05+00:00",
+        "sender_id": 46641672,
+        "text_preview": "pero si no quieres un juguete, las pico 4 ultra",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 288,
+        "date": "2025-10-23 17:45:05+00:00",
+        "sender_id": 46641672,
+        "text_preview": "rondan ese precio y merecen la pena",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 289,
+        "date": "2025-10-24 06:49:05+00:00",
+        "sender_id": 46641672,
+        "text_preview": "pues usar el termux es sexy",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 290,
+        "date": "2025-10-24 06:49:05+00:00",
+        "sender_id": 46641672,
+        "text_preview": "y como \"escritorio\", yo soy fan",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 291,
+        "date": "2025-10-24 06:49:05+00:00",
+        "sender_id": 46641672,
+        "text_preview": "te sorprenderías jaja",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 292,
+        "date": "2025-10-24 06:49:05+00:00",
+        "sender_id": 46641672,
+        "text_preview": "en avión p.e., son lo mejor",
+        "reply_to_msg_id": 291,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 272,
+      "end_msg_id": 293,
+      "boundary": "next_anchor",
+      "num_messages": 11
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 293,
+      "date": "2025-10-27 21:23:32+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://book.hacktricks.wiki/en/index.html"
+      ],
+      "text_preview": "ah, a Carlos Polop le conocí en HackOn, tiene un par de páginas interesantes https://book.hacktricks.wiki/en/index.html",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 294,
+        "date": "2025-11-20 22:20:40+00:00",
+        "sender_id": 46641672,
+        "text_preview": "El 11 es asqueroso, pero bueno, nada nuevo bajo el sol",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 293,
+      "end_msg_id": 295,
+      "boundary": "next_anchor",
+      "num_messages": 1
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 295,
+      "date": "2025-11-20 22:20:40+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "c4n4ry",
+      "urls": [
+        "https://schneegans.de/windows/unattend-generator/"
+      ],
+      "text_preview": "https://schneegans.de/windows/unattend-generator/",
+      "reply_to_msg_id": 294,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 296,
+        "date": "2025-12-15 01:06:57+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Pero este año compre uno en amazon que el cuerpo estab fenomenal pero las puntas eran de un material que tenia una transferencia de calor pésima y ademas el agujero no ajustaba bien al diametro de la resistencia y era un desastre la transferencia termica. Cambie las puntas por las que tenía yo guard",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 295,
+      "end_msg_id": 297,
+      "boundary": "next_anchor",
+      "num_messages": 1
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 297,
+      "date": "2025-12-15 01:06:57+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "Ignacio",
+      "urls": [
+        "https://www.batterfly.com/shop/en/hakko-t18-d16?search=soldering%20tip"
+      ],
+      "text_preview": "https://www.batterfly.com/shop/en/hakko-t18-d16?search=soldering%20tip",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 297,
+      "end_msg_id": 298,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 298,
+      "date": "2025-12-15 01:06:57+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "Ignacio",
+      "urls": [
+        "https://www.batterfly.com/shop/en/hakko-t18-d24?search=fx-8801%20tip"
+      ],
+      "text_preview": "https://www.batterfly.com/shop/en/hakko-t18-d24?search=fx-8801%20tip",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 298,
+      "end_msg_id": 299,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 299,
+      "date": "2025-12-15 01:06:57+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "Ignacio",
+      "urls": [
+        "https://www.batterfly.com/shop/en?route=product/search&search=fx-8801%20tip"
+      ],
+      "text_preview": "https://www.batterfly.com/shop/en?route=product/search&search=fx-8801%20tip",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 299,
+      "end_msg_id": 300,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 300,
+      "date": "2025-12-17 14:53:51+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://youtu.be/QBqFtvjnX7g?si=33VZ-WKv5nJjiv4E"
+      ],
+      "text_preview": "https://youtu.be/QBqFtvjnX7g?si=33VZ-WKv5nJjiv4E",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 300,
+      "end_msg_id": 301,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 301,
+      "date": "2025-12-18 09:07:39+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.m5stack.com/project-hub?category_id=1&page=1"
+      ],
+      "text_preview": "Por cierto, si alguien quiere inspirarse: https://www.m5stack.com/project-hub?category_id=1&page=1",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 301,
+      "end_msg_id": 302,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 302,
+      "date": "2026-01-03 20:51:14+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://github.com/jcomas/luckfox-pico/commit/4913f3da5096918e23382cc98d56bc0888f2db2d"
+      ],
+      "text_preview": "Dale un vistazo al commit que hice para añadir el soporte Alpine Linux para la Luckfox Pico, te debería servir para hacer algo similar para la Luckfox Lyra o puedes que ya lo incluya\nhttps://github.com/jcomas/luckfox-pico/commit/4913f3da5096918e23382cc98d56bc0888f2db2d",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 303,
+        "date": "2026-01-03 20:52:09+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Es que Linux lo tiene fácil, puedes sustituir toda la partición \"root\" por una distribución como Alpine Linux y arrancar el sistema y que te funcione.",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 304,
+        "date": "2026-01-03 20:52:09+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Tu prueba Alpine Linux y verás que es otro mundo, poder instalar el paquete que quieras sin tener que hacer una compilación cada vez.",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 305,
+        "date": "2026-01-03 20:52:09+00:00",
+        "sender_id": 46641672,
+        "text_preview": "No sé, yo probé unos cuantos y todos ok.",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 306,
+        "date": "2026-01-03 20:52:09+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Con la Luckfox Pico todos estos me funcionaban:\n\n    # Install additional utilities\n    apk add util-linux dialog dtc i2c-tools mtd-utils e2fsprogs e2fsprogs-extra\n    apk add btop ncurses ncurses-terminfo-base terminus-font musl-locales\n    apk add sqlite\n    apk add python3 py3-pip py3-smbus\n    #",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 307,
+        "date": "2026-01-03 20:52:09+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Probé hasta de compilar un programa en C, perfecto.",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 302,
+      "end_msg_id": 308,
+      "boundary": "next_anchor",
+      "num_messages": 5
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 308,
+      "date": "2026-01-03 20:52:09+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/armv7/"
+      ],
+      "text_preview": "Si no recuerdo mal, utilizaba \"minirootfs\"\nhttps://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/armv7/",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 309,
+        "date": "2026-01-03 20:52:09+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Con eso ya tienes todo el sistema listo, sólo hace falta poner la configuración que es lo que hacía y tienes en el commit.",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 310,
+        "date": "2026-01-03 20:52:09+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Es decir, arrancas con el u-boot, el kernel y todo lo que te haya generado buildroot y luego sólo es sustituir la partición root por una de Alpine Linux soportada. Eso sí, hay que añadir cierta configuración, pero es fácil.",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 313,
+        "date": "2026-01-07 13:02:47+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Si es por cositas en DSK he visto que tengo en el ordenador una carpeta con todo tipo de cosas y hay bastantes en dsk,si os interesa las cuelgo...",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 315,
+        "date": "2026-01-07 14:53:26+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Os dejo por aquí el comprimido para hacerlo funcionar en Linux y también en Windows.\nDebes descomprimirlo en la carpeta Spectrum de la versión 3.\nTe creará un DOSBOX y un Menu-Linux.sh y un Menu-Windows.bat.\nEs un portable y como tal espero que funcione en casi todos los linux y windows, he probado ",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 316,
+        "date": "2026-01-07 14:54:09+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Yo solo uso DSK y no hay problema. Si te sale un mensaje 40 80 o lo que sea son los sectores y se puede configurar la disquetera.",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 317,
+        "date": "2026-01-07 14:54:09+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Si, estaba la unidad A: en 40, arreglado, ahora funciona hasta el Twilight... 🥳",
+        "reply_to_msg_id": 316,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 318,
+        "date": "2026-01-07 14:54:09+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Has puesto 80?\n\nSeguramente a 80 te funcionará también DSK720... La controladora del +3 admite incluso más grande pero ese tamaño está pensando en los limites del estándar de 3 1/2 para que no digan que eso no existió 😅",
+        "reply_to_msg_id": 317,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 308,
+      "end_msg_id": 319,
+      "boundary": "next_anchor",
+      "num_messages": 7
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 319,
+      "date": "2026-01-08 21:33:03+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://archive.org/details/graphic-adventures-for-the-spectrum-48K"
+      ],
+      "text_preview": "He visto que el juego viene de un libro editado en 1984 llamado  Graphic Adventures for the Spectrum 48K en el que vienen varios juegos en código para que lo teclees, por si a alguien le interesa...\n\nhttps://archive.org/details/graphic-adventures-for-the-spectrum-48K",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 320,
+        "date": "2026-01-08 21:33:03+00:00",
+        "sender_id": 46641672,
+        "text_preview": "En esta página hay también un montón de materia, libros, juegos, revistas, etc de Spectrum y todo tipo de sistemas, incluso para jugar online...",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 319,
+      "end_msg_id": 321,
+      "boundary": "next_anchor",
+      "num_messages": 1
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 321,
+      "date": "2026-01-08 21:33:03+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.youtube.com/channel/UCAz8lXjzd8TZkbbID_qSakA/videos"
+      ],
+      "text_preview": "https://www.youtube.com/channel/UCAz8lXjzd8TZkbbID_qSakA/videos",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 321,
+      "end_msg_id": 322,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 322,
+      "date": "2026-01-08 21:33:03+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.youtube.com/@ElSpectrumeroJaviOrtiz"
+      ],
+      "text_preview": "https://www.youtube.com/@ElSpectrumeroJaviOrtiz",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 322,
+      "end_msg_id": 323,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 323,
+      "date": "2026-01-08 21:33:03+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.youtube.com/@NostalgiaZxspectrum"
+      ],
+      "text_preview": "https://www.youtube.com/@NostalgiaZxspectrum",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 323,
+      "end_msg_id": 324,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 324,
+      "date": "2026-01-08 21:33:03+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.youtube.com/@JuanjeJuega"
+      ],
+      "text_preview": "https://www.youtube.com/@JuanjeJuega",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 324,
+      "end_msg_id": 325,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 325,
+      "date": "2026-01-08 21:33:03+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.youtube.com/@Elmundodelspectrum"
+      ],
+      "text_preview": "https://www.youtube.com/@Elmundodelspectrum",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 325,
+      "end_msg_id": 326,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 326,
+      "date": "2026-01-08 21:33:03+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.youtube.com/@LOADZX/videos"
+      ],
+      "text_preview": "https://www.youtube.com/@LOADZX/videos",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 326,
+      "end_msg_id": 327,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 327,
+      "date": "2026-01-08 21:33:03+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.youtube.com/@KelbenStark"
+      ],
+      "text_preview": "https://www.youtube.com/@KelbenStark",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 327,
+      "end_msg_id": 328,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 328,
+      "date": "2026-01-08 21:33:03+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.youtube.com/@Rebelwade77Games"
+      ],
+      "text_preview": "https://www.youtube.com/@Rebelwade77Games",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 328,
+      "end_msg_id": 329,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 329,
+      "date": "2026-01-08 21:33:03+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.youtube.com/@ElViejovenFX"
+      ],
+      "text_preview": "https://www.youtube.com/@ElViejovenFX",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 329,
+      "end_msg_id": 330,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 330,
+      "date": "2026-01-08 21:33:03+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.youtube.com/@Davidprograma"
+      ],
+      "text_preview": "https://www.youtube.com/@Davidprograma",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 330,
+      "end_msg_id": 331,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 331,
+      "date": "2026-01-08 21:33:03+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://www.youtube.com/@ZXESPectrum/videos"
+      ],
+      "text_preview": "https://www.youtube.com/@ZXESPectrum/videos",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 332,
+        "date": "2026-01-08 21:33:03+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Ahí van unos cuantos canales. Hay más, pero tendría que mirarme todos los canales a los que estoy suscrito, y son un huevo.",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 333,
+        "date": "2026-01-09 07:33:40+00:00",
+        "sender_id": 46641672,
+        "text_preview": "ZXDB al completo, la BD creada por Einar Saukas con sus correspondientes tablas en SQL.",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 331,
+      "end_msg_id": 334,
+      "boundary": "next_anchor",
+      "num_messages": 2
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 334,
+      "date": "2026-01-10 20:02:16+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "almu_hs",
+      "urls": [
+        "https://riscv-simulator-five.vercel.app/"
+      ],
+      "text_preview": "bueno, corrijo, era simulador. Pero está bastante bien\nhttps://riscv-simulator-five.vercel.app/",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 335,
+        "date": "2026-01-20 21:34:26+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Analizador Lógico",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 334,
+      "end_msg_id": 338,
+      "boundary": "next_anchor",
+      "num_messages": 1
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 338,
+      "date": "2026-01-31 13:57:36+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://vwguy16.itch.io/nixy-and-the-seeds-of-doom"
+      ],
+      "text_preview": "Nixy and the Seeds of Doom by BubbleSoftGames\nhttps://vwguy16.itch.io/nixy-and-the-seeds-of-doom",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 338,
+      "end_msg_id": 345,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 345,
+      "date": "2026-02-01 13:35:33+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "Pere",
+      "urls": [
+        "https://www.gamebase64.com/forum/viewtopic.php?t=5892"
+      ],
+      "text_preview": "https://www.gamebase64.com/forum/viewtopic.php?t=5892",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 346,
+        "date": "2026-02-01 13:35:48+00:00",
+        "sender_id": 46641672,
+        "text_preview": "En archive.org está también la versión 4, acabo de encontrar la 5 en esta página",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 345,
+      "end_msg_id": 347,
+      "boundary": "next_anchor",
+      "num_messages": 1
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 347,
+      "date": "2026-02-06 22:56:06+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://conradobadenas.wordpress.com/2026/02/06/te-reto-a-que-dibujes-esto/"
+      ],
+      "text_preview": "Para que no haga falta ningún nivel, he escrito una nueva entrada en mi blog explicando las cosas de tal forma que hasta mi esposa lo entiende y le ha gustado:\n\nhttps://conradobadenas.wordpress.com/2026/02/06/te-reto-a-que-dibujes-esto/",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 348,
+        "date": "2026-02-06 22:56:06+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Para los que les guste trastear con las \"tripas\" del Spectrum, esta página les va a ser muy útil 😄",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 349,
+        "date": "2026-02-10 20:39:52+00:00",
+        "sender_id": 46641672,
+        "text_preview": "📄 Te reto a que dibujes esto, por @ConradoBadenas\n¿Has visto alguna vez los juegos isométricos de Spectrum? ¿Te has preguntado cómo consiguen una apariencia tan realista? Fueron programados por genios como Jon Ritman o los hermanos Jim y Chris Stamper. En este artículo quiero mostrarte una cosa, y p",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 350,
+        "date": "2026-02-17 10:23:01+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Buenos días mi gente . ¿ Alguna pagina para descargar ROMS de Nintendo Swich ?",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 351,
+        "date": "2026-02-17 10:23:01+00:00",
+        "sender_id": 46641672,
+        "text_preview": "¿ Y DS ?",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 347,
+      "end_msg_id": 352,
+      "boundary": "next_anchor",
+      "num_messages": 4
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 352,
+      "date": "2026-02-17 10:23:01+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "cтнonιan godĸιller",
+      "urls": [
+        "https://romsfun.com/roms/nintendo-ds/"
+      ],
+      "text_preview": "https://romsfun.com/roms/nintendo-ds/",
+      "reply_to_msg_id": 351,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 352,
+      "end_msg_id": 353,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 353,
+      "date": "2026-02-17 10:23:01+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://archive.org/download/jogos-updates-dlcs-emuladores-e-apps-para-nintendo-switch"
+      ],
+      "text_preview": "https://archive.org/download/jogos-updates-dlcs-emuladores-e-apps-para-nintendo-switch",
+      "reply_to_msg_id": 350,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 353,
+      "end_msg_id": 354,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 354,
+      "date": "2026-02-17 10:23:01+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://myrient.erista.me/files/"
+      ],
+      "text_preview": "Y no se si ennla maravillosa https://myrient.erista.me/files/",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [],
+    "window": {
+      "start_msg_id": 354,
+      "end_msg_id": 356,
+      "boundary": "next_anchor",
+      "num_messages": 0
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 356,
+      "date": "2026-03-23 00:06:16+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": "Ignacio",
+      "urls": [
+        "https://github.com/LostRuins/koboldcpp"
+      ],
+      "text_preview": "https://github.com/LostRuins/koboldcpp",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 358,
+        "date": "2026-03-29 16:31:11+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Recuerdo ejercicios así de C, siempre me hacia mi propio tabla \n\n#include <stdio.h>\n\nint main() {\n    for (int i = 0; i <= 255; i++) {\n        printf(\"%3d: %c\\n\", i, (char)i);\n    }\n    return 0;\n}",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 360,
+        "date": "2026-04-02 23:06:37+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Mira @Kerbi 👆. Estos son los valores que le estoy poniendo para que me ayuede a entender proyectos medianos de código   rápidamente con el Qwen3-Esper3-Reasoning-CODER-12B-Brainstorm20x. Ocupa 6GB y pico. He cuantizado contexto activado el flash attention y el context shifting,  y un contexto de 160",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 361,
+        "date": "2026-04-16 18:52:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "#LLM \n#tIA",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 362,
+        "date": "2026-04-16 18:52:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Jo, y usando tanto Claude, ya tiras tú alguna línea de Codigo?",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 363,
+        "date": "2026-04-16 18:52:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Yo es que he visto que Rust puede ser uno de los mejores lenguajes para las LLM, por su modelo estricto en tiempo de compilación. Si la cagan en algo el feedback es inmediato y pueden iterar sobre ello autónomamente, sin necesidad de lanzar pruebas, etc...",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 364,
+        "date": "2026-04-16 18:52:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Vamos que no te hacen una barbaridad que luego pete en ejecución, se dan cuenta pronto, muy pronto de la cagada, porque ni compila",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 365,
+        "date": "2026-04-16 18:52:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "He puesto a trabajar hasta una IA local Qwen3 Coder Next en un proyecto de Rust con bastante éxito. Hace lo que Gpt 5.4 en 15 mins, este tarda 1h, pero lo hace y funciona",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 366,
+        "date": "2026-04-16 18:52:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Que destilado de qwen3 coder usas un 21B? un 12B? con que gráfica?",
+        "reply_to_msg_id": 365,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 367,
+        "date": "2026-04-16 18:52:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Qwen3 Coder Next Q4_K_M en un Mac Studio M2 Ultra de 64GB",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 368,
+        "date": "2026-04-16 18:52:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "De momento es el que mejores resultados me ha dado, para cuando me quedo sin tokens de Codex. Aunque no lo he probado más que en un proyecto de Rust en un STM32 con Embassy. @The_iLk Sí! Al final logré que me pagaran por probarlo jejeje! Moló verlo funcionar",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 369,
+        "date": "2026-04-16 18:52:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "@nachogazpacho Este pone que es 512x2.5B, esto es 512B con 2.5B activados? Es que llevo aún poco tiempo con esto de las IAs locales. Tu usas un destilado? Qué modelo?",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 370,
+        "date": "2026-04-16 18:52:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Para muchas cosas los destilados más pequeños volarían en tu aparato. Has probado el 30B o el 21B, incluso el 12B?",
+        "reply_to_msg_id": 368,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 371,
+        "date": "2026-04-16 18:52:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "básicamente todas",
+        "reply_to_msg_id": 362,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 372,
+        "date": "2026-04-16 18:52:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "yo le pido que revise y que apañe un huevo de cosas que se me escapan como por ej en este caso que hay que pasarle al I2C de la camara cutre esta para que se ponga en modo tal",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 373,
+        "date": "2026-04-16 18:52:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Yo lo más grande que corro es un 21B en una RTX2080ti. Me va bien para chatear, unos 11tok/s, y el 12b va bien rápido, unos 55t/s.",
+        "reply_to_msg_id": 369,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 374,
+        "date": "2026-04-16 18:52:44+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Este que tengo cargado va a 70 tps, no sé para qué quiero más velocidad. Lo que noto es que no es muy listo ya de por sí, por lo que un destilado no va a arreglar eso, aunque vaya más volado",
+        "reply_to_msg_id": 370,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 375,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "coincido, qwen coder next es de los que mejores resultados me ha dado a mi aunque yo tengo que cuantizarlo un poco más por limitaciones de mi hardware",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 376,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Para autocompletar código y cosas así yno pequeñito va bien, pero claro, si ya tienes 70t/s para que los quieres.",
+        "reply_to_msg_id": 374,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 377,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "De todos modos los Mixture of Experts como el tuyo, puede que no sean la mejor opción ya que ocupan muchamemoria comparado con lo listos que son creo. Un modelo denso quizá sería más listo aunque fuera más pequeño. Tampoco lo puedo afirmar al 100%.",
+        "reply_to_msg_id": 374,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 379,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Hum, interesante. Y existe este Qwen3 Coder Next en version densa?",
+        "reply_to_msg_id": 377,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 380,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Mira este por ejemplo. Aunque esta demasiado cuantizado, a 3 bits, digamos que tienen bastante inteligencia abstracta pero cometen fallos tontos con esa cuantización agresiva.",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 381,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Creo que el que te he señalado es denso.",
+        "reply_to_msg_id": 379,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 382,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Interesante, pensé que un modelo X que sacaran era MoE o denso, pero no qué existieran ambas versiones. Curioso, la verdad es que TOOODO un mundo esto de las IA locales, quantizaciones, destilaciones, arquitecturas... ufff",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 383,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Yo para buscar el mejor modelo para mi máquina y mi actividad concreta le suelo preguntar a mi tIA, al chat de gémini o copilot.",
+        "reply_to_msg_id": 379,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 384,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Puede que tengas razón. Yo puedo estar equivocado perfectamente. Soy un completo principiante.",
+        "reply_to_msg_id": 382,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 385,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Ya que estás tan informado, para montarme un OpenClaw con estas IAs locales? Que modelo, tipología o arquitectura recomendarias, conoces algo de esto?",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 386,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "No estoy nada informado. Open Claw es el agente  no? Todavía estoy empezando. Pero si me preguntas por el motor LLM yo estoy centrado en Qwen, aunque creo que Gemma y que Kimi son también muy buenas opciones que caben en tu máquina. Te tocaría investigar si tienen versiones coder, que es muy importa",
+        "reply_to_msg_id": 385,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 387,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Y tengo instalada la extensión Continue de VS Code.",
+        "reply_to_msg_id": 385,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 388,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Con Continue te va bien? He probado con el propio agente \"Qwen Code\" y con OpenCode, porque Qwen tiene unas llamadas a herramientas muy raritas que no todo el mundo las soporta. Me gusta mucho OpenCode como harness, pero con Qwen3 Coder Next le fallan a veces las herramientas, aunque el modelo se dá",
+        "reply_to_msg_id": 387,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 389,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Por ejemplo, en OpenCode le hablo en español sin problemas, pero Qwen Code tiene en su system prompt que use SIEMPRE inglés... que cabron jajaja y entonces hasta que me di cuenta, dije, joder que cosa más extraña, que me fuerza siempre al inglés",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 390,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Lo he instalado hace cuatro días y no he programado nada. Aparte de que soy un programador malísimo y un desarrollador pésimo. No te puedo decir, pero Continue es una de las extensiones más recomendadas para IA con VS Code, si no la más.",
+        "reply_to_msg_id": 388,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 391,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Ok Ok, gracias. Yo es que soy Teleco telemático, más de 10 años haciendo software, etc... Y desde hace algunos meses ya no tiro casi ni una linea, lo hace todo Codex, muchísimo más rapido. Vaya revolución, me canso mentalmente la mitad o una decima parte, puedo estar haciendo 2 o 3 proyectos a la ve",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 392,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Una revolución y nada, tenerlo en local es el siguiente paso, aunque no sean tan listas, hay algunas cosas que mejor se queden en casita",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 356,
+      "end_msg_id": 395,
+      "boundary": "next_anchor",
+      "num_messages": 33
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 395,
+      "date": "2026-04-16 18:52:45+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://es.euronews.com/next/2026/04/12/de-galicia-a-cabo-canaveral-la-startup-gallega-que-convencio-a-la-otan-con-satelites-que-r"
+      ],
+      "text_preview": "Propulsores de  plasma solares para satélites de orbita baja:    https://es.euronews.com/next/2026/04/12/de-galicia-a-cabo-canaveral-la-startup-gallega-que-convencio-a-la-otan-con-satelites-que-r",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 396,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "#sevillamakersociety",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 398,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Pues parece que no hay versión densa. Tenías razón.",
+        "reply_to_msg_id": 379,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 404,
+        "date": "2026-04-16 18:52:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Pues según mi tIA tienes instalado lo mejor que puedes tener, salvo para algunas tareas que te puede venir mejor otra cosa.",
+        "reply_to_msg_id": 385,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 410,
+        "date": "2026-04-17 15:16:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "El juego del Menceyato",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 411,
+        "date": "2026-04-17 15:16:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Protagonistas : Frank of Güímar y Konamito Of André",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 412,
+        "date": "2026-04-17 15:16:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "No se llegó a liberar",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 413,
+        "date": "2026-04-17 15:16:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Así q no lo compartáis por ahí hasta q lo pongamos en la web",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 414,
+        "date": "2026-04-17 15:16:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Guapísimo el cover de tu juego. Tengo que jugarlo",
+        "reply_to_msg_id": 406,
+        "strategy": "window"
+      },
+      {
+        "msg_id": 415,
+        "date": "2026-04-17 15:16:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Ya tiene unos añitos",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 395,
+      "end_msg_id": 416,
+      "boundary": "next_anchor",
+      "num_messages": 9
+    }
+  },
+  {
+    "anchor": {
+      "msg_id": 416,
+      "date": "2026-04-17 15:16:45+00:00",
+      "sender_id": 46641672,
+      "forwarded_from": null,
+      "urls": [
+        "https://spectrumcomputing.co.uk/list?label_id=16466"
+      ],
+      "text_preview": "https://spectrumcomputing.co.uk/list?label_id=16466",
+      "reply_to_msg_id": null,
+      "reply_to_anchor_msg_id": null
+    },
+    "reactions": [
+      {
+        "msg_id": 417,
+        "date": "2026-04-17 15:16:45+00:00",
+        "sender_id": 46641672,
+        "text_preview": "Ahí tienes los demas",
+        "reply_to_msg_id": null,
+        "strategy": "window"
+      }
+    ],
+    "window": {
+      "start_msg_id": 416,
+      "end_msg_id": null,
+      "boundary": "end_of_data",
+      "num_messages": 1
+    }
+  }
+]
