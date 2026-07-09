@@ -20,7 +20,7 @@ Dos canales, separación limpia:
 | **Chunking & Tagging** | Partir contenido en chunks recuperables con metadata | Parent-child chunks, 15% overlap (baseline) | Pendiente |
 | **Embedding** | Vectorizar chunks para búsqueda semántica | `mistral-embed` (Mistral AI API, 1024 dim) | ✅ |
 | **Almacenamiento vectorial** | Persistir y consultar vectores | Zvec (embebido, in-process, Apache 2.0) | ✅ |
-| **Clustering de bundles** | Agrupar enlaces+opiniones por tema | Por decidir (BERTopic como opción principal) | Pendiente |
+| **Clustering de bundles** | Agrupar enlaces+opiniones por tema | KMeans (scikit-learn) + TF-IDF keywords. BERTopic descartado para corpus actual (71 bundles — UMAP necesita ~200+ puntos). | ✅ |
 | **Curación (decay profiles)** | Clasificar contenido por vida útil | Evergreen / semi-stable / ephemeral | Pendiente |
 | **Guía de estudio** | Mapa vivo de contenidos para newcomers, organizado por cluster temático y curado por decay profile. No es el digest (Salida), sino la tabla de contenidos persistente. | Markdown o mensajes formateados en canal de doc | Pendiente |
 | **Salida** | Publicar resúmenes al canal de doc | Pyrogram / Bot API | Pendiente |
@@ -64,7 +64,7 @@ Canal fuente (read-only)
     → [Pendiente] Chunking: parent-child chunks, 15% overlap, metadata prefix
     → Embedding: mistral-embed (1024 dim) → vectores ✅
     → Storage: Zvec (in-process, reranking integrado) ✅
-    → [Pendiente] Clustering: por decidir (BERTopic como opción)
+    → [Pendiente] Clustering: KMeans (scikit-learn) + TF-IDF keywords ✅
     → [Pendiente] Curación: decay profiles (evergreen/semi-stable/ephemeral)
     → [Pendiente] Guía de estudio: mapa vivo de contenidos por cluster
     → [Pendiente] Salida: formatear resumen → canal de documentación
@@ -87,7 +87,7 @@ Three-pass algorithm para vincular mensajes posteriores a su anchor:
 5. **Chunking & Tagging**: parent-child chunks, 15% overlap, metadata prefix (pendiente)
 6. **Embedding**: `mistral-embed` → vectores 1024d ✅
 7. **Storage**: Zvec (in-process, reranking integrado) ✅
-8. **Clustering**: por decidir (BERTopic como opción) (pendiente)
+8. **Clustering**: KMeans (scikit-learn) + TF-IDF keywords ✅
 9. **Curación**: clasificación evergreen/semi-stable/ephemeral (pendiente)
 10. **Guía de estudio**: mapa vivo de contenidos, organizado por cluster y decay profile. La tabla de contenidos persistente del canal — distinta del digest periódico (pendiente)
 11. **Salida**: resumen en canal de documentación (pendiente)

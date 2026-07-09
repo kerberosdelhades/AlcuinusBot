@@ -10,7 +10,7 @@
 | 3 | **Metadata** — fetch title + description per link (HTML + GitHub/arXiv API) | ✅ Done |
 | 4 | **Chunking & Tagging** — parent-child chunks, overlap, metadata prefix | Pending |
 | 5 | **Embedding** — `mistral-embed` (1024 dim) → Zvec | ✅ Done |
-| 6 | **Bundle clustering** — por decidir (BERTopic como opción) | Pending |
+| 6 | **Bundle clustering** — KMeans + TF-IDF keywords | ✅ Done |
 | 7 | **Decay classification** — evergreen / semi-stable / ephemeral tagging | Pending |
 | 8 | **Output** — publish summaries to docs channel | Pending |
 | 9 | **Syllabus generation** — living study guide for newcomers | Pending |
@@ -240,7 +240,6 @@ The 10-20% overlap range is well-documented across the RAG ecosystem. The strong
 
 ## Open decisions
 
-- **Clustering tech**: BERTopic (con HDBSCAN/UMAP) vs. alternativas más ligeras (KMeans, HDBSCAN standalone). Decidir antes de Phase 6.
 - Discord ingestion: scoped as future work, not yet started.
 
 ## Explicitly reverted / parked decisions
