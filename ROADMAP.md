@@ -260,10 +260,26 @@ Per SPECIFICATIONS.md §"Estrategias de análisis":
 
 | Priority | Task | Effort | Blocks |
 |----------|------|--------|--------|
-| P0 | Phase 3 — Link metadata | Small | Phase 4 |
-| P1 | Fix reactions extraction (verify Telethon flags) | Small | Phase 6 quality |
-| P2 | Phase 4 — Chunking & tagging | Medium | Phase 5 |
-| P3 | Phase 5 — Embedding via mistral-embed + pgvector | Medium | Phase 6 |
-| P4 | Phase 6 — Bundle clustering | Medium | Phase 7 |
-| P5 | Phase 7 — Decay classification | Small | Phase 8 |
-| P6 | Phase 8 — Output | Medium | — |
+| P0 | Phase 8 — Output (digest to docs channel) | Medium | Phase 9 |
+| P1 | Phase 9 — Syllabus generation | Medium | Phase 10 |
+| P2 | Phase 10 — 6-month review cycle | Small | — |
+| P3 | Fix reactions extraction (verify Telethon flags) | Small | Output quality |
+
+---
+
+## End-to-end pipeline verification
+
+The full pipeline (Phases 0–7) was verified end-to-end on 2026-07-10:
+
+```
+252 msgs → 71 anchors → 71 bundles → 74 URLs → 173 chunks
+   → 8 clusters (KMeans + TF-IDF) → 8 decay profiles (LLM)
+   All cross-phase ID checks pass. No orphan data. 100% chunk coverage.
+   Cluster quality spot-check confirms keywords match real message content.
+```
+
+Verification script: `delete_this.py` (gitignored, dev-only). Run with:
+```bash
+uv run python delete_this.py
+```
+Requires `MISTRAL_API_KEY` and `config/.env` with Telegram credentials.
