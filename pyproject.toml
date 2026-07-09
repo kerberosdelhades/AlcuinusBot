@@ -13,6 +13,9 @@ dependencies = [
     # our own deps
     "requests",
     "beautifulsoup4",
+    # Phase 5 — embedding + vector store
+    "mistralai",
+    "zvec",
 ]
 
 [project.optional-dependencies]
