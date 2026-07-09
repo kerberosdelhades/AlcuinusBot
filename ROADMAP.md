@@ -11,7 +11,7 @@
 | 4 | **Chunking & Tagging** — parent-child chunks, overlap, metadata prefix | Pending |
 | 5 | **Embedding** — `mistral-embed` (1024 dim) → Zvec | ✅ Done |
 | 6 | **Bundle clustering** — KMeans + TF-IDF keywords | ✅ Done |
-| 7 | **Decay classification** — evergreen / semi-stable / ephemeral tagging | Pending |
+| 7 | **Decay classification** — evergreen / semi-stable / ephemeral tagging | ✅ Done |
 | 8 | **Output** — publish summaries to docs channel | Pending |
 | 9 | **Syllabus generation** — living study guide for newcomers | Pending |
 | 10 | **6-month review cycle** — re-audit existing documentation | Pending |

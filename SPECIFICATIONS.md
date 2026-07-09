@@ -21,7 +21,7 @@ Dos canales, separación limpia:
 | **Embedding** | Vectorizar chunks para búsqueda semántica | `mistral-embed` (Mistral AI API, 1024 dim) | ✅ |
 | **Almacenamiento vectorial** | Persistir y consultar vectores | Zvec (embebido, in-process, Apache 2.0) | ✅ |
 | **Clustering de bundles** | Agrupar enlaces+opiniones por tema | KMeans (scikit-learn) + TF-IDF keywords. BERTopic descartado para corpus actual (71 bundles — UMAP necesita ~200+ puntos). | ✅ |
-| **Curación (decay profiles)** | Clasificar contenido por vida útil | Evergreen / semi-stable / ephemeral | Pendiente |
+| **Curación (decay profiles)** | Clasificar contenido por vida útil | Evergreen / semi-stable / ephemeral. LLM-based (Mistral) + heuristic fallback. | ✅ |
 | **Guía de estudio** | Mapa vivo de contenidos para newcomers, organizado por cluster temático y curado por decay profile. No es el digest (Salida), sino la tabla de contenidos persistente. | Markdown o mensajes formateados en canal de doc | Pendiente |
 | **Salida** | Publicar resúmenes al canal de doc | Pyrogram / Bot API | Pendiente |
 
