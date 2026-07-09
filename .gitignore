@@ -6,3 +6,4 @@ results/
 *.session
 vendor/
 .venv/
+delete_this.py
