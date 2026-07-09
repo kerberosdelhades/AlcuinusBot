@@ -16,6 +16,8 @@ dependencies = [
     # Phase 5 — embedding + vector store
     "mistralai",
     "zvec",
+    # Phase 6 — clustering
+    "scikit-learn",
 ]
 
 [project.optional-dependencies]
