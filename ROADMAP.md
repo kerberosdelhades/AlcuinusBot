@@ -9,7 +9,7 @@
 | 2 | **Association** — link subsequent opinions/reactions to each anchor | ✅ Done |
 | 3 | **Metadata** — fetch title + description per link (HTML + GitHub/arXiv API) | ✅ Done |
 | 4 | **Chunking & Tagging** — parent-child chunks, overlap, metadata prefix | Pending |
-| 5 | **Embedding** — `mistral-embed` (1024 dim) → pgvector | Pending |
+| 5 | **Embedding** — `mistral-embed` (1024 dim) → Zvec | Pending |
 | 6 | **Bundle clustering** — por decidir (BERTopic como opción) | Pending |
 | 7 | **Decay classification** — evergreen / semi-stable / ephemeral tagging | Pending |
 | 8 | **Output** — publish summaries to docs channel | Pending |
@@ -140,22 +140,30 @@ The 10-20% overlap range is well-documented across the RAG ecosystem. The strong
 
 ---
 
-## Phase 5 — Embedding + pgvector
+## Phase 5 — Embedding + Zvec
 
-**Goal**: Vectorize all chunks and store them for semantic search.
+**Goal**: Vectorize all chunks and store them for semantic search with built-in reranking.
 
-**Tech**: `mistral-embed` (Mistral AI API)
-- Dimensions: 1024
-- Context window: ~8K tokens per input
-- Multilingual: solid Spanish/English coverage
-- Already provisioned — no new integration/auth work required.
+**Tech**: `mistral-embed` (Mistral AI API) + Zvec (embebido, Apache 2.0)
+- **mistral-embed**: 1024 dim, ~8K tokens/ctx, multilingual. Ya provisionado.
+- **Zvec**: "SQLite for vector search" — in-process, sin servidor, sin infraestructura externa. Built-in reranking (weighted fusion + RRF). ~128MB RAM para ~100K embeddings.
 
 **Approach**:
 - Apply an instruction/task-context prefix per chunk (e.g., "represents a technical link summary for retrieval").
-- Store vectors in **pgvector** on existing/managed PostgreSQL.
+- Store vectors in a local Zvec index file (single-file, portable).
+- Use Zvec's built-in reranking instead of an external reranker API.
 - Keyword/date/channel filters layered on top as needed.
 
-**Output**: pgvector table with chunk embeddings, queryable via dense similarity search.
+**Output**: Zvec index file with chunk embeddings, queryable via dense + sparse hybrid search with reranking.
+
+**Handoff to Phase 6 (clustering):** BERTopic or alternative reads vectors directly from Zvec via `collection.Fetch(pks, include_vector=True)`. No duplication of vectors — the same embeddings stored by `mistral-embed` are retrieved by ID and passed to the clustering algorithm. Zero extra API calls, zero data redundancy.
+
+**Why Zvec over pgvector:**
+- Zero-ops: no PostgreSQL instance to provision, manage, or back up. The index is a single file.
+- Built-in reranking eliminates the need for a separate cross-encoder API call.
+- Single-tenant, single-process profile matches AlcuinusBot exactly (one channel, one bot).
+- Apache 2.0 license, no licensing friction.
+- Tradeoff documented: embedded DB pushes index migration + backup responsibility to the app release cycle. Simple periodic file-copy backup covers this.
 
 ---
 
@@ -233,7 +241,6 @@ The 10-20% overlap range is well-documented across the RAG ecosystem. The strong
 ## Open decisions
 
 - **Clustering tech**: BERTopic (con HDBSCAN/UMAP) vs. alternativas más ligeras (KMeans, HDBSCAN standalone). Decidir antes de Phase 6.
-- Reranking: revisit only if `mistral-embed` top-K retrieval precision is insufficient; no reranker is currently planned.
 - Discord ingestion: scoped as future work, not yet started.
 
 ## Explicitly reverted / parked decisions

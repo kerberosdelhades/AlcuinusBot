@@ -19,7 +19,7 @@ Dos canales, separación limpia:
 | **Metadata de enlaces** | Título, descripción de cada enlace | HTTP fetch + HTML parse (genérico) + GitHub/arXiv API calls | ✅ |
 | **Chunking & Tagging** | Partir contenido en chunks recuperables con metadata | Parent-child chunks, 15% overlap (baseline) | Pendiente |
 | **Embedding** | Vectorizar chunks para búsqueda semántica | `mistral-embed` (Mistral AI API, 1024 dim) | Pendiente |
-| **Almacenamiento vectorial** | Persistir y consultar vectores | pgvector sobre PostgreSQL | Pendiente |
+| **Almacenamiento vectorial** | Persistir y consultar vectores | Zvec (embebido, in-process, Apache 2.0) | Pendiente |
 | **Clustering de bundles** | Agrupar enlaces+opiniones por tema | Por decidir (BERTopic como opción principal) | Pendiente |
 | **Curación (decay profiles)** | Clasificar contenido por vida útil | Evergreen / semi-stable / ephemeral | Pendiente |
 | **Guía de estudio** | Mapa vivo de contenidos para newcomers, organizado por cluster temático y curado por decay profile. No es el digest (Salida), sino la tabla de contenidos persistente. | Markdown o mensajes formateados en canal de doc | Pendiente |
@@ -40,16 +40,16 @@ Usamos [pytopicgram](https://github.com/ugr-sail/pytopicgram) (Universidad de Gr
 | Dependencia | Tipo | Justificación |
 |-------------|------|---------------|
 | **`mistral-embed`** | API externa (Mistral AI) | Embedding multilingual (es/en), 1024 dim, ~8K tokens/ctx. Ya provisionado — sin trabajo extra de integración. |
-| **pgvector** | Extensión PostgreSQL | Almacén vectorial sobre Postgres gestionado. Evita provisioning de Qdrant hasta que el corpus lo justifique. |
+| **Zvec** | Biblioteca embebida (Apache 2.0) | "SQLite for vector search" — in-process, sin servidor, reranking integrado (weighted fusion + RRF). ~128MB RAM para ~100K embeddings. API `Fetch(pks)` permite recuperar vectores por ID para clustering. Sustituye pgvector y elimina la dependencia de PostgreSQL. |
 | **GitHub API** | API externa (sin auth para uso ligero) | Metadata estructurada de repositorios (descripción, topics, estrellas). 60 req/h sin auth. |
 | **arXiv API** | API externa (pública) | Metadata de papers (título, autores, abstract). Sin rate limits prácticos. |
-| **BERTopic** | Python lib (clustering) | Opción principal para clustering temático sobre vectores de pgvector. Puede operar con embeddings externos. Alternativas por evaluar (KMeans, HDBSCAN standalone). |
+| **BERTopic** | Python lib (clustering) | Opción principal para clustering temático sobre vectores de Zvec. Puede operar con embeddings externos. Alternativas por evaluar (KMeans, HDBSCAN standalone). |
 | **Telethon** | Python lib (Telegram MTProto) | Crawling del canal fuente. Ya integrado via pytopicgram. |
 
 ### Decisiones bloqueadas
 
 - **Embedding**: `mistral-embed` es la decisión final. No se evaluarán alternativas salvo que la calidad de retrieval sea insuficiente en testing.
-- **Almacenamiento**: pgvector sobre PostgreSQL existente. Qdrant queda descartado hasta que el tamaño del corpus o necesidades de filtrado lo justifiquen.
+- **Almacenamiento**: Zvec (embebido, in-process, Apache 2.0). Sustituye pgvector/PostgreSQL. Elimina la dependencia de un servidor externo. Reranking integrado (weighted fusion + RRF) — no se necesita un reranker externo salvo que la precisión sea insuficiente en testing.
 - **Canales**: Dos canales separados (fuente read-only, documentación write-only). Esta decisión es estable.
 - **Metadata de enlaces**: HTTP GET + BeautifulSoup para la mayoría de URLs. GitHub y arXiv se resuelven vía sus APIs respectivas (sin rate limits para uso ligero, devuelven datos estructurados).
 
@@ -63,7 +63,7 @@ Canal fuente (read-only)
     → Metadata: fetch título + descripción (HTML genérico + GitHub/arXiv API) ✅
     → [Pendiente] Chunking: parent-child chunks, 15% overlap, metadata prefix
     → [Pendiente] Embedding: mistral-embed (1024 dim) → vectores
-    → [Pendiente] Storage: pgvector (PostgreSQL)
+    → [Pendiente] Storage: Zvec (in-process, reranking integrado)
     → [Pendiente] Clustering: por decidir (BERTopic como opción)
     → [Pendiente] Curación: decay profiles (evergreen/semi-stable/ephemeral)
     → [Pendiente] Guía de estudio: mapa vivo de contenidos por cluster
@@ -86,7 +86,7 @@ Three-pass algorithm para vincular mensajes posteriores a su anchor:
 4. **Metadata**: fetch título + descripción de cada enlace ✅
 5. **Chunking & Tagging**: parent-child chunks, 15% overlap, metadata prefix (pendiente)
 6. **Embedding**: `mistral-embed` → vectores 1024d (pendiente)
-7. **Storage**: pgvector en PostgreSQL (pendiente)
+7. **Storage**: Zvec (in-process, reranking integrado) (pendiente)
 8. **Clustering**: por decidir (BERTopic como opción) (pendiente)
 9. **Curación**: clasificación evergreen/semi-stable/ephemeral (pendiente)
 10. **Guía de estudio**: mapa vivo de contenidos, organizado por cluster y decay profile. La tabla de contenidos persistente del canal — distinta del digest periódico (pendiente)
