@@ -238,10 +238,6 @@ The 10-20% overlap range is well-documented across the RAG ecosystem. The strong
 
 ---
 
-## Open decisions
-
-- Discord ingestion: scoped as future work, not yet started.
-
 ## Explicitly reverted / parked decisions
 
 - vx-summary-style link processing bot — parked, out of scope.
