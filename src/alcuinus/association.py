@@ -23,13 +23,44 @@ from typing import Any
 
 
 def _parse_dt(date_str: str) -> datetime:
-    """Parse an ISO-ish datetime string, appending +00:00 if no tz given."""
+    """Parse a datetime string, handling both ISO and Telegram export formats."""
+    if not date_str or not date_str.strip():
+        return datetime.min.replace(tzinfo=timezone.utc)
+
+    # Normalize: Z → +00:00
     if date_str.endswith("Z"):
         date_str = date_str[:-1] + "+00:00"
-    dt = datetime.fromisoformat(date_str)
-    if dt.tzinfo is None:
-        dt = dt.replace(tzinfo=timezone.utc)
-    return dt
+
+    # Try ISO 8601 first (YYYY-MM-DD HH:MM:SS+00:00)
+    try:
+        dt = datetime.fromisoformat(date_str)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt
+    except ValueError:
+        pass
+
+    # Try Telegram chat export format (DD.MM.YYYY HH:MM:SS UTC+00:00)
+    parts = date_str.strip().split(" ")
+    if len(parts) >= 2:
+        date_part = parts[0]
+        time_part = parts[1]
+        # Parse DD.MM.YYYY
+        day, month, year = date_part.split(".")
+        # Parse HH:MM:SS
+        time_parts = time_part.split(":")
+        hour, minute = time_parts[0], time_parts[1]
+        second = time_parts[2] if len(time_parts) > 2 else "00"
+
+        dt = datetime(
+            int(year), int(month), int(day),
+            int(hour), int(minute), int(second),
+            tzinfo=timezone.utc,
+        )
+        return dt
+
+    # Fallback: epoch
+    return datetime.min.replace(tzinfo=timezone.utc)
 
 
 def _build_reaction(msg: dict[str, Any], strategy: str) -> dict[str, Any]:

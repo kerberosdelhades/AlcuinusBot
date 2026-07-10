@@ -151,22 +151,27 @@ def embed_and_store(
     schema = build_schema()
     collection = create_index(index_path, schema)
 
-    # Build Doc objects and insert
-    docs = []
-    for chunk, embedding in zip(chunks, embeddings):
-        doc = zvec.Doc(
-            id=chunk["chunk_id"],
-            vectors={"embedding": embedding},
-            fields={
-                "text": chunk["text"],
-                "bundle_anchor_id": chunk["bundle_anchor_id"],
-                "is_parent": chunk["is_parent"],
-                "token_estimate": chunk["token_estimate"],
-            },
-        )
-        docs.append(doc)
+    # Build Doc objects and insert in batches (Zvec limit: 1024 docs/batch)
+    ZVEC_BATCH = 1024
+    for i in range(0, len(chunks), ZVEC_BATCH):
+        batch_docs = []
+        for chunk, embedding in zip(
+            chunks[i : i + ZVEC_BATCH],
+            embeddings[i : i + ZVEC_BATCH],
+        ):
+            doc = zvec.Doc(
+                id=chunk["chunk_id"],
+                vectors={"embedding": embedding},
+                fields={
+                    "text": chunk["text"],
+                    "bundle_anchor_id": chunk["bundle_anchor_id"],
+                    "is_parent": chunk["is_parent"],
+                    "token_estimate": chunk["token_estimate"],
+                },
+            )
+            batch_docs.append(doc)
+        collection.insert(batch_docs)
 
-    collection.insert(docs)
     collection.flush()
 
     return index_path

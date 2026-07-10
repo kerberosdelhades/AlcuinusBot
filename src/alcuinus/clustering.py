@@ -52,11 +52,12 @@ def fetch_vectors_from_zvec(
 
     # Get all IDs from the index (query with a dummy vector to get all)
     # We use a zero vector to get everything — ANN returns nearest first,
-    # but at this scale (174 docs) it returns all.
+    # but at this scale it returns all.
     dummy = [0.0] * 1024
+    # large enough to get everything
     hits = collection.query(
         zvec.Query(field_name="embedding", vector=dummy),
-        topk=10000,  # large enough to get everything
+        topk=100000,  # large enough for 15K+ chunks
     )
 
     # Now fetch full data for each hit
@@ -209,6 +210,12 @@ def _get_stopwords() -> set[str]:
         "ver", "venir", "llevar", "poner", "salir", "volver", "tomar",
         "como", "más", "muy", "también", "ya", "solo", "hay", "era",
         "sido", "ser", "fue", "son", "están", "está", "ha", "han",
+        # Additional Spanish common words found in chat export data
+        "eso", "porque", "tiene", "pero", "aunque", "algo", "cada",
+        "todo", "todos", "otro", "otra", "otros", "otras", "mucho",
+        "muchos", "poco", "parte", "lado", "tipo", "dice", "dijo",
+        "hace", "hizo", "sea", "van", "pues", "cual", "cuales",
+        "dónde", "quién", "cuál", "cuánto", "siempre", "nunca",
     }
     return en | es
 
