@@ -22,7 +22,7 @@ Dos canales, separación limpia:
 | **Almacenamiento vectorial** | Persistir y consultar vectores | Zvec (embebido, in-process, Apache 2.0) | ✅ |
 | **Clustering de bundles** | Agrupar enlaces+opiniones por tema | KMeans (scikit-learn) + TF-IDF keywords. BERTopic descartado para corpus actual (71 bundles — UMAP necesita ~200+ puntos). | ✅ |
 | **Curación (decay profiles)** | Clasificar contenido por vida útil | Evergreen / semi-stable / ephemeral. LLM-based (Mistral) + heuristic fallback. | ✅ |
-| **Guía de estudio** | Mapa vivo de contenidos para newcomers, organizado por cluster temático y curado por decay profile. No es el digest (Salida), sino la tabla de contenidos persistente. | Markdown o mensajes formateados en canal de doc | Pendiente |
+| **Guía de estudio** | Syllabus: mapa vivo para newcomers, organizado por cluster y decay profile. | Markdown estructurado → `data/syllabus.md`. Tiered: evergreen → semi-stable → ephemeral. | ✅ |
 | **Salida** | Publicar resúmenes al canal de doc | Markdown formateado → `data/digest.txt`. Top 5 topics, emerging themes, influential links, LLM connection insight. | ✅ |
 
 ### Dependencia: pytopicgram

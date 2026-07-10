@@ -13,7 +13,7 @@
 | 6 | **Bundle clustering** — KMeans + TF-IDF keywords | ✅ Done |
 | 7 | **Decay classification** — evergreen / semi-stable / ephemeral tagging | ✅ Done |
 | 8 | **Output** — publish summaries to docs channel | ✅ Done |
-| 9 | **Syllabus generation** — living study guide for newcomers | Pending |
+| 9 | **Syllabus generation** — living study guide for newcomers | ✅ Done |
 | 10 | **6-month review cycle** — re-audit existing documentation | Pending |
 
 ---
