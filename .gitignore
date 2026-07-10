@@ -7,3 +7,4 @@ results/
 vendor/
 .venv/
 delete_this.py
+alcuinusbot-data-*.tar.gz
