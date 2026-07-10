@@ -14,7 +14,7 @@
 | 7 | **Decay classification** — evergreen / semi-stable / ephemeral tagging | ✅ Done |
 | 8 | **Output** — publish summaries to docs channel | ✅ Done |
 | 9 | **Syllabus generation** — living study guide for newcomers | ✅ Done |
-| 10 | **6-month review cycle** — re-audit existing documentation | Pending |
+| 10 | **6-month review cycle** — re-audit existing documentation | ✅ Done |
 
 ---
 
@@ -280,10 +280,15 @@ Per SPECIFICATIONS.md §"Estrategias de análisis":
 
 | Priority | Task | Effort | Blocks |
 |----------|------|--------|--------|
-| P0 | Phase 8 — Output (digest to docs channel) | Medium | Phase 9 |
-| P1 | Phase 9 — Syllabus generation | Medium | Phase 10 |
-| P2 | Phase 10 — 6-month review cycle | Small | — |
-| P3 | Fix reactions extraction (verify Telethon flags) | Small | Output quality |
+| P1 | Fix reactions extraction (verify Telethon flags) | Small | Output quality |
+| P2 | Set up cron job for Phase 10 review cycle | Small | — |
+| P3 | "Maybe someday" improvements (from section above) | Varies | — |
+
+---
+
+## All phases complete — 10/10 (100%)
+
+The full AlcuinusBot pipeline is implemented and verified end-to-end on real data. See "End-to-end pipeline verification" section above for details.
 
 ---
 
