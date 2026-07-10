@@ -244,6 +244,26 @@ The 10-20% overlap range is well-documented across the RAG ecosystem. The strong
 
 ---
 
+## Maybe someday — digest & output improvements
+
+Post-Phase 8 ideas for richer digest output:
+
+1. **Per-cluster LLM summaries** — replace cryptic keywords ("es, yo, app") with a one-line LLM description ("Immich self-hosted photo management — trending tools"). One batch LLM call, 8 clusters.
+
+2. **Temporal comparison** — diff this week's digest against last week's to show spikes, decay, and new clusters. Store previous state in `data/digest_history.json`.
+
+3. **"Quiet gems"** — links with few reactions but high semantic novelty. Compute each bundle vector's distance to its nearest neighbor in Zvec; the furthest outlier is the overlooked gem.
+
+4. **Controversy tracker** — reply-depth instead of reaction count. A link with 10 deep replies is more interesting than one with 30 "+1" likes.
+
+5. **Per-user contributions** — who shared what, who's most active per cluster. Data already exists in anchor sender IDs.
+
+6. **Personalized "you might have missed"** — given a user's reaction history, recommend unseen bundles within their interest clusters. Vector similarity in Zvec.
+
+
+
+---
+
 ## Future (post-MVP)
 
 Per SPECIFICATIONS.md §"Estrategias de análisis":
