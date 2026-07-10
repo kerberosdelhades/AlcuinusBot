@@ -260,6 +260,10 @@ Post-Phase 8 ideas for richer digest output:
 
 6. **Personalized "you might have missed"** — given a user's reaction history, recommend unseen bundles within their interest clusters. Vector similarity in Zvec.
 
+7. **Telegram bot hook — minimal (script)** — CLI script that posts digest/syllabus to docs channel on command. Lightweight: no command listening, no scheduling, just fire and forget. Pair with cron.
+
+8. **Telegram bot hook — full (listener)** — background process that listens for `/digest`, `/syllabus`, and `/review` commands in the docs channel. Generates and posts on demand.
+
 
 
 ---
