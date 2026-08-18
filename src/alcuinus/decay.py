@@ -8,6 +8,9 @@ Two classification strategies:
    and asks for a classification. One batch call for all clusters.
 2. **Heuristic** (fallback): classifies based on date ranges and keyword
    patterns. No API calls, instant, but less accurate.
+
+Storage: bundles and chunks are loaded from SQLite (preferred) or JSON.
+Decay profiles stay as JSON — small, output-shaped.
 """
 
 from __future__ import annotations
@@ -16,6 +19,8 @@ import json
 import os
 from datetime import datetime
 from typing import Any
+
+from alcuinus import db
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -202,24 +207,29 @@ Clusters:
 
 
 def run_decay(
-    clusters_path: str = DEFAULT_CLUSTERS_PATH,
-    chunks_path: str = DEFAULT_CHUNKS_PATH,
-    bundles_path: str = DEFAULT_BUNDLES_PATH,
-    output_path: str = DEFAULT_OUTPUT_PATH,
+    clusters_path: str = "data/clusters.json",
+    chunks_path: str = "data/chunks.json",
+    bundles_path: str = "data/bundles.json",
+    output_path: str = "data/decay_profiles.json",
     api_key: str | None = None,
     use_llm: bool = True,
+    db_path: str = db.DEFAULT_DB_PATH,
 ) -> str:
     """Classify clusters by decay profile and write output.
 
     Returns path to the decay profiles JSON file.
     """
-    # Load data
+    # Load data — prefer SQLite
     with open(clusters_path, encoding="utf-8") as f:
         cluster_data = json.load(f)
-    with open(chunks_path, encoding="utf-8") as f:
-        chunks = json.load(f)
-    with open(bundles_path, encoding="utf-8") as f:
-        bundles = json.load(f)
+    if db.db_exists(db_path):
+        chunks = db.load_chunks(db_path)
+        bundles = db.load_bundles(db_path)
+    else:
+        with open(chunks_path, encoding="utf-8") as f:
+            chunks = json.load(f)
+        with open(bundles_path, encoding="utf-8") as f:
+            bundles = json.load(f)
 
     clusters = cluster_data["clusters"]
 

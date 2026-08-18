@@ -10,6 +10,9 @@ Extracts representative keywords per cluster via TF-IDF on chunk text.
 - KMeans is deterministic, fast, and works well at this scale.
 - If corpus grows to 500+ bundles, BERTopic becomes the better choice.
   The ``ClusteringEngine`` abstraction makes swapping easy.
+
+Storage: chunk_ids are pulled from SQLite (``chunks`` table) instead of
+the brittle ``topk=100000`` zero-vector query against Zvec.
 """
 
 from __future__ import annotations
@@ -24,14 +27,14 @@ import zvec
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+from alcuinus import db
+
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
 
 DEFAULT_K = 8  # number of clusters (heuristic: ~9 bundles per cluster at 71)
 DEFAULT_INDEX_PATH = "data/zvec_index"
-DEFAULT_CHUNKS_PATH = "data/chunks.json"
-DEFAULT_OUTPUT_PATH = "data/clusters.json"
 TOP_KEYWORDS = 5  # keywords per cluster
 
 
@@ -41,28 +44,31 @@ TOP_KEYWORDS = 5  # keywords per cluster
 
 
 def fetch_vectors_from_zvec(
+    chunk_ids: list[str] | None = None,
     index_path: str = DEFAULT_INDEX_PATH,
+    db_path: str = db.DEFAULT_DB_PATH,
 ) -> dict[str, dict]:
-    """Fetch all documents from Zvec index.
+    """Fetch documents from Zvec index.
+
+    If ``chunk_ids`` is provided, fetch exactly those. Otherwise, fetch every
+    chunk that exists in the SQLite ``chunks`` table (the canonical ID list).
+    This replaces the previous ``topk=100000`` zero-vector workaround.
 
     Returns dict mapping chunk_id → {"vector": list[float], "text": str,
     "bundle_anchor_id": int, "is_parent": bool}.
     """
+    if chunk_ids is None:
+        # Use SQLite as the canonical ID list — the zero-vector hack is gone
+        if not db.db_exists(db_path):
+            raise FileNotFoundError(
+                f"DB not found at {db_path} and no chunk_ids supplied. "
+                "Either provide chunk_ids or run the migration first."
+            )
+        chunks = db.load_chunks(db_path)
+        chunk_ids = [c["chunk_id"] for c in chunks]
+
     collection = zvec.open(path=index_path)
-
-    # Get all IDs from the index (query with a dummy vector to get all)
-    # We use a zero vector to get everything — ANN returns nearest first,
-    # but at this scale it returns all.
-    dummy = [0.0] * 1024
-    # large enough to get everything
-    hits = collection.query(
-        zvec.Query(field_name="embedding", vector=dummy),
-        topk=100000,  # large enough for 15K+ chunks
-    )
-
-    # Now fetch full data for each hit
-    ids = [h.id for h in hits]
-    docs = collection.fetch(ids=ids, include_vector=True)
+    docs = collection.fetch(ids=chunk_ids, include_vector=True)
 
     result = {}
     for doc_id, doc in docs.items():
@@ -70,7 +76,7 @@ def fetch_vectors_from_zvec(
             "vector": doc.vector("embedding"),
             "text": doc.field("text") or "",
             "bundle_anchor_id": doc.field("bundle_anchor_id"),
-            "is_parent": doc.field("is_parent"),
+            "is_parent": bool(doc.field("is_parent")),
         }
 
     return result
@@ -227,16 +233,24 @@ def _get_stopwords() -> set[str]:
 
 def run_clustering(
     index_path: str = DEFAULT_INDEX_PATH,
-    chunks_path: str = DEFAULT_CHUNKS_PATH,
-    output_path: str = DEFAULT_OUTPUT_PATH,
+    db_path: str = db.DEFAULT_DB_PATH,
+    chunks_path: str = "data/chunks.json",
+    output_path: str = "data/clusters.json",
     k: int = DEFAULT_K,
 ) -> str:
     """Convenience wrapper: fetch vectors, cluster, extract keywords, write output.
 
-    Returns path to the clusters JSON file.
+    Uses SQLite for the chunk_id list (no zero-vector hack).
     """
-    # Fetch vectors from Zvec
-    vectors = fetch_vectors_from_zvec(index_path)
+    # Fetch vectors from Zvec. Canonical chunk_ids come from SQLite when the
+    # DB exists; otherwise fall back to the chunks JSON (compat window).
+    if db.db_exists(db_path):
+        vectors = fetch_vectors_from_zvec(db_path=db_path, index_path=index_path)
+    else:
+        with open(chunks_path, encoding="utf-8") as f:
+            fallback_chunks = json.load(f)
+        chunk_ids = [c["chunk_id"] for c in fallback_chunks]
+        vectors = fetch_vectors_from_zvec(chunk_ids=chunk_ids, index_path=index_path)
 
     # Cluster
     result = cluster_vectors(vectors, k=k)
@@ -249,9 +263,12 @@ def run_clustering(
         label = info["label"]
         info["keywords"] = keywords.get(label, [])
 
-    # Load chunk metadata for bundle info
-    with open(chunks_path, encoding="utf-8") as f:
-        chunks = json.load(f)
+    # Build chunk→bundle lookup from SQLite (preferred) or JSON
+    if db.db_exists(db_path):
+        chunks = db.load_chunks(db_path)
+    else:
+        with open(chunks_path, encoding="utf-8") as f:
+            chunks = json.load(f)
     chunk_meta = {c["chunk_id"]: c for c in chunks}
 
     # Add bundle info to each cluster

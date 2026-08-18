@@ -9,6 +9,9 @@ decay data. Organized by decay tier:
 
 Distinct from Phase 8 digest: the syllabus is structural, not temporal.
 It answers "what should a newcomer read first?" not "what happened this week?"
+
+Storage: bundles and link metadata are loaded from SQLite (preferred) or
+JSON. Syllabus is written as Markdown — it's the final output.
 """
 
 from __future__ import annotations
@@ -17,6 +20,8 @@ import json
 import os
 from datetime import datetime
 from typing import Any
+
+from alcuinus import db
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -35,7 +40,7 @@ TIER_LABELS = {
     "ephemeral": "🔴 Recent & ephemeral",
 }
 
-CHANNEL_NAME = "Kreitek IA"
+CHANNEL_NAME = os.environ.get("ALCUINUS_CHANNEL_NAME", "Kreitek IA")
 
 
 # ---------------------------------------------------------------------------
@@ -44,20 +49,25 @@ CHANNEL_NAME = "Kreitek IA"
 
 
 def load_data(
-    clusters_path: str = DEFAULT_CLUSTERS_PATH,
-    decay_path: str = DEFAULT_DECAY_PATH,
-    bundles_path: str = DEFAULT_BUNDLES_PATH,
-    metadata_path: str = DEFAULT_METADATA_PATH,
+    clusters_path: str = "data/clusters.json",
+    decay_path: str = "data/decay_profiles.json",
+    bundles_path: str = "data/bundles.json",
+    metadata_path: str = "data/link_metadata.json",
+    db_path: str = db.DEFAULT_DB_PATH,
 ) -> tuple[dict, dict, list, dict[str, dict]]:
-    """Load all data for syllabus generation."""
+    """Load all data for syllabus generation. Prefers SQLite when available."""
     with open(clusters_path, encoding="utf-8") as f:
         clusters = json.load(f)
     with open(decay_path, encoding="utf-8") as f:
         decay = json.load(f)
-    with open(bundles_path, encoding="utf-8") as f:
-        bundles = json.load(f)
-    with open(metadata_path, encoding="utf-8") as f:
-        meta_list = json.load(f)
+    if db.db_exists(db_path):
+        bundles = db.load_bundles(db_path)
+        meta_list = db.load_link_metadata(db_path)
+    else:
+        with open(bundles_path, encoding="utf-8") as f:
+            bundles = json.load(f)
+        with open(metadata_path, encoding="utf-8") as f:
+            meta_list = json.load(f)
 
     link_meta = {r["url"]: r for r in meta_list}
     return clusters, decay, bundles, link_meta
@@ -185,13 +195,14 @@ def run_syllabus(
     bundles_path: str = DEFAULT_BUNDLES_PATH,
     metadata_path: str = DEFAULT_METADATA_PATH,
     output_path: str = DEFAULT_OUTPUT_PATH,
+    db_path: str = db.DEFAULT_DB_PATH,
 ) -> str:
     """Load data, build syllabus sections, write output.
 
     Returns path to the syllabus Markdown file.
     """
     clusters_data, decay_data, bundles, link_meta = load_data(
-        clusters_path, decay_path, bundles_path, metadata_path
+        clusters_path, decay_path, bundles_path, metadata_path, db_path
     )
 
     clusters = clusters_data["clusters"]

@@ -519,7 +519,10 @@ class TestRunMetadata:
         monkeypatch.setattr(requests, "get", fake_get)
 
         result_path = run_metadata(
-            str(input_path), str(output_path), delay=0.0
+            db_path=str(tmp_path / "none.db"),  # JSON fallback for anchors
+            input_path=str(input_path),
+            output_path=str(output_path),
+            delay=0.0,
         )
         assert result_path == str(output_path)
         assert output_path.exists()

@@ -203,6 +203,7 @@ class TestRunSyllabus:
             bundles_path=str(b_path),
             metadata_path=str(m_path),
             output_path=str(out_path),
+            db_path=str(tmp_path / "none.db"),  # JSON fallback for bundles/meta
         )
 
         assert result == str(out_path)

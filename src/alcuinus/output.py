@@ -9,6 +9,9 @@ Digest format:
     - 3 emerging themes (ephemeral + newest clusters)
     - 5 most influential links (by reaction count per cluster)
     - 1 connection insight (LLM-generated cross-cluster link)
+
+Storage: bundles and link metadata are loaded from SQLite (preferred) or
+JSON. Digest stays as text — it's the final output.
 """
 
 from __future__ import annotations
@@ -17,6 +20,8 @@ import json
 import os
 from datetime import datetime
 from typing import Any
+
+from alcuinus import db
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -35,20 +40,25 @@ DEFAULT_OUTPUT_PATH = "data/digest.txt"
 
 
 def load_data(
-    clusters_path: str = DEFAULT_CLUSTERS_PATH,
-    decay_path: str = DEFAULT_DECAY_PATH,
-    bundles_path: str = DEFAULT_BUNDLES_PATH,
-    metadata_path: str = DEFAULT_METADATA_PATH,
+    clusters_path: str = "data/clusters.json",
+    decay_path: str = "data/decay_profiles.json",
+    bundles_path: str = "data/bundles.json",
+    metadata_path: str = "data/link_metadata.json",
+    db_path: str = db.DEFAULT_DB_PATH,
 ) -> tuple[dict, dict, list, dict[str, dict]]:
-    """Load all data for digest generation."""
+    """Load all data for digest generation. Prefers SQLite when available."""
     with open(clusters_path, encoding="utf-8") as f:
         clusters = json.load(f)
     with open(decay_path, encoding="utf-8") as f:
         decay = json.load(f)
-    with open(bundles_path, encoding="utf-8") as f:
-        bundles = json.load(f)
-    with open(metadata_path, encoding="utf-8") as f:
-        meta_list = json.load(f)
+    if db.db_exists(db_path):
+        bundles = db.load_bundles(db_path)
+        meta_list = db.load_link_metadata(db_path)
+    else:
+        with open(bundles_path, encoding="utf-8") as f:
+            bundles = json.load(f)
+        with open(metadata_path, encoding="utf-8") as f:
+            meta_list = json.load(f)
 
     link_meta = {r["url"]: r for r in meta_list}
     return clusters, decay, bundles, link_meta

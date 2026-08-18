@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+from alcuinus import db
 from alcuinus.anchor_detection import detect_anchors
 from alcuinus.association import associate, run_association
 
@@ -179,33 +180,27 @@ class TestAssociate:
 
 
 class TestRunAssociation:
-    def test_round_trip(self, synthetic_fixture):
-        """Write messages + anchors to temp files, run, read back."""
+    def test_round_trip(self, synthetic_fixture, tmp_path):
+        """Seed a temp SQLite DB with the fixture, run, verify JSON round-trip."""
         msgs, anchors = synthetic_fixture
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
-            json.dump(msgs, f)
-            msgs_tmp = f.name
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
-            json.dump(anchors, f)
-            anchors_tmp = f.name
+        db_path = str(tmp_path / "test.db")
+        db.init_db(db_path)
+        with db.connect(db_path) as conn:
+            db.upsert_messages(conn, msgs)
+            db.upsert_anchors(conn, anchors)
 
-        try:
-            out = run_association(
-                messages_path=msgs_tmp,
-                anchors_path=anchors_tmp,
-                output_path=tempfile.mktemp(suffix=".json"),
-                max_idle_hours=168,
-            )
-            with open(out, encoding="utf-8") as f:
-                bundles = json.load(f)
+        out_path = str(tmp_path / "bundles.json")
+        out = run_association(
+            db_path=db_path,
+            output_path=out_path,
+            max_idle_hours=168,
+        )
+        with open(out, encoding="utf-8") as f:
+            bundles = json.load(f)
 
-            assert len(bundles) == 3
-            assert all("anchor" in b and "reactions" in b and "window" in b for b in bundles)
-        finally:
-            Path(msgs_tmp).unlink(missing_ok=True)
-            Path(anchors_tmp).unlink(missing_ok=True)
-            Path(out).unlink(missing_ok=True)
+        assert len(bundles) == 3
+        assert all("anchor" in b and "reactions" in b and "window" in b for b in bundles)
 
 
 class TestReactionRecord:

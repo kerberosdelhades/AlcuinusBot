@@ -182,7 +182,9 @@ class TestGetStopwords:
 class TestFetchVectorsFromZvec:
     def test_fetches_all_docs(self, tmp_path):
         index_path = _make_zvec_with_vectors(tmp_path, n=10)
-        result = fetch_vectors_from_zvec(index_path)
+        result = fetch_vectors_from_zvec(
+            chunk_ids=[f"chunk_{i}" for i in range(10)], index_path=index_path
+        )
 
         assert len(result) == 10
         for chunk_id, info in result.items():
@@ -198,7 +200,7 @@ class TestFetchVectorsFromZvec:
         collection.flush()
         del collection
 
-        result = fetch_vectors_from_zvec(index_path)
+        result = fetch_vectors_from_zvec(chunk_ids=[], index_path=index_path)
         assert len(result) == 0
 
 
@@ -230,6 +232,7 @@ class TestRunClustering:
 
         result = run_clustering(
             index_path=index_path,
+            db_path=str(tmp_path / "none.db"),  # JSON fallback for chunk_ids
             chunks_path=str(chunks_path),
             output_path=str(out_path),
             k=4,

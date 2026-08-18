@@ -7,6 +7,10 @@ precision, larger parent chunks (1024 tokens) for LLM context.
 
 Overlap: 15% (NVIDIA FinanceBench optimal — 2024 benchmark tested
 10%, 15%, 20%; 15% best on 1,024-token chunks).
+
+Storage: SQLite is the source of truth. Bundles and link metadata are
+loaded from SQLite; chunks are written to both the ``chunks`` table and
+the legacy ``chunks.json`` file for backwards compat.
 """
 
 from __future__ import annotations
@@ -15,7 +19,7 @@ import json
 import os
 from typing import Any
 
-from alcuinus.metadata import fetch_metadata
+from alcuinus import db
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -24,7 +28,10 @@ from alcuinus.metadata import fetch_metadata
 CHILD_CHUNK_TOKENS = 256
 PARENT_CHUNK_TOKENS = 1024
 OVERLAP_RATIO = 0.15  # NVIDIA FinanceBench optimal
-CHANNEL = "Demiurgo"  # source channel name
+# Source channel name, used in chunk metadata prefix.  Configurable via env
+# var ``ALCUINUS_CHANNEL_NAME``; defaults to a generic value now that the
+# source isn't strictly the "Demiurgo" subgroup.
+CHANNEL = os.environ.get("ALCUINUS_CHANNEL_NAME", "Kreitek IA")
 
 
 # ---------------------------------------------------------------------------
@@ -47,10 +54,20 @@ def estimate_tokens(text: str) -> int:
 # ---------------------------------------------------------------------------
 
 
-def load_link_metadata(path: str = "data/link_metadata.json") -> dict[str, dict]:
-    """Load link metadata from Phase 3, keyed by URL."""
-    with open(path, encoding="utf-8") as f:
-        records = json.load(f)
+def load_link_metadata(
+    db_path: str = db.DEFAULT_DB_PATH,
+    json_path: str = "data/link_metadata.json",
+) -> dict[str, dict]:
+    """Load link metadata from SQLite (or JSON fallback), keyed by URL.
+
+    ``json_path`` is the legacy-JSON fallback used when the SQLite DB is
+    absent (fresh clone / one-release compat window).
+    """
+    if db.db_exists(db_path):
+        records = db.load_link_metadata(db_path)
+    else:
+        with open(json_path, encoding="utf-8") as f:
+            records = json.load(f)
     return {r["url"]: r for r in records}
 
 
@@ -271,22 +288,32 @@ def build_all_chunks(
 
 
 def run_chunking(
+    db_path: str = db.DEFAULT_DB_PATH,
     bundles_path: str = "data/bundles.json",
     link_metadata_path: str = "data/link_metadata.json",
     output_path: str = "data/chunks.json",
 ) -> str:
     """Convenience wrapper: load bundles + metadata, chunk, write output.
 
-    Returns path to the chunks JSON file.
+    Writes to SQLite (chunks table) and JSON (backwards compat).
     """
-    with open(bundles_path, encoding="utf-8") as f:
-        bundles = json.load(f)
+    # Load bundles from SQLite (preferred) or JSON
+    if db.db_exists(db_path):
+        bundles = db.load_bundles(db_path)
+    else:
+        with open(bundles_path, encoding="utf-8") as f:
+            bundles = json.load(f)
 
-    link_meta = load_link_metadata(link_metadata_path)
+    link_meta = load_link_metadata(db_path, json_path=link_metadata_path)
 
     chunks = build_all_chunks(bundles, link_meta)
 
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    # Write to SQLite
+    with db.connect(db_path) as conn:
+        db.upsert_chunks(conn, chunks)
+
+    # Write JSON for backwards compat
+    os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(chunks, f, indent=2, ensure_ascii=False)
 

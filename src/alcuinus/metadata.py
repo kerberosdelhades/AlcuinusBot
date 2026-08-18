@@ -10,6 +10,10 @@ description. Strategy is chosen by URL domain:
 - **arXiv API** — paper metadata (title, authors, abstract).
 - **Unsupported** — YouTube, PDFs, images, etc. get a ``status: "unsupported"``
   record so they can be tracked without wasted fetches.
+
+Storage: SQLite is the source of truth. URLs are pulled from
+``anchor_urls``; results are upserted into ``link_metadata`` and
+also written to ``data/link_metadata.json`` for backwards compat.
 """
 
 from __future__ import annotations
@@ -24,6 +28,8 @@ from urllib.parse import urlparse
 
 import requests
 from bs4 import BeautifulSoup
+
+from alcuinus import db
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -345,20 +351,56 @@ def fetch_all_metadata(
 
 
 def run_metadata(
+    db_path: str = db.DEFAULT_DB_PATH,
     input_path: str = "data/anchors.json",
     output_path: str = "data/link_metadata.json",
     delay: float = REQUEST_DELAY,
+    only_missing: bool = False,
 ) -> str:
     """Convenience wrapper: load anchors, fetch metadata, write output.
 
-    Returns path to the metadata JSON file.
+    Writes to SQLite (link_metadata table) and JSON (backwards compat).
+
+    If ``only_missing`` is True, URLs that already have status="ok" in
+    the DB are skipped (re-runs only fetch new or failed URLs).
     """
-    with open(input_path, encoding="utf-8") as f:
-        anchors = json.load(f)
+    # Load anchors — prefer SQLite
+    if db.db_exists(db_path):
+        anchors = db.load_anchors(db_path)
+    else:
+        with open(input_path, encoding="utf-8") as f:
+            anchors = json.load(f)
+
+    # Build a set of URLs we already have status="ok" for (if filtering)
+    already_ok: set[str] = set()
+    if only_missing and db.db_exists(db_path):
+        with db.connect(db_path) as conn:
+            for r in conn.execute(
+                "SELECT url FROM link_metadata WHERE status = 'ok'"
+            ).fetchall():
+                already_ok.add(r["url"])
+
+    # Filter anchors to only include URLs that aren't already ok
+    if only_missing:
+        for a in anchors:
+            a["urls"] = [u for u in a.get("urls", []) if u not in already_ok]
 
     results = fetch_all_metadata(anchors, delay=delay)
 
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    # If we're in only_missing mode, also pull the existing ok records
+    # so the output reflects the full set
+    if only_missing and db.db_exists(db_path):
+        existing = [r for r in db.load_link_metadata(db_path) if r.get("status") == "ok"]
+        results = existing + results
+
+    # Write to SQLite (upsert). init_db is idempotent — covers fresh DBs
+    # (tests, or a clone that hasn't run `migrate` yet).
+    db.init_db(db_path)
+    with db.connect(db_path) as conn:
+        db.upsert_link_metadata(conn, results)
+
+    # Write JSON for backwards compat
+    os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
 

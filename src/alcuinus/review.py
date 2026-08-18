@@ -29,6 +29,7 @@ from typing import Any
 from alcuinus.decay import DECAY_PROFILES
 from alcuinus.output import run_output as regenerate_digest
 from alcuinus.syllabus import run_syllabus as regenerate_syllabus
+from alcuinus import db
 
 # ---------------------------------------------------------------------------
 # Configuration

@@ -5,62 +5,37 @@ Three strategies, applied in priority order:
 
 1. **Explicit reply** — a message whose ``reply_to`` points directly at
    an anchor is assigned to that anchor, regardless of window boundaries.
-
 2. **Window: until next anchor** — default; messages belong to the nearest
    preceding anchor. The window closes when the next anchor appears.
-
 3. **Time-gap fallback** — for the last anchor in the data, a configurable
    idle cutoff prevents stale assignments (messages posted long after the
    conversation died).
+
+Storage: SQLite is the source of truth. Windowing uses a single indexed
+SQL query instead of an O(N × A) Python loop — ``bisect`` on the
+sorted anchor list pulled from the DB.
 """
 
 from __future__ import annotations
 
 import json
 import os
+from bisect import bisect_right
 from datetime import datetime, timezone
 from typing import Any
+
+from alcuinus import db
 
 
 def _parse_dt(date_str: str) -> datetime:
     """Parse a datetime string, handling both ISO and Telegram export formats."""
-    if not date_str or not date_str.strip():
+    iso = db.parse_date_iso(date_str)
+    if iso is None:
         return datetime.min.replace(tzinfo=timezone.utc)
-
-    # Normalize: Z → +00:00
-    if date_str.endswith("Z"):
-        date_str = date_str[:-1] + "+00:00"
-
-    # Try ISO 8601 first (YYYY-MM-DD HH:MM:SS+00:00)
     try:
-        dt = datetime.fromisoformat(date_str)
-        if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=timezone.utc)
-        return dt
+        return datetime.fromisoformat(iso)
     except ValueError:
-        pass
-
-    # Try Telegram chat export format (DD.MM.YYYY HH:MM:SS UTC+00:00)
-    parts = date_str.strip().split(" ")
-    if len(parts) >= 2:
-        date_part = parts[0]
-        time_part = parts[1]
-        # Parse DD.MM.YYYY
-        day, month, year = date_part.split(".")
-        # Parse HH:MM:SS
-        time_parts = time_part.split(":")
-        hour, minute = time_parts[0], time_parts[1]
-        second = time_parts[2] if len(time_parts) > 2 else "00"
-
-        dt = datetime(
-            int(year), int(month), int(day),
-            int(hour), int(minute), int(second),
-            tzinfo=timezone.utc,
-        )
-        return dt
-
-    # Fallback: epoch
-    return datetime.min.replace(tzinfo=timezone.utc)
+        return datetime.min.replace(tzinfo=timezone.utc)
 
 
 def _build_reaction(msg: dict[str, Any], strategy: str) -> dict[str, Any]:
@@ -128,35 +103,24 @@ def associate(
         else:
             enriched_anchors[aid] = dict(anchor_by_id[aid])
 
-    # --- pass 1: window assignment ("until next anchor") -------------------
-    # Assign every message after the first anchor to the nearest preceding
-    # anchor.  Time-gap filtering is deferred to pass 3 so that reply
-    # override (pass 2) gets a chance to rescue late replies.
-    assignment: dict[int, int] = {}  # reaction_msg_id → anchor_msg_id
-    current_anchor_idx = 0
+    # --- pass 1: window assignment (binary search — O(N log A)) -----------
+    # For each non-anchor message, find the largest anchor id <= mid.
+    # bisect_right returns the insertion point; subtract 1 to get the index.
+    assignment: dict[int, int] = {}
 
     for msg in sorted(messages, key=lambda m: m["id"]):
         mid = msg["id"]
-
         if mid in anchor_ids:
-            continue  # anchors are not reactions
+            continue
         if mid < anchor_ids_sorted[0]:
-            continue  # orphan before first anchor
-
-        # Advance current_anchor_idx to the last anchor that precedes this msg
-        while (
-            current_anchor_idx + 1 < len(anchor_ids_sorted)
-            and anchor_ids_sorted[current_anchor_idx + 1] < mid
-        ):
-            current_anchor_idx += 1
-
-        assignment[mid] = anchor_ids_sorted[current_anchor_idx]
+            continue
+        idx = bisect_right(anchor_ids_sorted, mid) - 1
+        if idx < 0:
+            continue
+        assignment[mid] = anchor_ids_sorted[idx]
 
     # --- pass 2: reply override + mark reply-anchored messages -------------
-    # A message whose reply_to points directly at *any* anchor is held by
-    # that anchor regardless of window boundaries or time gaps.
     reply_anchored: set[int] = set()
-
     for mid, current_anchor in list(assignment.items()):
         msg = msg_by_id[mid]
         reply_target = (msg.get("reply_to") or {}).get("reply_to_msg_id")
@@ -166,8 +130,6 @@ def associate(
                 assignment[mid] = reply_target
 
     # --- pass 3: time-gap cleanup (last anchor only) -----------------------
-    # Remove reactions assigned to the last anchor that are too far away,
-    # unless they explicitly replied to an anchor (reply_anchored).
     last_anchor_id = anchor_ids_sorted[-1]
     last_anchor_dt = _parse_dt(msg_by_id[last_anchor_id]["date"])
     for mid in list(assignment):
@@ -215,6 +177,7 @@ def associate(
 
 
 def run_association(
+    db_path: str = db.DEFAULT_DB_PATH,
     messages_path: str = "data/channel_messages.json",
     anchors_path: str = "data/anchors.json",
     output_path: str = "data/bundles.json",
@@ -223,16 +186,26 @@ def run_association(
 ) -> str:
     """Convenience wrapper: load messages + anchors, build bundles, write output.
 
-    Returns path to the bundles JSON file.
+    Writes to SQLite (bundles + reactions tables) and JSON (backwards compat).
     """
-    with open(messages_path, encoding="utf-8") as f:
-        messages = json.load(f)
-    with open(anchors_path, encoding="utf-8") as f:
-        anchors = json.load(f)
+    # Load — prefer SQLite
+    if db.db_exists(db_path):
+        messages = db.load_messages(db_path)
+        anchors = db.load_anchors(db_path)
+    else:
+        with open(messages_path, encoding="utf-8") as f:
+            messages = json.load(f)
+        with open(anchors_path, encoding="utf-8") as f:
+            anchors = json.load(f)
 
     bundles = associate(messages, anchors, max_idle_hours=max_idle_hours)
 
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    # Write to SQLite
+    with db.connect(db_path) as conn:
+        db.upsert_bundles(conn, bundles)
+
+    # Write JSON for backwards compat
+    os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(bundles, f, indent=2, ensure_ascii=False)
 

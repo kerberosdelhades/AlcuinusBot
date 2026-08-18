@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+from alcuinus import db
 from alcuinus.chunking import (
     CHILD_CHUNK_TOKENS,
     OVERLAP_RATIO,
@@ -59,7 +60,7 @@ class TestBuildMetadataPrefix:
             }
         }
         prefix = build_metadata_prefix(bundle)
-        assert "[channel: Demiurgo]" in prefix
+        assert "[channel: Kreitek IA]" in prefix
         assert "[date: 2024-03-15]" in prefix
         assert "[author: 12345]" in prefix
         assert "[lang: en]" in prefix  # pure ASCII
@@ -267,7 +268,7 @@ class TestBuildAllChunks:
         link_meta = {"https://example.com/article": {"title": "Test Title"}}
         chunks = build_all_chunks(bundles, link_meta)
         for c in chunks:
-            assert "[channel: Demiurgo]" in c["text"]
+            assert "[channel: Kreitek IA]" in c["text"]
             assert "[date: 2024-06-15]" in c["text"]
 
 
@@ -285,7 +286,9 @@ class TestLoadLinkMetadata:
         path = tmp_path / "meta.json"
         path.write_text(json.dumps(data), encoding="utf-8")
 
-        result = load_link_metadata(str(path))
+        result = load_link_metadata(
+            db_path=str(tmp_path / "none.db"), json_path=str(path)
+        )
         assert result["https://a.com/1"]["title"] == "A"
         assert result["https://a.com/2"]["title"] == "B"
 
@@ -306,7 +309,7 @@ class TestRunChunking:
                     "text_preview": "Some text here. " * 10,
                 },
                 "reactions": [
-                    {"text_preview": "Interesting"},
+                    {"msg_id": 2, "text_preview": "Interesting"},
                 ],
             }
         ]
@@ -314,16 +317,33 @@ class TestRunChunking:
             {"url": "https://a.com/x", "title": "Title X", "description": "Desc X"},
         ]
 
-        bundles_path = tmp_path / "bundles.json"
-        meta_path = tmp_path / "meta.json"
+        # Seed a temp SQLite DB (SQLite is the source of truth post-refactor)
+        db_path = str(tmp_path / "test.db")
+        db.init_db(db_path)
+        msgs = [
+            {
+                "id": 1, "date": "2024-01-01", "message": "Some text here. " * 10,
+                "from_id": {"user_id": 1}, "fwd_from": None, "reply_to": None,
+            },
+            {
+                "id": 2, "date": "2024-01-01 00:05:00", "message": "Interesting",
+                "from_id": {"user_id": 2}, "fwd_from": None, "reply_to": None,
+            },
+        ]
+        anchors = [
+            {
+                "msg_id": 1, "date": "2024-01-01", "sender_id": "1",
+                "urls": ["https://a.com/x"], "text_preview": "Some text here. " * 10,
+            },
+        ]
+        with db.connect(db_path) as conn:
+            db.upsert_messages(conn, msgs)
+            db.upsert_anchors(conn, anchors)
+            db.upsert_bundles(conn, bundles)
+            db.upsert_link_metadata(conn, link_meta)
+
         out_path = tmp_path / "chunks.json"
-
-        bundles_path.write_text(json.dumps(bundles), encoding="utf-8")
-        meta_path.write_text(json.dumps(link_meta), encoding="utf-8")
-
-        result = run_chunking(
-            str(bundles_path), str(meta_path), str(out_path)
-        )
+        result = run_chunking(db_path=db_path, output_path=str(out_path))
         assert result == str(out_path)
         assert out_path.exists()
 
