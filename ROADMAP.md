@@ -8,7 +8,7 @@
 | 1 | **Anchor detection** — identify messages containing links | ✅ Done |
 | 2 | **Association** — link subsequent opinions/reactions to each anchor | ✅ Done |
 | 3 | **Metadata** — fetch title + description per link (HTML + GitHub/arXiv API) | ✅ Done |
-| 4 | **Chunking & Tagging** — parent-child chunks, overlap, metadata prefix | Pending |
+| 4 | **Chunking & Tagging** — parent-child chunks, overlap, metadata prefix | ✅ Done |
 | 5 | **Embedding** — `mistral-embed` (1024 dim) → Zvec | ✅ Done |
 | 6 | **Bundle clustering** — KMeans + TF-IDF keywords | ✅ Done |
 | 7 | **Decay classification** — evergreen / semi-stable / ephemeral tagging | ✅ Done |
@@ -20,12 +20,13 @@
 
 ## Phase 0 — Ingestion ✅
 
-- **Module**: `src/alcuinus/extraction.py`
-- **Data**: 252 messages extracted to `data/channel_messages.json`
-- **Date range**: 2022-09-15 → 2026-05-25
-- **Key stats**: 71 messages with URLs, 207 forwarded, 43 with reply chains, 0 with extracted reactions (field present but null)
-- **Tech**: pytopicgram crawler (vendored in `vendor/pytopicgram/`) over Telethon
-- **Config**: `config/.env` (api_id, api_hash, source_channel, docs_channel)
+- **Module**: `src/alcuinus/extraction.py` (Telethon vía pytopicgram) o `src/alcuinus/chat_export_ingest.py` (HTML export)
+- **Datos actuales** (2026-08-09): **32,227 mensajes** en `data/channel_messages.json`
+- **Rango de fechas**: **2021-01-01 → 2025-12-31** (672 mensajes sin fecha, 2.1%)
+- **Senders únicos**: 727 (top 5: empty 11,185, GonzaloFotonPe 4,072, Jose Rodriguez "Boriel" 2,845, Ivan Juanes 2,226, Joaquin 1,947)
+- **Mensajes con URL**: 5,913
+- **Tech ingestión actual**: HTML export (Telegram Desktop) → `chat_export_ingest.py`. El camino Telethon existe en `extraction.py` y está parcheado, pero no se usó para la última ingesta. Ver **Auditoría A** (Telethon) para la recomendación de volver a Telethon como camino principal.
+- **Config**: `config/.env` (api_id, api_hash, source_channel, docs_channel) + `.env` raíz (MISTRAL_API_KEY)
 
 ### Extraction module API
 
@@ -37,12 +38,13 @@ run_extraction(days_back=0, output_dir="data") → path_to_json
 
 ### Known issues / future work
 
-- **Reactions not populated**: pytopicgram's Telethon crawler may not request `MessageReactions`. Need to verify the Telethon client flags or add a post-processing step that fetches reactions separately.
+- **Reacciones emoji no se extraen vía HTML export** — `chat_export_ingest.py` no parsea `MessageReactions`. Si se quiere emoji real, hay que volver al camino Telethon y añadir un post-step (`GetMessagesReactionsRequest` en batches de 100).
+- **"Reacciones" windowed ≠ reacciones reales.** La pipeline de asociación (Phase 2) produce 26,308 registros `reaction` que son mensajes de seguimiento en la ventana del anchor — un proxy de engagement, no reacciones emoji. Distinción documentada en **Auditoría D**.
 - **Single channel only**: `run_extraction` hardcodes one channel. Multi-channel ingestion needs extending.
 
 ---
 
-## Phase 1 — Anchor detection
+## Phase 1 — Anchor detection ✅
 
 **Goal**: Given `data/channel_messages.json`, identify every message that contains at least one URL. These are the "anchors" — the messages around which discussion clusters form.
 
@@ -90,7 +92,7 @@ run_extraction(days_back=0, output_dir="data") → path_to_json
 
 ---
 
-## Phase 3 — Metadata
+## Phase 3 — Metadata ✅
 
 **Goal**: For each unique URL in the anchors, fetch the page title and meta description.
 
@@ -109,7 +111,7 @@ run_extraction(days_back=0, output_dir="data") → path_to_json
 
 ---
 
-## Phase 4 — Chunking & Tagging
+## Phase 4 — Chunking & Tagging ✅
 
 **Goal**: Split extracted content into retrievable chunks with rich metadata.
 
@@ -280,13 +282,94 @@ Per SPECIFICATIONS.md §"Estrategias de análisis":
 
 ---
 
+## Auditoría técnica — 2026-08-09 (consolidada)
+
+Antes documento separado (`EVALUATION-2026-08-09.md`, eliminado el 2026-08-17 al consolidarse aquí). Hallazgos clave:
+
+- **Los docs describían un piloto 100× más pequeño** (252 mensajes / 71 anchors) que no correspondía a los datos reales (32,227 mensajes / 5,907 anchors). Docs corregidos.
+- **Canal real**: chat general de Kreitek (no "Demiurgo"). El fixture de 252 mensajes venía de otro canal y el usuario pidió no sacar conclusiones de él (registrado en `.dao/memory/`).
+
+### A. Ingestión — Telethon como camino primario (P0, pendiente)
+
+- Los datos actuales vinieron de `chat_export_ingest.py` (export HTML). `extraction.py` (Telethon vía pytopicgram) existe, está parcheado, y es el camino recomendado para producción.
+- **Por qué**: sin export manual; reacciones emoji reales (`MessageReactions` + post-step `GetMessagesReactionsRequest` en batches de 100); re-runs idempotentes con `min_id`; `replies`/`forwards`/`views` que el export HTML pierde (útiles para "influential links" y "per-user contributions").
+- **Con SQLite**: `min_id = SELECT MAX(id) FROM messages` → el modo `--incremental` es ~30 líneas.
+- **Pitfalls**: dos `*.session` en la raíz (gitignored, no borrar); `pytopicgram/crawler.py` traga excepciones con `except Exception`; esperar `FloodWaitError` (5-15 min para 32K mensajes). Clave de datos: `msg_id`, no orden de archivo.
+
+### B. Reindex Zvec — política incremental (P0, pendiente)
+
+- Zvec está diseñado para updates incrementales: `insert`/`upsert`/`update`/`delete` por id, staging buffer, `optimize()` en background, `flush()`. Escrituras inmediatamente consultables.
+- **Hoy (anti-pattern)**: `embedding.py:99-104` hace `shutil.rmtree(index_path)` y re-embebe los 15,330 chunks cada run — ~$0.32 USD + 3-5 min por run.
+- **Patrón objetivo**: delta de chunk_ids desde SQLite (`SELECT chunk_id FROM chunks`) → embed solo lo nuevo → `upsert(docs)` → `optimize()` → `flush()`.
+
+| Escenario | Hoy | Tras el cambio |
+|---|---|---|
+| 50 mensajes nuevos | $0.32, 3-5 min | $0.0013, ~5 s |
+| 500 mensajes nuevos | $0.32, 3-5 min | $0.013, ~30 s |
+| Run inicial (sin índice) | $0.32, 3-5 min | igual |
+
+- **Caveat**: el staging buffer es flat index (la búsqueda degrada mientras crece); `optimize()` periódico lo mantiene sano — irrelevante a 15K docs, relevante a 1M+.
+- **Clustering**: re-cluster de 15K×1024d tarda segundos; para deltas pequeños, `MiniBatchKMeans.partial_fit()` o re-cluster solo si delta > 5%.
+- El hack de `topk=100000` con zero-vector ya está eliminado en clustering (chunk_ids canónicos desde SQLite).
+
+### C. Ingestión en vivo — evaluado, no recomendado
+
+- Un daemon 24/7 `events.NewMessage` es overkill para un digest semanal. Preferible **polling incremental** (cron 15-60 min): `min_id` persistido → append → estado.
+- El modo live solo merece la pena con frescura <5 min o triggers por autor — no aplica hoy.
+
+### D. Calidad general — hallazgos
+
+**Fortalezas**: arquitectura 10 fases con verificación end-to-end; fases 1/2/4 bien testeadas (15/12/21 tests); elección de Zvec y mistral-embed documentada; degradación elegante en metadata; separación dual de canales correcta; código bien comentado.
+
+**Pitfalls pendientes**:
+- **Clusters pobres a esta escala**: keywords tipo stopword (`creo`, `tengo`, `mismo`, `gente`, `xataka`, `maria`, `molina`) → ampliar stopwords y re-evaluar BERTopic a 5.9K bundles (P1).
+- **Digest repetitivo**: el mismo link en Top Topics y Most Discussed Links → dedupe (P1).
+- **"Reacciones" es un proxy**: 26,308 registros = mensajes de seguimiento en ventana del anchor, no emoji. Documentado; falta un comentario en `association.py`.
+- **892 fallos de metadata**: 18 timeouts recuperables con retry/backoff; el resto (403/429/404) son paywalls y link rot (P3).
+- **`delete_this.py`** es un script one-shot, no pytest; sin tests del camino Zvec (P3).
+- **Reproducibilidad**: un clone limpio no arranca sin datos; el tarball `alcuinusbot-data-v0.1.tar.gz` (41 MB, gitignored) es el único seed (P3).
+
+### E. Recomendaciones — estado
+
+| # | Recomendación | Estado |
+|---|---|---|
+| 1 | Migrar storage a SQLite | ✅ Implementado (2026-08-10; commiteado 2026-08-17) |
+| 2 | Reindex Zvec incremental | ⏳ P0 pendiente (ver B) |
+| 3 | Telethon como camino primario | ⏳ P0 pendiente (ver A) |
+| 4 | Dedupe digest + calidad de clusters | ⏳ P1 pendiente (ver D) |
+| 5 | Cache de `load_messages()` | ✅ Supersedido por SQLite |
+| 6 | Tests del camino Zvec (embeddings sintéticos) | ⏳ P3 pendiente |
+| 7 | Proyecto bootable desde clone | ⏳ P3 pendiente |
+| 8 | Retry/backoff en metadata | ⏳ P3 pendiente |
+| 9 | Fix `CHANNEL = "Demiurgo"` hardcodeado | ✅ Implementado (`ALCUINUS_CHANNEL_NAME`) |
+| 10 | Disambiguar "reacciones" en docs | ✅ Documentado (README/SPECS) |
+| 11 | `delete_this.py` → pytest suite | ⏳ P3 pendiente |
+
+### F. SQLite — decisión e implementación (✅ hecho)
+
+- **Decisión (bloqueada)**: SQLite embebido (stdlib) como fuente de verdad; 7 tablas + `_meta`, FKs enforced, WAL mode, índices. Reemplaza 5 JSONs (~38 MB → 30 MB, 97,127 filas).
+- Schema completo, migración idempotente y verificación en `src/alcuinus/db.py` (CLI: `python -m alcuinus.db migrate`).
+- Todos los módulos leen de SQLite con fallback JSON; los JSONs se escriben una release más por compatibilidad.
+- **Lo que desbloquea**: `SELECT chunk_id FROM chunks` (B), `SELECT MAX(id) FROM messages` (A), asociación O(N log A) con `bisect`, fin del hack `topk=100000`, "per-user contributions" como GROUP BY instantáneo.
+- `clusters.json`, `decay_profiles.json`, `digest.txt`, `syllabus.md` siguen como JSON/texto (output-shaped, fuera del hot path).
+
+---
+
 ## Immediate next steps
 
-| Priority | Task | Effort | Blocks |
-|----------|------|--------|--------|
-| P1 | Fix reactions extraction (verify Telethon flags) | Small | Output quality |
-| P2 | Set up cron job for Phase 10 review cycle | Small | — |
-| P3 | "Maybe someday" improvements (from section above) | Varies | — |
+| Priority | Task | Esfuerzo | Estimación | Fuente |
+|----------|------|----------|------------|--------|
+| **P0** | Implementar reindex incremental en Zvec (`upsert` + `optimize()`, sin `rmtree`) | Small–Medium | 0.5–1 día | Auditoría B |
+| **P0** | Reintegrar Telethon como camino primario (con `--incremental` y `min_id`) + enrichment de reacciones emoji | Small | 0.5–1 día | Auditoría A |
+| P1 | Dedupe digest output (mismo link en Top Topics + Most Discussed Links) | Trivial | 30–60 min | Auditoría D |
+| P1 | Mejorar calidad de clusters: stopwords (`creo`, `tengo`, `gente`, `xataka`, `mismo`, `maria`, `molina`) + re-evaluar BERTopic a 5.9K | Small–Medium | 0.5–1.5 días | Auditoría D |
+| P2 | Set up cron job para Phase 10 review cycle | Small | 30–60 min | — |
+| P2 | ~~Cache `load_messages()`~~ — supersedido por SQLite | n/a | — | Auditoría F |
+| P3 | Retry/backoff en `metadata.py` (recuperar la mayoría de los 18 timeouts) | Small | 1–2 h | Auditoría D |
+| P3 | Reproducibilidad: `bootstrap.sh` / `make data` desde seed documentado | Small | 1–2 h | Auditoría D |
+| P3 | Tests del camino Zvec con embeddings sintéticos (sin `MISTRAL_API_KEY`) | Small | 2–3 h | Auditoría E |
+| P3 | Reemplazar `delete_this.py` por pytest suite (mock Mistral) | Medium | 2–4 h | Auditoría E |
+| — | "Maybe someday" (8 ideas de output, sección arriba) | Varies | 1–2 semanas | — |
 
 ---
 
@@ -298,17 +381,31 @@ The full AlcuinusBot pipeline is implemented and verified end-to-end on real dat
 
 ## End-to-end pipeline verification
 
-The full pipeline (Phases 0–7) was verified end-to-end on 2026-07-10:
+El pipeline completo (Phases 0–7) está verificado end-to-end sobre los datos reales de `data/`:
 
 ```
-252 msgs → 71 anchors → 71 bundles → 74 URLs → 173 chunks
-   → 8 clusters (KMeans + TF-IDF) → 8 decay profiles (LLM)
-   All cross-phase ID checks pass. No orphan data. 100% chunk coverage.
-   Cluster quality spot-check confirms keywords match real message content.
+32,227 msgs → 5,907 anchors → 5,907 bundles → 5,435 URLs → 15,330 chunks
+   → 12 clusters (KMeans + TF-IDF) → 8 decay profiles (LLM)
+   Cross-phase ID checks pass. No orphan data. 100% chunk coverage.
+   Cluster quality spot-check confirma keywords contra contenido real.
 ```
+
+> **Nota sobre los números.** El bloque original de "End-to-end pipeline verification" listaba 252 → 71 → 71 → 74 → 173 → 8 → 8. Esos números corresponden a un piloto previo con un subconjunto muy pequeño del canal. Los números arriba (32,227 → 5,907 → 5,907 → 5,435 → 15,330 → 12 → 8) son el estado actual de `data/` a 2026-08-09. La verificación de `delete_this.py` corre contra los datos reales y pasa con cobertura 100%.
 
 Verification script: `delete_this.py` (gitignored, dev-only). Run with:
 ```bash
 uv run python delete_this.py
 ```
 Requires `MISTRAL_API_KEY` and `config/.env` with Telegram credentials.
+
+## Estado del reindex Zvec
+
+⚠️ **La política actual es "nuke & rebuild"**: `embedding.py:99-104` hace `shutil.rmtree(index_path)` y re-embebe los 15,330 chunks en cada run. Costo ~$0.32 USD + 3-5 min de wall clock por run. Esto es ineficiente y anti-pattern para Zvec, que soporta `insert`/`upsert`/`update`/`delete` por id con staging buffer y `optimize()` en background. La política incremental está documentada en **Auditoría B** — P0 pendiente (#1 de los P0 restantes).
+
+---
+
+## Registro de cambios recientes
+
+- **2026-08-17** — Consolidación: `EVALUATION-2026-08-09.md` eliminado; contenido migrado a la sección "Auditoría técnica". Higiene: `.env` raíz añadido a `.gitignore`; `data/bundles.json`, `data/chunks.json`, `data/link_metadata.json` dejan de estar trackeados (outputs de compatibilidad; SQLite es la fuente de verdad); Phase 4 marcada ✅ en la tabla de estado.
+- **2026-08-10** — Capa SQLite (P0 #1 de la auditoría): `src/alcuinus/db.py` + refactor de 9 módulos + `tests/test_db.py` (26 tests). Pipeline completo re-ejecutado contra `data/alcuinus.db` (97,127 filas, integrity ok).
+- **2026-07-10** — Bot hook mínimo (`bot.py`) y datos reales de 32K mensajes; Phase 10 completa (100% roadmap).
