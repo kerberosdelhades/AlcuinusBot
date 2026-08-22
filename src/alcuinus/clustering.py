@@ -222,6 +222,14 @@ def _get_stopwords() -> set[str]:
         "muchos", "poco", "parte", "lado", "tipo", "dice", "dijo",
         "hace", "hizo", "sea", "van", "pues", "cual", "cuales",
         "dónde", "quién", "cuál", "cuánto", "siempre", "nunca",
+        # Audit 2026-08-09 §D: filler words dominating cluster keywords
+        "creo", "tengo", "mismo", "gente", "mejor", "estoy",
+        "problema", "Gracias", "gracias", "bien", "claro", "duda",
+        "verdad", "falta", "caso", "forma", "tan", "vez", "tal",
+        # Social media platform noise (URL fragments, not topics)
+        "xataka", "vxtwitter", "fixupx", "youtu",
+        # Frequent poster names (not topics)
+        "maria", "molina",
     }
     return en | es
 

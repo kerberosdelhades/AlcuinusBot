@@ -173,6 +173,12 @@ class TestGetStopwords:
         assert "el" in sw
         assert "de" in sw
 
+    def test_includes_audit_stopwords(self):
+        """Stopwords identified in the 2026-08-09 audit §D."""
+        sw = _get_stopwords()
+        for word in ["creo", "tengo", "mismo", "gente", "xataka", "maria", "molina"]:
+            assert word in sw, f"{word!r} should be in stopwords"
+
 
 # ---------------------------------------------------------------------------
 # fetch_vectors_from_zvec (real Zvec index)
