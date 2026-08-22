@@ -289,12 +289,13 @@ Antes documento separado (`EVALUATION-2026-08-09.md`, eliminado el 2026-08-17 al
 - **Los docs describían un piloto 100× más pequeño** (252 mensajes / 71 anchors) que no correspondía a los datos reales (32,227 mensajes / 5,907 anchors). Docs corregidos.
 - **Canal real**: chat general de Kreitek (no "Demiurgo"). El fixture de 252 mensajes venía de otro canal y el usuario pidió no sacar conclusiones de él (registrado en `.dao/memory/`).
 
-### A. Ingestión — Telethon como camino primario (P0, pendiente)
+### A. Ingestión — Telethon como camino primario (✅ implementado)
 
-- Los datos actuales vinieron de `chat_export_ingest.py` (export HTML). `extraction.py` (Telethon vía pytopicgram) existe, está parcheado, y es el camino recomendado para producción.
-- **Por qué**: sin export manual; reacciones emoji reales (`MessageReactions` + post-step `GetMessagesReactionsRequest` en batches de 100); re-runs idempotentes con `min_id`; `replies`/`forwards`/`views` que el export HTML pierde (útiles para "influential links" y "per-user contributions").
-- **Con SQLite**: `min_id = SELECT MAX(id) FROM messages` → el modo `--incremental` es ~30 líneas.
-- **Pitfalls**: dos `*.session` en la raíz (gitignored, no borrar); `pytopicgram/crawler.py` traga excepciones con `except Exception`; esperar `FloodWaitError` (5-15 min para 32K mensajes). Clave de datos: `msg_id`, no orden de archivo.
+- Los datos originales vinieron de `chat_export_ingest.py` (export HTML). `extraction_v2.py` usa Telethon directamente (sin pytopicgram) para ingesta primaria.
+- **Qué hace**: `run_extraction_v2()` conecta a Telegram via `TelegramClient`, itera mensajes con `client.iter_messages(channel, min_id=last_id)`, normaliza al shape del pipeline, escribe a SQLite via `db.upsert_messages()`. `--incremental` (default) usa `min_id = SELECT MAX(id) FROM messages`; `--full` hace extracción completa.
+- **Por qué Telethon**: sin export manual; re-runs idempotentes con `min_id`; `replies`/`forwards`/`views` que el export HTML pierde (útiles para "influential links" y "per-user contributions"). Reacciones emoji (`GetMessagesReactionsRequest`) deferidas a P1.
+- **Migración**: la primera extracción Telethon reemplaza los datos del HTML export (IDs secuenciales falsos → IDs reales de Telegram). Requiere re-run completo del pipeline.
+- **Pitfalls**: `session_name.session` en la raíz (gitignored, no borrar); esperar `FloodWaitError` (5-15 min para 32K mensajes). `extraction.py` (wrapper pytopicgram) y `chat_export_ingest.py` (HTML) se mantienen como fallback.
 
 ### B. Reindex Zvec — política incremental (✅ implementado)
 
@@ -336,7 +337,7 @@ Antes documento separado (`EVALUATION-2026-08-09.md`, eliminado el 2026-08-17 al
 |---|---|---|
 | 1 | Migrar storage a SQLite | ✅ Implementado (2026-08-10; commiteado 2026-08-17) |
 | 2 | Reindex Zvec incremental | ✅ Implementado (2026-08-22; `embed_and_store_incremental` + `compute_embedding_delta` + `text_hash` column) |
-| 3 | Telethon como camino primario | ⏳ P0 pendiente (ver A) |
+| 3 | Telethon como camino primario | ✅ Implementado (2026-08-22; `extraction_v2.py` con `run_extraction_v2` + `normalize_message` + `fetch_messages`; `--incremental`/`--full`) |
 | 4 | Dedupe digest + calidad de clusters | ⏳ P1 pendiente (ver D) |
 | 5 | Cache de `load_messages()` | ✅ Supersedido por SQLite |
 | 6 | Tests del camino Zvec (embeddings sintéticos) | ⏳ P3 pendiente |
@@ -360,7 +361,6 @@ Antes documento separado (`EVALUATION-2026-08-09.md`, eliminado el 2026-08-17 al
 
 | Priority | Task | Esfuerzo | Estimación | Fuente |
 |----------|------|----------|------------|--------|
-| **P0** | Reintegrar Telethon como camino primario (con `--incremental` y `min_id`) + enrichment de reacciones emoji | Small | 0,5–1 día | Auditoría A |
 | P1 | Dedupe digest output (mismo link en Top Topics + Most Discussed Links) | Trivial | 30–60 min | Auditoría D |
 | P1 | Mejorar calidad de clusters: stopwords (`creo`, `tengo`, `gente`, `xataka`, `mismo`, `maria`, `molina`) + re-evaluar BERTopic a 5.9K | Small–Medium | 0.5–1.5 días | Auditoría D |
 | P2 | Set up cron job para Phase 10 review cycle | Small | 30–60 min | — |
@@ -408,6 +408,7 @@ Antes: `embedding.py:99-104` hacía `shutil.rmtree(index_path)` + re-embed de 15
 
 ## Registro de cambios recientes
 
+- **2026-08-22** — Telethon reintegration (P0 #3 de la auditoría): `extraction_v2.py` — `normalize_message()`, `fetch_messages()`, `run_extraction_v2()` con `--incremental`/`--full`. Telethon directo, sin pytopicgram. Escribe a SQLite + JSON. 10 tests, 74/74 total pasan.
 - **2026-08-22** — Reindex Zvec incremental (P0 #2 de la auditoría): `embed_and_store_incremental()` + `compute_embedding_delta()` en `embedding.py`; `text_hash` column + `_hash_text` + `get_chunk_hashes` + `get_meta`/`set_meta` en `db.py`. 64/64 tests pasan (30 db + 22 embedding + 12 clustering). DB migrada: 15,330 hashes backfilled.
 - **2026-08-17** — Consolidación: `EVALUATION-2026-08-09.md` eliminado; contenido migrado a la sección "Auditoría técnica". Higiene: `.env` raíz añadido a `.gitignore`; `data/bundles.json`, `data/chunks.json`, `data/link_metadata.json` dejan de estar trackeados (outputs de compatibilidad; SQLite es la fuente de verdad); Phase 4 marcada ✅ en la tabla de estado.
 - **2026-08-10** — Capa SQLite (P0 #1 de la auditoría): `src/alcuinus/db.py` + refactor de 9 módulos + `tests/test_db.py` (26 tests). Pipeline completo re-ejecutado contra `data/alcuinus.db` (97,127 filas, integrity ok).

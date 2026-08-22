@@ -13,7 +13,7 @@ Dos canales, separación limpia:
 
 | Componente | Propósito | Tecnología | Estado |
 |------------|-----------|------------|--------|
-| **Ingesta** | Leer mensajes del canal fuente | pytopicgram crawler (Telethon) o HTML export → JSON | ✅ |
+| **Ingesta** | Leer mensajes del canal fuente | `extraction_v2.py` (Telethon directo, `--incremental`/`--full`). Fallback: `chat_export_ingest.py` (HTML export) | ✅ |
 | **Storage** | Persistir mensajes, anchors, bundles, chunks, metadata | **SQLite** in-process (`data/alcuinus.db`, 7 tablas, FKs, WAL mode) | ✅ |
 | **Detección de anchors** | Identificar mensajes con enlaces | urlextract | ✅ |
 | **Asociación de opiniones** | Vincular reacciones a su enlace | Three-pass algorithm (window + reply + gap). Usa `bisect` en lista de anchors desde SQLite (O(N log A)) | ✅ |
@@ -62,7 +62,7 @@ Como alternativa, `chat_export_ingest.py` parsea exports HTML de Telegram Deskto
 
 ```
 Canal fuente (read-only, Kreitek general chat)
-    → Telethon (vía pytopicgram) o HTML export: 32,227 mensajes → data/channel_messages.json
+    → Telethon (`extraction_v2.py`, `--incremental`): 32,227 mensajes → SQLite + data/channel_messages.json
     → Migración: JSONs → SQLite (data/alcuinus.db, 7 tablas, WAL mode, FKs)
     → Anchor detection: urlextract → 5,907 anchors (5,435 URLs únicas)
     → Association: three-pass con bisect (O(N log A)) → 5,907 bundles (anchor + windowed reactions)
