@@ -20,7 +20,7 @@ Dos canales, separación limpia:
 | **Metadata de enlaces** | Título, descripción de cada enlace | HTTP fetch + HTML parse (genérico) + GitHub/arXiv API calls. Soporta `--only-missing` para re-runs incrementales | ✅ |
 | **Chunking & Tagging** | Partir contenido en chunks recuperables con metadata | Parent-child chunks, 15% overlap (baseline). Channel name configurable via `ALCUINUS_CHANNEL_NAME` | ✅ |
 | **Embedding** | Vectorizar chunks para búsqueda semántica | `mistral-embed` (Mistral AI API, 1024 dim) | ✅ |
-| **Almacenamiento vectorial** | Persistir y consultar vectores | Zvec (embebido, in-process, Apache 2.0). `optimize()` en background. `insert`/`upsert`/`update`/`delete` por id | ✅ |
+| **Almacenamiento vectorial** | Persistir y consultar vectores | Zvec (embebido, in-process, Apache 2.0). Indexado incremental: `upsert` por id + `optimize()` en background. `text_hash` (SHA-256) en SQLite para diff. `delete` por id para stale chunks | ✅ |
 | **Clustering de bundles** | Agrupar enlaces+opiniones por tema | KMeans (scikit-learn) + TF-IDF keywords. BERTopic descartado en el piloto de 71 bundles (UMAP necesita ~200+ puntos); pendiente re-evaluar a 5,907 bundles — ver ROADMAP.md "Auditoría D". Lee chunk_ids de SQLite (no más hack de `topk=100000` con zero-vector) | ✅ |
 | **Curación (decay profiles)** | Clasificar contenido por vida útil | Evergreen / semi-stable / ephemeral. LLM-based (Mistral) + heuristic fallback | ✅ |
 | **Guía de estudio** | Syllabus: mapa vivo para newcomers, organizado por cluster y decay profile. | Markdown estructurado → `data/syllabus.md`. Tiered: evergreen → semi-stable → ephemeral | ✅ |
@@ -68,7 +68,7 @@ Canal fuente (read-only, Kreitek general chat)
     → Association: three-pass con bisect (O(N log A)) → 5,907 bundles (anchor + windowed reactions)
     → Metadata: fetch título + descripción (HTML genérico + GitHub/arXiv API) → 5,435 URLs, 3,851 ok
     → Chunking: parent-child chunks, 15% overlap, metadata prefix → 15,330 chunks
-    → Embedding: mistral-embed (1024 dim) → vectores → Zvec (in-process, reranking integrado)
+    → Embedding: mistral-embed (1024 dim) → vectores → Zvec (in-process, indexado incremental via upsert + optimize)
     → Clustering: KMeans (scikit-learn) + TF-IDF keywords → 12 clusters. Lee chunk_ids de SQLite
     → Curación: decay profiles (evergreen/semi-stable/ephemeral) → 8/3/1
     → Guía de estudio: mapa vivo de contenidos por cluster
@@ -77,7 +77,7 @@ Canal fuente (read-only, Kreitek general chat)
 
 **Storage:** SQLite es la fuente de verdad. Los JSONs se siguen escribiendo por compatibilidad (una release), pero todas las operaciones de lectura prefieren SQLite. Ver `src/alcuinus/db.py` y ROADMAP.md "Auditoría F".
 
-**Costo por run:** ~$0.32 USD (Mistral) + 3-5 min de wall clock (reindex completo de Zvec). Ver ROADMAP.md "Auditoría B" para la propuesta de index incremental (delta + `upsert` + `optimize()`), que baja a $0.0013 para deltas de 50 mensajes.
+**Costo por run:** Run inicial ~$0.32 USD (Mistral) + 3-5 min. Runs incrementales: $0.00 si sin cambios, ~$0.0013 para 50 mensajes nuevos. Ver `ROADMAP.md` "Auditoría B" para la tabla completa de costos comparativos.
 
 ### Algoritmo de asociación (Phase 2)
 

@@ -296,17 +296,18 @@ Antes documento separado (`EVALUATION-2026-08-09.md`, eliminado el 2026-08-17 al
 - **Con SQLite**: `min_id = SELECT MAX(id) FROM messages` → el modo `--incremental` es ~30 líneas.
 - **Pitfalls**: dos `*.session` en la raíz (gitignored, no borrar); `pytopicgram/crawler.py` traga excepciones con `except Exception`; esperar `FloodWaitError` (5-15 min para 32K mensajes). Clave de datos: `msg_id`, no orden de archivo.
 
-### B. Reindex Zvec — política incremental (P0, pendiente)
+### B. Reindex Zvec — política incremental (✅ implementado)
 
 - Zvec está diseñado para updates incrementales: `insert`/`upsert`/`update`/`delete` por id, staging buffer, `optimize()` en background, `flush()`. Escrituras inmediatamente consultables.
-- **Hoy (anti-pattern)**: `embedding.py:99-104` hace `shutil.rmtree(index_path)` y re-embebe los 15,330 chunks cada run — ~$0.32 USD + 3-5 min por run.
-- **Patrón objetivo**: delta de chunk_ids desde SQLite (`SELECT chunk_id FROM chunks`) → embed solo lo nuevo → `upsert(docs)` → `optimize()` → `flush()`.
+- **Antes (anti-pattern)**: `embedding.py:99-104` hacía `shutil.rmtree(index_path)` y re-embebe los 15,330 chunks cada run — ~$0.32 USD + 3-5 min por run.
+- **Ahora**: `embed_and_store_incremental()` hace un diff de hashes (`chunks.text_hash`, SHA-256) entre SQLite y el estado del último run (almacenado en `_meta.indexed_hashes`). Solo embebe los chunks nuevos o cambiados, hace `upsert()` en Zvec, borra los stale, y llama `optimize()`. `run_embedding()` auto-detecta: si el índice existe → incremental; si no → full build. `force_full=True` para forzar rebuild completo.
 
-| Escenario | Hoy | Tras el cambio |
-|---|---|---|
-| 50 mensajes nuevos | $0.32, 3-5 min | $0.0013, ~5 s |
-| 500 mensajes nuevos | $0.32, 3-5 min | $0.013, ~30 s |
-| Run inicial (sin índice) | $0.32, 3-5 min | igual |
+|| Escenario | Antes | Después ||
+||---|---|---||
+|| 50 mensajes nuevos | $0.32, 3-5 min | $0.0013, ~5 s ||
+|| 500 mensajes nuevos | $0.32, 3-5 min | $0.013, ~30 s ||
+|| Sin cambios | $0.32, 3-5 min | $0.00, <1 s ||
+|| Run inicial (sin índice) | $0.32, 3-5 min | $0.32, 3-5 min (igual) ||
 
 - **Caveat**: el staging buffer es flat index (la búsqueda degrada mientras crece); `optimize()` periódico lo mantiene sano — irrelevante a 15K docs, relevante a 1M+.
 - **Clustering**: re-cluster de 15K×1024d tarda segundos; para deltas pequeños, `MiniBatchKMeans.partial_fit()` o re-cluster solo si delta > 5%.
@@ -334,7 +335,7 @@ Antes documento separado (`EVALUATION-2026-08-09.md`, eliminado el 2026-08-17 al
 | # | Recomendación | Estado |
 |---|---|---|
 | 1 | Migrar storage a SQLite | ✅ Implementado (2026-08-10; commiteado 2026-08-17) |
-| 2 | Reindex Zvec incremental | ⏳ P0 pendiente (ver B) |
+| 2 | Reindex Zvec incremental | ✅ Implementado (2026-08-22; `embed_and_store_incremental` + `compute_embedding_delta` + `text_hash` column) |
 | 3 | Telethon como camino primario | ⏳ P0 pendiente (ver A) |
 | 4 | Dedupe digest + calidad de clusters | ⏳ P1 pendiente (ver D) |
 | 5 | Cache de `load_messages()` | ✅ Supersedido por SQLite |
@@ -359,8 +360,7 @@ Antes documento separado (`EVALUATION-2026-08-09.md`, eliminado el 2026-08-17 al
 
 | Priority | Task | Esfuerzo | Estimación | Fuente |
 |----------|------|----------|------------|--------|
-| **P0** | Implementar reindex incremental en Zvec (`upsert` + `optimize()`, sin `rmtree`) | Small–Medium | 0.5–1 día | Auditoría B |
-| **P0** | Reintegrar Telethon como camino primario (con `--incremental` y `min_id`) + enrichment de reacciones emoji | Small | 0.5–1 día | Auditoría A |
+| **P0** | Reintegrar Telethon como camino primario (con `--incremental` y `min_id`) + enrichment de reacciones emoji | Small | 0,5–1 día | Auditoría A |
 | P1 | Dedupe digest output (mismo link en Top Topics + Most Discussed Links) | Trivial | 30–60 min | Auditoría D |
 | P1 | Mejorar calidad de clusters: stopwords (`creo`, `tengo`, `gente`, `xataka`, `mismo`, `maria`, `molina`) + re-evaluar BERTopic a 5.9K | Small–Medium | 0.5–1.5 días | Auditoría D |
 | P2 | Set up cron job para Phase 10 review cycle | Small | 30–60 min | — |
@@ -400,12 +400,15 @@ Requires `MISTRAL_API_KEY` and `config/.env` with Telegram credentials.
 
 ## Estado del reindex Zvec
 
-⚠️ **La política actual es "nuke & rebuild"**: `embedding.py:99-104` hace `shutil.rmtree(index_path)` y re-embebe los 15,330 chunks en cada run. Costo ~$0.32 USD + 3-5 min de wall clock por run. Esto es ineficiente y anti-pattern para Zvec, que soporta `insert`/`upsert`/`update`/`delete` por id con staging buffer y `optimize()` en background. La política incremental está documentada en **Auditoría B** — P0 pendiente (#1 de los P0 restantes).
+✅ **Incremental indexing implementado (2026-08-22)**. `embed_and_store_incremental()` en `embedding.py` reemplaza el nuke-and-rebuild. La función difunde hashes SHA-256 (`chunks.text_hash`) entre SQLite y el estado del último run (`_meta.indexed_hashes`) para detectar chunks nuevos, cambiados, y stale. Solo los deltas se envían a Mistral. `run_embedding()` auto-detecta incremental vs full; `force_full=True` para forzar rebuild. 64/64 tests pasan (30 db + 22 embedding + 12 clustering).
+
+Antes: `embedding.py:99-104` hacía `shutil.rmtree(index_path)` + re-embed de 15,330 chunks cada run — ~$0.32 USD + 3-5 min. Ver **Auditoría B** para la tabla de costos comparativos.
 
 ---
 
 ## Registro de cambios recientes
 
+- **2026-08-22** — Reindex Zvec incremental (P0 #2 de la auditoría): `embed_and_store_incremental()` + `compute_embedding_delta()` en `embedding.py`; `text_hash` column + `_hash_text` + `get_chunk_hashes` + `get_meta`/`set_meta` en `db.py`. 64/64 tests pasan (30 db + 22 embedding + 12 clustering). DB migrada: 15,330 hashes backfilled.
 - **2026-08-17** — Consolidación: `EVALUATION-2026-08-09.md` eliminado; contenido migrado a la sección "Auditoría técnica". Higiene: `.env` raíz añadido a `.gitignore`; `data/bundles.json`, `data/chunks.json`, `data/link_metadata.json` dejan de estar trackeados (outputs de compatibilidad; SQLite es la fuente de verdad); Phase 4 marcada ✅ en la tabla de estado.
 - **2026-08-10** — Capa SQLite (P0 #1 de la auditoría): `src/alcuinus/db.py` + refactor de 9 módulos + `tests/test_db.py` (26 tests). Pipeline completo re-ejecutado contra `data/alcuinus.db` (97,127 filas, integrity ok).
 - **2026-07-10** — Bot hook mínimo (`bot.py`) y datos reales de 32K mensajes; Phase 10 completa (100% roadmap).

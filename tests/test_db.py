@@ -457,6 +457,60 @@ def test_schema_migration_adds_forwarded_from_column(tmp_path):
     assert "forwarded_from" in cols
 
 
+def test_schema_migration_adds_text_hash_column(tmp_path):
+    """A DB created before the text_hash column was added gets it on init_db."""
+    db_path = str(tmp_path / "test.db")
+    with db.connect(db_path) as conn:
+        # Create minimal tables WITHOUT text_hash on chunks (mimic old schema).
+        # Must include all columns referenced by SCHEMA indexes so that
+        # init_db's executescript(SCHEMA) doesn't fail on CREATE INDEX.
+        conn.execute("""
+            CREATE TABLE messages (
+                id INTEGER PRIMARY KEY,
+                date TEXT,
+                date_iso TEXT,
+                sender_id TEXT,
+                message TEXT,
+                forwarded_from TEXT,
+                reply_to_msg_id INTEGER,
+                has_media INTEGER NOT NULL DEFAULT 0
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE anchors (
+                msg_id INTEGER PRIMARY KEY,
+                date TEXT,
+                sender_id TEXT,
+                text_preview TEXT,
+                forwarded_from TEXT
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE chunks (
+                chunk_id TEXT PRIMARY KEY,
+                bundle_anchor_id INTEGER NOT NULL,
+                is_parent INTEGER NOT NULL DEFAULT 0,
+                token_estimate INTEGER NOT NULL DEFAULT 0,
+                text TEXT NOT NULL,
+                FOREIGN KEY (bundle_anchor_id) REFERENCES anchors(msg_id) ON DELETE CASCADE
+            )
+        """)
+        # Insert rows to satisfy FK
+        conn.execute("INSERT INTO messages (id) VALUES (1)")
+        conn.execute("INSERT INTO anchors (msg_id) VALUES (1)")
+        conn.execute(
+            "INSERT INTO chunks (chunk_id, bundle_anchor_id, is_parent, token_estimate, text) "
+            "VALUES ('test_chunk', 1, 0, 10, 'hello')"
+        )
+
+    # init_db should add the column
+    db.init_db(db_path)
+
+    with db.connect(db_path) as conn:
+        cols = {row["name"] for row in conn.execute("PRAGMA table_info(chunks)")}
+    assert "text_hash" in cols
+
+
 # ---------------------------------------------------------------------------
 # Lookups
 # ---------------------------------------------------------------------------
@@ -473,3 +527,38 @@ def test_get_max_message_id(tmp_db, sample_messages):
     with db.connect(tmp_db) as conn:
         db.upsert_messages(conn, sample_messages)
     assert db.get_max_message_id(tmp_db) == 3
+
+
+def test_upsert_chunks_stores_hash(tmp_db, sample_messages, sample_anchors, sample_chunks):
+    """upsert_chunks should compute and store a 64-char SHA-256 hash per chunk."""
+    with db.connect(tmp_db) as conn:
+        db.upsert_messages(conn, sample_messages)
+        db.upsert_anchors(conn, sample_anchors)
+        db.upsert_chunks(conn, sample_chunks)
+    loaded = db.load_chunks(tmp_db)
+    assert len(loaded) == 2
+    for c in loaded:
+        assert c["text_hash"] is not None
+        assert len(c["text_hash"]) == 64
+        # Verify it's a valid hex string
+        int(c["text_hash"], 16)
+
+
+def test_get_chunk_hashes(tmp_db, sample_messages, sample_anchors, sample_chunks):
+    """get_chunk_hashes returns {chunk_id: text_hash} with correct size and 64-char hashes."""
+    with db.connect(tmp_db) as conn:
+        db.upsert_messages(conn, sample_messages)
+        db.upsert_anchors(conn, sample_anchors)
+        db.upsert_chunks(conn, sample_chunks)
+    hashes = db.get_chunk_hashes(tmp_db)
+    assert len(hashes) == 2
+    for chunk_id, h in hashes.items():
+        assert len(h) == 64
+        int(h, 16)  # valid hex
+
+
+def test_set_and_get_meta(tmp_db):
+    """set_meta / get_meta round-trip; nonexistent key returns None."""
+    db.set_meta(tmp_db, key="test_key", value="test_value")
+    assert db.get_meta(tmp_db, key="test_key") == "test_value"
+    assert db.get_meta(tmp_db, key="nonexistent") is None

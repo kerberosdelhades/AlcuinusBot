@@ -27,6 +27,7 @@ Design principles:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import sqlite3
@@ -140,6 +141,7 @@ CREATE TABLE IF NOT EXISTS chunks (
     is_parent          INTEGER NOT NULL DEFAULT 0,
     token_estimate     INTEGER NOT NULL DEFAULT 0,
     text               TEXT NOT NULL,
+    text_hash          TEXT,
     FOREIGN KEY (bundle_anchor_id) REFERENCES anchors(msg_id) ON DELETE CASCADE
 );
 CREATE INDEX IF NOT EXISTS idx_chunks_bundle ON chunks(bundle_anchor_id);
@@ -256,6 +258,11 @@ def init_db(db_path: str = DEFAULT_DB_PATH) -> None:
                    )
                  WHERE forwarded_from IS NULL
             """)
+
+        # v2 → v3: add chunks.text_hash (for incremental Zvec embedding diff)
+        cols = {row["name"] for row in conn.execute("PRAGMA table_info(chunks)")}
+        if "text_hash" not in cols:
+            conn.execute("ALTER TABLE chunks ADD COLUMN text_hash TEXT")
 
 
 def db_exists(db_path: str = DEFAULT_DB_PATH) -> bool:
@@ -394,6 +401,12 @@ def upsert_bundles(
     return len(bundle_rows), len(reaction_rows)
 
 
+def _hash_text(text: str) -> str:
+    """Return SHA-256 hex digest of *text* (UTF-8). Used for incremental
+    Zvec embedding diff — when the hash changes, the chunk needs re-embedding."""
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
 def upsert_chunks(conn: sqlite3.Connection, chunks: list[dict]) -> int:
     """Insert or replace chunks. Returns count written."""
     rows = [
@@ -403,13 +416,14 @@ def upsert_chunks(conn: sqlite3.Connection, chunks: list[dict]) -> int:
             1 if c.get("is_parent") else 0,
             int(c.get("token_estimate") or 0),
             c["text"],
+            _hash_text(c["text"]),
         )
         for c in chunks
     ]
     conn.executemany(
         "INSERT OR REPLACE INTO chunks "
-        "(chunk_id, bundle_anchor_id, is_parent, token_estimate, text) "
-        "VALUES (?, ?, ?, ?, ?)",
+        "(chunk_id, bundle_anchor_id, is_parent, token_estimate, text, text_hash) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
         rows,
     )
     return len(rows)
@@ -618,6 +632,25 @@ def get_max_message_id(db_path: str = DEFAULT_DB_PATH) -> int | None:
     with connect(db_path) as conn:
         row = conn.execute("SELECT MAX(id) AS m FROM messages").fetchone()
     return row["m"]
+
+
+def get_chunk_hashes(db_path: str = DEFAULT_DB_PATH) -> dict[str, str]:
+    """Return {chunk_id: text_hash} for all chunks. Used by the embedding
+    diff to detect which chunks need re-embedding."""
+    with connect(db_path) as conn:
+        rows = conn.execute("SELECT chunk_id, text_hash FROM chunks").fetchall()
+    return {r["chunk_id"]: r["text_hash"] for r in rows if r["text_hash"]}
+
+
+def get_meta(db_path: str = DEFAULT_DB_PATH, *, key: str) -> str | None:
+    with connect(db_path) as conn:
+        row = conn.execute("SELECT value FROM _meta WHERE key = ?", (key,)).fetchone()
+    return row["value"] if row else None
+
+
+def set_meta(db_path: str = DEFAULT_DB_PATH, *, key: str, value: str) -> None:
+    with connect(db_path) as conn:
+        conn.execute("INSERT OR REPLACE INTO _meta (key, value) VALUES (?, ?)", (key, value))
 
 
 # ---------------------------------------------------------------------------
