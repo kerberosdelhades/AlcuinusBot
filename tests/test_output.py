@@ -207,6 +207,22 @@ class TestInfluentialLinks:
         result = influential_links(clusters, bundles, {})
         assert result[0]["title"] == "https://missing.com"
 
+    def test_dedupes_same_url_across_clusters(self):
+        """Same URL in two clusters should appear only once."""
+        clusters = {
+            "0": {"bundle_ids": [1], "keywords": [], "size": 1, "chunk_ids": []},
+            "1": {"bundle_ids": [2], "keywords": [], "size": 1, "chunk_ids": []},
+        }
+        bundles = [
+            {"anchor": {"msg_id": 1, "urls": ["https://shared.com"], "text_preview": "A"}, "reactions": [{"x": 1}]},
+            {"anchor": {"msg_id": 2, "urls": ["https://shared.com"], "text_preview": "B"}, "reactions": [{"x": 1}, {"x": 2}]},
+        ]
+        link_meta = {"https://shared.com": {"title": "Shared"}}
+
+        result = influential_links(clusters, bundles, link_meta, top_n=5)
+        assert len(result) == 1  # deduped
+        assert result[0]["url"] == "https://shared.com"
+
 
 # ---------------------------------------------------------------------------
 # format_digest

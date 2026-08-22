@@ -123,13 +123,16 @@ def influential_links(
     """Return the most influential links: bundles with most reactions per cluster.
 
     A bundle's influence is measured by its reaction count — more discussion
-    means more influence within the cluster.
+    means more influence within the cluster. The same URL can appear as the
+    top bundle in multiple clusters; we deduplicate by URL so each link
+    appears at most once in the output.
     """
     # Map bundle by anchor msg_id
     bundle_map = {b["anchor"]["msg_id"]: b for b in bundles}
 
     # Per cluster, find the bundle with most reactions
     candidates = []
+    seen_urls: set[str] = set()
     for key, info in cluster_info.items():
         best_bundle = None
         best_reactions = -1
@@ -147,6 +150,9 @@ def influential_links(
         if best_bundle:
             urls = best_bundle["anchor"].get("urls", [])
             url = urls[0] if urls else ""
+            if url in seen_urls:
+                continue
+            seen_urls.add(url)
             meta = link_meta.get(url, {})
             candidates.append({
                 "cluster_id": key,
