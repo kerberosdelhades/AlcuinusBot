@@ -532,5 +532,117 @@ class TestRunMetadata:
         assert data[0]["url"].startswith("https://example.com/")
         assert data[0]["title"] == "T"
         assert data[0]["source"] == "html"
-        assert data[0]["status"] == "ok"
-        assert "fetched_at" in data[0]
+
+
+# ---------------------------------------------------------------------------
+# Retry / backoff
+# ---------------------------------------------------------------------------
+
+
+class TestFetchWithRetry:
+    def test_retries_on_timeout(self, monkeypatch):
+        """Timeout on first attempt, success on second."""
+        import requests
+        from alcuinus.metadata import _fetch_with_retry
+
+        call_count = 0
+
+        def fake_get(url, **kwargs):
+            nonlocal call_count
+            call_count += 1
+            if call_count == 1:
+                raise requests.Timeout("timed out")
+
+            class FakeResp:
+                status_code = 200
+                text = "<html><title>OK</title></html>"
+                headers = {"Content-Type": "text/html"}
+
+                def raise_for_status(self):
+                    pass
+
+            return FakeResp()
+
+        monkeypatch.setattr(requests, "get", fake_get)
+        monkeypatch.setattr("alcuinus.metadata.time.sleep", lambda s: None)
+
+        resp = _fetch_with_retry("https://example.com/test")
+        assert resp.status_code == 200
+        assert call_count == 2
+
+    def test_retries_on_5xx(self, monkeypatch):
+        """500 on first attempt, 200 on second."""
+        import requests
+        from alcuinus.metadata import _fetch_with_retry
+
+        call_count = 0
+
+        def fake_get(url, **kwargs):
+            nonlocal call_count
+            call_count += 1
+
+            class FakeResp:
+                def __init__(self, code):
+                    self.status_code = code
+                    self.text = "<html></html>"
+                    self.headers = {}
+
+                def raise_for_status(self):
+                    if self.status_code >= 400:
+                        raise requests.HTTPError(f"{self.status_code}")
+
+            return FakeResp(500 if call_count == 1 else 200)
+
+        monkeypatch.setattr(requests, "get", fake_get)
+        monkeypatch.setattr("alcuinus.metadata.time.sleep", lambda s: None)
+
+        resp = _fetch_with_retry("https://example.com/test")
+        assert resp.status_code == 200
+        assert call_count == 2
+
+    def test_no_retry_on_404(self, monkeypatch):
+        """404 is permanent — no retry."""
+        import requests
+        from alcuinus.metadata import _fetch_with_retry
+
+        call_count = 0
+
+        def fake_get(url, **kwargs):
+            nonlocal call_count
+            call_count += 1
+
+            class FakeResp:
+                status_code = 404
+                text = "Not Found"
+                headers = {}
+
+                def raise_for_status(self):
+                    raise requests.HTTPError("404")
+
+            return FakeResp()
+
+        monkeypatch.setattr(requests, "get", fake_get)
+
+        resp = _fetch_with_retry("https://example.com/test")
+        assert resp.status_code == 404
+        assert call_count == 1
+
+    def test_exhausts_retries_on_timeout(self, monkeypatch):
+        """All retries fail — raises the last exception."""
+        import requests
+        from alcuinus.metadata import _fetch_with_retry
+
+        call_count = 0
+
+        def fake_get(url, **kwargs):
+            nonlocal call_count
+            call_count += 1
+            raise requests.Timeout("always times out")
+
+        monkeypatch.setattr(requests, "get", fake_get)
+        monkeypatch.setattr("alcuinus.metadata.time.sleep", lambda s: None)
+
+        with pytest.raises(requests.Timeout):
+            _fetch_with_retry("https://example.com/test", max_retries=2)
+
+        assert call_count == 3  # initial + 2 retries

@@ -37,6 +37,8 @@ from alcuinus import db
 
 REQUEST_DELAY = 1.0  # seconds between requests (polite default)
 REQUEST_TIMEOUT = 15  # seconds per HTTP request
+MAX_RETRIES = 3  # max retry attempts for transient errors
+RETRY_BACKOFF = 2.0  # exponential backoff base (seconds: 2, 4, 8)
 USER_AGENT = (
     "AlcuinusBot/0.1 (+https://hq.ijuanes.ovh; Telegram link-analysis bot)"
 )
@@ -79,6 +81,34 @@ _UNSUPPORTED_EXTENSIONS = frozenset(
 # ---------------------------------------------------------------------------
 # URL classification
 # ---------------------------------------------------------------------------
+
+def _fetch_with_retry(
+    url: str,
+    headers: dict | None = None,
+    timeout: int = REQUEST_TIMEOUT,
+    max_retries: int = MAX_RETRIES,
+) -> requests.Response:
+    """HTTP GET with retry on transient errors and exponential backoff.
+
+    Returns the response object (even for 4xx/5xx — caller checks status).
+    Raises requests.RequestException only on connection/timeout errors
+    that persist after all retries.
+    """
+    last_exc: requests.RequestException | None = None
+    for attempt in range(max_retries + 1):
+        try:
+            resp = requests.get(url, headers=headers, timeout=timeout)
+            # Retry on 5xx (transient server errors); return on everything else
+            if resp.status_code >= 500 and attempt < max_retries:
+                time.sleep(RETRY_BACKOFF * (2 ** attempt))
+                continue
+            return resp
+        except (requests.ConnectionError, requests.Timeout) as exc:
+            last_exc = exc
+            if attempt == max_retries:
+                raise
+            time.sleep(RETRY_BACKOFF * (2 ** attempt))
+    raise last_exc  # unreachable, but satisfies the type checker
 
 def classify_url(url: str) -> str:
     """Return the strategy to use for a URL.
@@ -131,10 +161,9 @@ def fetch_github(url: str) -> dict:
     api_url = api_url.replace("github.com", "api.github.com/repos", 1)
 
     try:
-        resp = requests.get(
+        resp = _fetch_with_retry(
             api_url,
             headers={"Accept": "application/vnd.github+json", "User-Agent": USER_AGENT},
-            timeout=REQUEST_TIMEOUT,
         )
         if resp.status_code == 404:
             return {
@@ -145,7 +174,6 @@ def fetch_github(url: str) -> dict:
                 "status": "not_found",
                 "fetched_at": _now_iso(),
             }
-        resp.raise_for_status()
         data = resp.json()
         return {
             "url": url,
@@ -184,7 +212,7 @@ def fetch_arxiv(url: str) -> dict:
     api_url = f"http://export.arxiv.org/api/query?id_list={arxiv_id}&max_results=1"
 
     try:
-        resp = requests.get(api_url, timeout=REQUEST_TIMEOUT)
+        resp = _fetch_with_retry(api_url)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
@@ -225,10 +253,9 @@ def fetch_arxiv(url: str) -> dict:
 def fetch_html(url: str) -> dict:
     """Extract <title> and <meta description> from a generic HTML page."""
     try:
-        resp = requests.get(
+        resp = _fetch_with_retry(
             url,
             headers={"User-Agent": USER_AGENT},
-            timeout=REQUEST_TIMEOUT,
         )
         resp.raise_for_status()
 
