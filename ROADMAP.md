@@ -20,21 +20,21 @@
 
 ## Phase 0 — Ingestion ✅
 
-- **Module**: `src/alcuinus/extraction.py` (Telethon vía pytopicgram) o `src/alcuinus/chat_export_ingest.py` (HTML export)
-- **Datos actuales** (2026-08-09): **32,227 mensajes** en `data/channel_messages.json`
+- **Module**: `src/alcuinus/extraction_v2.py` (Telethon directo, sin pytopicgram) — camino primario. Fallback: `src/alcuinus/chat_export_ingest.py` (HTML export)
+- **Datos actuales** (2026-08-09): **32,227 mensajes** en `data/alcuinus.db` (SQLite) + `data/channel_messages.json` (compat)
 - **Rango de fechas**: **2021-01-01 → 2025-12-31** (672 mensajes sin fecha, 2.1%)
-- **Senders únicos**: 727 (top 5: empty 11,185, GonzaloFotonPe 4,072, Jose Rodriguez "Boriel" 2,845, Ivan Juanes 2,226, Joaquin 1,947)
+- **Senders únicos**: 370 (top 5: empty 11,185, GonzaloFotonPe 4,072, Jose Rodriguez "Boriel" 2,845, Ivan Juanes 2,226, Joaquin 1,947)
 - **Mensajes con URL**: 5,913
-- **Tech ingestión actual**: HTML export (Telegram Desktop) → `chat_export_ingest.py`. El camino Telethon existe en `extraction.py` y está parcheado, pero no se usó para la última ingesta. Ver **Auditoría A** (Telethon) para la recomendación de volver a Telethon como camino principal.
+- **Tech ingestión actual**: HTML export (Telegram Desktop) → `chat_export_ingest.py`. `extraction_v2.py` (Telethon directo) está implementado como camino primario — ver **Auditoría A**. Los datos actuales tienen IDs secuenciales falsos del HTML export; una ingesta Telethon reemplazaría con IDs reales de Telegram.
 - **Config**: `config/.env` (api_id, api_hash, source_channel, docs_channel) + `.env` raíz (MISTRAL_API_KEY)
 
 ### Extraction module API
 
 ```
-run_extraction(days_back=0, output_dir="data") → path_to_json
+run_extraction_v2(db_path, incremental=True, output_dir="data") → dict
 ```
 
-`days_back=0` extracts all messages (from 2020-01-01 to now). Pass a positive int to limit.
+`incremental=True` (default) fetches only messages with id > MAX(id) in SQLite. `incremental=False` (or `--full` flag) does a fresh extraction. See `extraction_v2.py`.
 
 ### Known issues / future work
 
@@ -64,7 +64,7 @@ run_extraction(days_back=0, output_dir="data") → path_to_json
 - `run_anchor_detection()` → load JSON, detect, write `data/anchors.json`
 - Uses `urlextract` (transitive dep from pytopicgram, zero new deps)
 
-**Result**: 71 anchors found, 76 total URLs, spanning 2022-09-15 → 2026-05-25
+**Result**: 5,907 anchors found, 6,013 total URLs (5,435 unique), spanning 2021-01-01 → 2025-12-31
 
 **Tests**: `tests/test_anchor_detection.py` — 15 tests covering URL extraction, anchor building, empty input, real data round-trip
 
@@ -169,18 +169,16 @@ The 10-20% overlap range is well-documented across the RAG ecosystem. The strong
 
 ---
 
-## Phase 6 — Bundle clustering
+## Phase 6 — Bundle clustering ✅
 
 **Goal**: Cluster bundles (anchor metadata + associated opinions) to discover discussion topics.
 
-**Tech**: Por decidir. Opciones candidatas:
-- **BERTopic** — clustering temático sobre embeddings. Puede operar con vectores externos de pgvector. Requiere HDBSCAN/UMAP como deps.
-- **Alternativas por evaluar** — scikit-learn KMeans/Agglomerative, HDBSCAN standalone, etc.
+**Tech**: KMeans (scikit-learn) + TF-IDF keywords. BERTopic descartado en el piloto de 71 bundles (UMAP necesita ~200+ puntos para manifold learning estable). A 5,907 bundles, BERTopic podría re-evaluarse — ver ROADMAP.md "Auditoría D".
 
 **Input per bundle**:
 - Anchor link titles + descriptions
 - Associated opinion message texts
-- Embeddings from pgvector (mistral-embed, 1024d)
+- Embeddings from Zvec (mistral-embed, 1024d)
 
 **Output**:
 - Cluster labels (topics)
@@ -188,7 +186,7 @@ The 10-20% overlap range is well-documented across the RAG ecosystem. The strong
 
 **Key decision**: clustering is over *bundles*, not raw messages. This groups by "topics that generated discussion" rather than "mentioned in passing."
 
-**Status**: Decisión de tecnología de clustering abierta. BERTopic es la opción principal pero no bloqueada.
+**Status**: KMeans implementado y funcionando (12 clusters, 15,330 chunks). BERTopic re-evaluable a 5,907 bundles (P1).
 
 ---
 
@@ -392,11 +390,11 @@ El pipeline completo (Phases 0–7) está verificado end-to-end sobre los datos 
 
 > **Nota sobre los números.** El bloque original de "End-to-end pipeline verification" listaba 252 → 71 → 71 → 74 → 173 → 8 → 8. Esos números corresponden a un piloto previo con un subconjunto muy pequeño del canal. Los números arriba (32,227 → 5,907 → 5,907 → 5,435 → 15,330 → 12 → 8) son el estado actual de `data/` a 2026-08-09. La verificación de `delete_this.py` corre contra los datos reales y pasa con cobertura 100%.
 
-Verification script: `delete_this.py` (gitignored, dev-only). Run with:
+Verification: `tests/test_pipeline.py` (5 tests, real Zvec + mock Mistral). Run with:
 ```bash
-uv run python delete_this.py
+.venv/bin/python -m pytest tests/test_pipeline.py -v
 ```
-Requires `MISTRAL_API_KEY` and `config/.env` with Telegram credentials.
+No API keys required — uses synthetic data and mocked Mistral.
 
 ## Estado del reindex Zvec
 

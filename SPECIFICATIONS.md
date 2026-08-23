@@ -26,17 +26,17 @@ Dos canales, separación limpia:
 | **Guía de estudio** | Syllabus: mapa vivo para newcomers, organizado por cluster y decay profile. | Markdown estructurado → `data/syllabus.md`. Tiered: evergreen → semi-stable → ephemeral | ✅ |
 | **Salida** | Publicar resúmenes al canal de doc | Markdown formateado → `data/digest.txt`. Top 5 topics, emerging themes, influential links, LLM connection insight | ✅ |
 
-### Dependencia: pytopicgram
+### Dependencia: pytopicgram (legacy)
 
-Usamos [pytopicgram](https://github.com/ugr-sail/pytopicgram) (Universidad de Granada, SoftwareX 2025) **solo como crawler** — su módulo `crawler.py` para la ingesta de mensajes vía Telethon. No usamos su pipeline de preprocesamiento, métricas, NLP, ni topic modeling.
+Usamos [pytopicgram](https://github.com/ugr-sail/pytopicgram) (Universidad de Granada, SoftwareX 2025) **solo como dependencia transitoria** — `urlextract` viene a través de pytopicgram. La ingesta de mensajes ya no usa pytopicgram; `extraction_v2.py` usa Telethon directamente.
 
-Como alternativa, `chat_export_ingest.py` parsea exports HTML de Telegram Desktop y produce el mismo formato JSON. Útil cuando solo se tiene un export puntual o se quiere evitar autenticación Telethon. La ingestión actual de los datos en `data/` vino de este camino.
+`chat_export_ingest.py` parsea exports HTML de Telegram Desktop y produce el mismo formato JSON. Útil cuando solo se tiene un export puntual o se quiere evitar autenticación Telethon. La ingestión actual de los datos en `data/` vino de este camino.
 
-### Notas de integración con pytopicgram
+### Notas de integración con pytopicgram (legacy)
 
 - **Vendored**: pytopicgram se clona en `vendor/pytopicgram` (no pip install — sus dependencias ML son incompatibles con Python 3.14)
-- **Patches locales**: `crawler.py` tiene un fix para que `channel_url` use la entidad resuelta cuando `by_url=False`
-- **PeerChannel**: los IDs numéricos de canal se pasan como `PeerChannel` para que Telethon use `GetChannelsRequest` en vez de `GetChatsRequest`
+- **Solo se usa `urlextract`** (transitiva de pytopicgram) en `anchor_detection.py`. El módulo `crawler.py` de pytopicgram ya no se usa — `extraction_v2.py` lo reemplaza con Telethon directo.
+- `extraction.py` (wrapper pytopicgram) se mantiene como fallback legacy.
 
 ### Dependencias técnicas clave
 
@@ -47,8 +47,8 @@ Como alternativa, `chat_export_ingest.py` parsea exports HTML de Telegram Deskto
 | **Zvec** | Biblioteca embebida (Apache 2.0) | "SQLite for vector search" — in-process, sin servidor, reranking integrado (weighted fusion + RRF). ~128MB RAM para ~100K embeddings. API `Fetch(pks)` permite recuperar vectores por ID para clustering. Sustituye pgvector y elimina la dependencia de PostgreSQL. |
 | **GitHub API** | API externa (sin auth para uso ligero) | Metadata estructurada de repositorios (descripción, topics, estrellas). 60 req/h sin auth. |
 | **arXiv API** | API externa (pública) | Metadata de papers (título, autores, abstract). Sin rate limits prácticos. |
-| **BERTopic** | Python lib (clustering) | Opción principal para clustering temático sobre vectores de Zvec. Puede operar con embeddings externos. Alternativas por evaluar (KMeans, HDBSCAN standalone). |
-| **Telethon** | Python lib (Telegram MTProto) | Crawling del canal fuente. Ya integrado via pytopicgram. |
+| **BERTopic** | Python lib (clustering) | Evaluado y descartado para piloto de 71 bundles (UMAP inestable a baja escala). KMeans (scikit-learn) es la decisión actual. Re-evaluable a 5,907 bundles (P1). |
+| **Telethon** | Python lib (Telegram MTProto) | Crawling del canal fuente. Integrado directamente en `extraction_v2.py` (sin pytopicgram). |
 
 ### Decisiones bloqueadas
 
@@ -89,7 +89,7 @@ Three-pass algorithm para vincular mensajes posteriores a su anchor:
 
 ## MVP
 
-1. **Ingesta**: Telethon (vía pytopicgram) o export HTML → JSON ✅
+1. **Ingesta**: Telethon directo (`extraction_v2.py`, `--incremental`/`--full`) o export HTML (fallback) ✅
 2. **Detección de anchors**: mensajes con enlaces ✅
 3. **Asociación**: three-pass (window + reply override + time-gap) → bundles ✅
 4. **Metadata**: fetch título + descripción de cada enlace (HTML genérico + GitHub API + arXiv API) ✅
@@ -111,7 +111,7 @@ Estado a 2026-08-09 (ver `data/`):
 - **15,330 chunks** (6,166 parent + 9,164 child)
 - **12 clusters** (KMeans, k=12), **8 decay profiles** ephemeral / 3 semi-stable / 1 evergreen
 - **Canal**: chat general de Kreitek (no el subgrupo "Demiurgo" que el SPEC original mencionaba — esa descripción corresponde a un piloto previo de 252 mensajes que ya no representa el estado del dato)
-- **Ingestión usada**: `chat_export_ingest.py` (export HTML). El camino Telethon existe y es el recomendado para producción — ver ROADMAP.md "Auditoría A".
+- **Ingestión usada**: `chat_export_ingest.py` (export HTML). `extraction_v2.py` (Telethon directo) está implementado como camino primario — ver ROADMAP.md "Auditoría A". Los datos actuales tienen IDs secuenciales falsos del HTML export.
 
 > **Nota sobre "reacciones":** el SPEC original menciona "0 reacciones extraídas". Esto se refiere a reacciones emoji de Telegram. La pipeline de asociación (Phase 2) produce 26,308 registros `reaction` que son **mensajes de seguimiento dentro de la ventana del anchor** — un proxy de engagement, no reacciones reales. La distinción está documentada en ROADMAP.md "Auditoría D".
 
