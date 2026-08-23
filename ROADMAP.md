@@ -363,7 +363,7 @@ Antes documento separado (`EVALUATION-2026-08-09.md`, eliminado el 2026-08-17 al
 |----------|------|----------|------------|--------|
 | P1 | Dedupe digest output (mismo link en Top Topics + Most Discussed Links) | Trivial | 30–60 min | Auditoría D |
 | P1 | Mejorar calidad de clusters: stopwords (`creo`, `tengo`, `gente`, `xataka`, `mismo`, `maria`, `molina`) + re-evaluar BERTopic a 5.9K | Small–Medium | 0.5–1.5 días | Auditoría D |
-| P2 | Set up cron job para Phase 10 review cycle | Small | 30–60 min | — |
+| ~~P2~~ | ~~Set up cron job para Phase 10 review cycle~~ — ✅ Hecho (cron monthly 1st at 09:00, job `fdafc446a094`) | n/a | — | — |
 | P2 | ~~Cache `load_messages()`~~ — supersedido por SQLite | n/a | — | Auditoría F |
 | P3 | Retry/backoff en `metadata.py` (recuperar la mayoría de los 18 timeouts) | Small | 1–2 h | Auditoría D |
 | P3 | Reproducibilidad: `bootstrap.sh` / `make data` desde seed documentado | Small | 1–2 h | Auditoría D |
