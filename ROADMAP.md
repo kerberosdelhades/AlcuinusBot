@@ -365,10 +365,10 @@ Antes documento separado (`EVALUATION-2026-08-09.md`, eliminado el 2026-08-17 al
 | P1 | Mejorar calidad de clusters: stopwords (`creo`, `tengo`, `gente`, `xataka`, `mismo`, `maria`, `molina`) + re-evaluar BERTopic a 5.9K | Small–Medium | 0.5–1.5 días | Auditoría D |
 | ~~P2~~ | ~~Set up cron job para Phase 10 review cycle~~ — ✅ Hecho (cron monthly 1st at 09:00, job `fdafc446a094`) | n/a | — | — |
 | P2 | ~~Cache `load_messages()`~~ — supersedido por SQLite | n/a | — | Auditoría F |
-| P3 | Retry/backoff en `metadata.py` (recuperar la mayoría de los 18 timeouts) | Small | 1–2 h | Auditoría D |
-| P3 | Reproducibilidad: `bootstrap.sh` / `make data` desde seed documentado | Small | 1–2 h | Auditoría D |
-| P3 | Tests del camino Zvec con embeddings sintéticos (sin `MISTRAL_API_KEY`) | Small | 2–3 h | Auditoría E |
-| P3 | Reemplazar `delete_this.py` por pytest suite (mock Mistral) | Medium | 2–4 h | Auditoría E |
+| ~~P3~~ | ~~Retry/backoff en `metadata.py`~~ — ✅ Hecho (`_fetch_with_retry` + exponential backoff, 4 tests) | n/a | — | Auditoría D |
+| ~~P3~~ | ~~Reproducibilidad: `bootstrap.sh`~~ — ✅ Hecho | n/a | — | Auditoría D |
+| ~~P3~~ | ~~Tests del camino Zvec con embeddings sintéticos~~ — ✅ Hecho (`tests/test_pipeline.py`, 5 tests, real Zvec + mock Mistral) | n/a | — | Auditoría E |
+| ~~P3~~ | ~~Reemplazar `delete_this.py` por pytest suite~~ — ✅ Hecho (`tests/test_pipeline.py` reemplaza `delete_this.py`) | n/a | — | Auditoría E |
 | — | "Maybe someday" (8 ideas de output, sección arriba) | Varies | 1–2 semanas | — |
 
 ---
@@ -408,6 +408,7 @@ Antes: `embedding.py:99-104` hacía `shutil.rmtree(index_path)` + re-embed de 15
 
 ## Registro de cambios recientes
 
+- **2026-08-22** — P3 items: retry/backoff in metadata.py (`_fetch_with_retry`, 4 tests); bootstrap.sh for fresh-clone setup; test_pipeline.py (5 tests, real Zvec + mock Mistral, replaces delete_this.py). All P0-P3 audit items done. 132/132 tests pass.
 - **2026-08-22** — Telethon reintegration (P0 #3 de la auditoría): `extraction_v2.py` — `normalize_message()`, `fetch_messages()`, `run_extraction_v2()` con `--incremental`/`--full`. Telethon directo, sin pytopicgram. Escribe a SQLite + JSON. 10 tests, 74/74 total pasan.
 - **2026-08-22** — Reindex Zvec incremental (P0 #2 de la auditoría): `embed_and_store_incremental()` + `compute_embedding_delta()` en `embedding.py`; `text_hash` column + `_hash_text` + `get_chunk_hashes` + `get_meta`/`set_meta` en `db.py`. 64/64 tests pasan (30 db + 22 embedding + 12 clustering). DB migrada: 15,330 hashes backfilled.
 - **2026-08-17** — Consolidación: `EVALUATION-2026-08-09.md` eliminado; contenido migrado a la sección "Auditoría técnica". Higiene: `.env` raíz añadido a `.gitignore`; `data/bundles.json`, `data/chunks.json`, `data/link_metadata.json` dejan de estar trackeados (outputs de compatibilidad; SQLite es la fuente de verdad); Phase 4 marcada ✅ en la tabla de estado.
